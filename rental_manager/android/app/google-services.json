@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "107725945138",
+    "firebase_url": "https://rentalmanager-f94f1.firebaseio.com",
+    "project_id": "rentalmanager-f94f1",
+    "storage_bucket": "rentalmanager-f94f1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:107725945138:android:6fbb40dfc6cee77e44bf2b",
+        "android_client_info": {
+          "package_name": "com.example.rental_manager"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "107725945138-msrdi7cjokg0dcub6mgm9m2kb0ohcu4l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRv4ubMsSCCQjWgVxJLHEBMy2WArn-hEI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "107725945138-msrdi7cjokg0dcub6mgm9m2kb0ohcu4l.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "107725945138-iq60bnsd3g7p7gnoibtkb2pdp108qdar.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.rentalManager"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
