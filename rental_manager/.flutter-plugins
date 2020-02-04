@@ -1,4 +1,3 @@
 # This is a generated file; do not edit or check into version control.
-cloud_firestore=/Users/adila/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-0.13.0+1/
-firebase_core=/Users/adila/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core-0.4.3+2/
-firebase_core_web=/Users/adila/Documents/flutter/.pub-cache/hosted/pub.dartlang.org/firebase_core_web-0.1.1+2/
+cloud_firestore=/Users/GreatJing/.pub-cache/hosted/pub.dartlang.org/cloud_firestore-0.9.13+1/
+firebase_core=/Users/GreatJing/.pub-cache/hosted/pub.dartlang.org/firebase_core-0.3.4/
