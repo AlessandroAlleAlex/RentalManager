@@ -1,10 +1,10 @@
 // This is a generated file; do not edit or check into version control.
-FLUTTER_ROOT=/Users/GreatJing/Desktop/flutter
-FLUTTER_APPLICATION_PATH=/Users/GreatJing/AndroidStudioProjects/RentalManager/rental_manager
-FLUTTER_TARGET=/Users/GreatJing/AndroidStudioProjects/RentalManager/rental_manager/lib/main.dart
+FLUTTER_ROOT=/Users/adila/Documents/flutter
+FLUTTER_APPLICATION_PATH=/Users/adila/Desktop/Github/RentalManager/rental_manager
+FLUTTER_TARGET=/Users/adila/Desktop/Github/RentalManager/rental_manager/lib/main.dart
 FLUTTER_BUILD_DIR=build
 SYMROOT=${SOURCE_ROOT}/../build/ios
-FLUTTER_FRAMEWORK_DIR=/Users/GreatJing/Desktop/flutter/bin/cache/artifacts/engine/ios
+FLUTTER_FRAMEWORK_DIR=/Users/adila/Documents/flutter/bin/cache/artifacts/engine/ios
 FLUTTER_BUILD_NAME=1.0.0
 FLUTTER_BUILD_NUMBER=1
 TRACK_WIDGET_CREATION=true

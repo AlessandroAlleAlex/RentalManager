@@ -246,6 +246,56 @@ class FourthTab extends StatelessWidget {
                   ),
                 ),
               ),
+              Row(
+                children: <Widget>[
+                  SizedBox(
+                    height: 1,
+                    child: Divider(
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                padding:EdgeInsets.all(0.6),
+                margin:EdgeInsets.only(left:0, right:0,),
+                color: Colors.teal,
+                child: FlatButton(
+                  onPressed: (){
+                    print('Log out');
+                    Navigator.of(context).pushReplacementNamed('/LoginScreen');
+                  },
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Icon(
+                            Icons.history ,
+                            color: Colors.white,
+                          ),
+                          Text(
+                              'Sign Out',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontFamily: 'Source Sans Pro',
+                              )
+                          ),
+                          Text(
+                              '>>',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontFamily: 'Source Sans Pro',
+                              )
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
             ],
           ),
         ),

@@ -2,370 +2,47 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="7639727d-df48-4cfe-ad1a-c942e904a841" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/rental_manager/.idea/codeStyles/Project.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rental_manager/fonts/OFL.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rental_manager/fonts/Pacifico-Regular.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rental_manager/fonts/SourceSansPro-Regular.ttf" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rental_manager/images/appstore.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rental_manager/images/arc.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rental_manager/images/library.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rental_manager/images/mu.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rental_manager/lib/Locations/ItemDetails.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rental_manager/lib/Locations/arc.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rental_manager/lib/Locations/library.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rental_manager/lib/data.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rental_manager/lib/mainView.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rental_manager/lib/tabs/account.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rental_manager/lib/tabs/help.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rental_manager/lib/tabs/locations.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/rental_manager/lib/tabs/reservations.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/RentalManager.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/RentalManager.iml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/.flutter-plugins" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/.flutter-plugins" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/.flutter-plugins-dependencies" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/.flutter-plugins-dependencies" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/.idea/libraries/Dart_Packages.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/.idea/libraries/Flutter_Plugins.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/.idea/libraries/Flutter_Plugins.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/.packages" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/.packages" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/android/app/src/main/java/io/flutter/plugins/GeneratedPluginRegistrant.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/android/local.properties" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/android/local.properties" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/.symlinks/plugins/cloud_firestore" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/.symlinks/plugins/cloud_firestore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/.symlinks/plugins/firebase_core" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/.symlinks/plugins/firebase_core" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/.symlinks/plugins/firebase_core_web" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Flutter/App.framework/flutter_assets/AssetManifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Flutter/App.framework/flutter_assets/AssetManifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Flutter/App.framework/flutter_assets/FontManifest.json" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Flutter/App.framework/flutter_assets/FontManifest.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Flutter/App.framework/flutter_assets/LICENSE" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Flutter/App.framework/flutter_assets/LICENSE" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Flutter/App.framework/flutter_assets/kernel_blob.bin" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Flutter/App.framework/flutter_assets/kernel_blob.bin" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Flutter/Flutter.framework/Flutter" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Flutter/Flutter.framework/Flutter" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Flutter/Flutter.framework/Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Flutter/Flutter.framework/Info.plist" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Flutter/Generated.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Flutter/Generated.xcconfig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Flutter/flutter_export_environment.sh" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Flutter/flutter_export_environment.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Podfile.lock" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Podfile.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Firebase/CoreOnly/Sources/Firebase.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Firebase/CoreOnly/Sources/Firebase.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Firebase/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Firebase/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseAnalytics/Frameworks/FIRAnalyticsConnector.framework/FIRAnalyticsConnector" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseAnalytics/Frameworks/FIRAnalyticsConnector.framework/FIRAnalyticsConnector" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.framework/FirebaseAnalytics" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.framework/FirebaseAnalytics" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.framework/Headers/FIRAnalytics.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseAnalytics/Frameworks/FirebaseAnalytics.framework/Headers/FIRAnalytics.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/FIRAnalyticsConfiguration.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/FIRApp.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/FIRAppAssociationRegistration.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/FIRBundleUtil.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/FIRComponent.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/FIRComponentContainer.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/FIRComponentType.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/FIRConfiguration.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/FIRCoreDiagnosticsConnector.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/FIRDependency.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/FIRDiagnosticsData.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/FIRErrors.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/FIRLogger.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/FIROptions.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/FIRVersion.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/Private/FIRAnalyticsConfiguration.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/Private/FIRAppAssociationRegistration.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/Private/FIRAppInternal.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/Private/FIRBundleUtil.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/Private/FIRComponent.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/Private/FIRComponentContainer.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/Private/FIRComponentContainerInternal.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/Private/FIRComponentType.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/Private/FIRConfigurationInternal.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/Private/FIRCoreDiagnosticsConnector.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/Private/FIRDependency.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/Private/FIRDiagnosticsData.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/Private/FIRErrorCode.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/Private/FIRErrors.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/Private/FIRLibrary.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/Private/FIRLogger.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/Private/FIROptionsInternal.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/Private/FIRVersion.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/Public/FIRApp.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/Public/FIRConfiguration.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/Public/FIRLoggerLevel.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/Public/FIROptions.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/Firebase/Core/Public/FirebaseCore.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCore/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCoreDiagnostics/Firebase/CoreDiagnostics/FIRCDLibrary/FIRCoreDiagnostics.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCoreDiagnostics/Firebase/CoreDiagnostics/FIRCDLibrary/FIRCoreDiagnostics.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCoreDiagnostics/Firebase/CoreDiagnostics/FIRCDLibrary/FIRCoreDiagnosticsDateFileStorage.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCoreDiagnostics/Firebase/CoreDiagnostics/FIRCDLibrary/FIRCoreDiagnosticsDateFileStorage.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCoreDiagnostics/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCoreDiagnostics/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCoreDiagnosticsInterop/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseCoreDiagnosticsInterop/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/Protos/nanopb/firestore/local/target.nanopb.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/Protos/nanopb/firestore/local/target.nanopb.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/Protos/nanopb/firestore/local/target.nanopb.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/Protos/nanopb/firestore/local/target.nanopb.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/Protos/nanopb/google/firestore/v1/write.nanopb.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/Protos/nanopb/google/firestore/v1/write.nanopb.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/Protos/nanopb/google/firestore/v1/write.nanopb.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/Protos/nanopb/google/firestore/v1/write.nanopb.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/Source/API/FIRDocumentSnapshot.mm" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/Source/API/FIRDocumentSnapshot.mm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/Source/API/FIRFieldPath.mm" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/Source/API/FIRFieldPath.mm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/Source/API/FIRFirestore+Internal.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/Source/API/FIRFirestore+Internal.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/Source/API/FIRFirestore.mm" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/Source/API/FIRFirestore.mm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/Source/API/FIRQuery.mm" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/Source/API/FIRQuery.mm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/Source/API/FSTUserDataConverter.mm" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/Source/API/FSTUserDataConverter.mm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/Source/Core/FSTTypes.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/Source/Public/FIRDocumentChange.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/Source/Public/FIRDocumentChange.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/Source/Public/FIRQuery.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/Source/Public/FIRQuery.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/Source/Util/FSTClasses.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/collection_reference.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/collection_reference.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/collection_reference.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/collection_reference.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/document_reference.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/document_reference.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/document_reference.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/document_reference.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/document_snapshot.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/document_snapshot.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/document_snapshot.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/document_snapshot.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/firestore.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/firestore.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/firestore.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/firestore.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/query_core.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/query_core.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/query_core.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/query_core.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/query_snapshot.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/query_snapshot.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/settings.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/settings.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/settings.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/settings.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/write_batch.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/write_batch.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/write_batch.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/api/write_batch.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/auth/credentials_provider.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/auth/credentials_provider.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/auth/empty_credentials_provider.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/auth/empty_credentials_provider.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/auth/empty_credentials_provider.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/auth/empty_credentials_provider.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/auth/firebase_credentials_provider_apple.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/auth/firebase_credentials_provider_apple.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/auth/firebase_credentials_provider_apple.mm" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/auth/firebase_credentials_provider_apple.mm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/database_info.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/database_info.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/event_manager.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/event_manager.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/event_manager.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/event_manager.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/firestore_client.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/firestore_client.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/firestore_client.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/firestore_client.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/query.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/query.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/query.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/query.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/query_listener.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/query_listener.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/sync_engine.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/sync_engine.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/sync_engine.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/sync_engine.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/sync_engine_callback.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/sync_engine_callback.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/target_id_generator.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/target_id_generator.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/transaction.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/transaction.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/transaction.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/transaction.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/transaction_runner.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/transaction_runner.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/transaction_runner.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/transaction_runner.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/user_data.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/user_data.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/user_data.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/user_data.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/view.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/view.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/view.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/core/view.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/immutable/llrb_node.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/immutable/llrb_node.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/immutable/llrb_node_iterator.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/immutable/llrb_node_iterator.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/document_key_reference.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/document_key_reference.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/index_manager.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/index_manager.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/leveldb_key.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/leveldb_key.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/leveldb_key.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/leveldb_key.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/leveldb_lru_reference_delegate.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/leveldb_lru_reference_delegate.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/leveldb_lru_reference_delegate.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/leveldb_lru_reference_delegate.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/leveldb_mutation_queue.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/leveldb_mutation_queue.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/leveldb_persistence.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/leveldb_persistence.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/leveldb_persistence.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/leveldb_persistence.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/leveldb_persistence_apple.mm" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/leveldb_persistence_posix.cc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/leveldb_persistence_win.cc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/leveldb_query_cache.cc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/leveldb_query_cache.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/leveldb_remote_document_cache.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/leveldb_remote_document_cache.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/leveldb_remote_document_cache.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/leveldb_remote_document_cache.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/leveldb_transaction.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/leveldb_transaction.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/leveldb_transaction.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/leveldb_transaction.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/local_documents_view.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/local_documents_view.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/local_documents_view.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/local_documents_view.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/local_serializer.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/local_serializer.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/local_serializer.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/local_serializer.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/local_store.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/local_store.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/local_store.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/local_store.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/local_view_changes.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/local_view_changes.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/local_view_changes.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/local_view_changes.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/lru_garbage_collector.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/lru_garbage_collector.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/lru_garbage_collector.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/lru_garbage_collector.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/memory_eager_reference_delegate.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/memory_eager_reference_delegate.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/memory_eager_reference_delegate.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/memory_eager_reference_delegate.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/memory_index_manager.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/memory_index_manager.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/memory_lru_reference_delegate.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/memory_lru_reference_delegate.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/memory_lru_reference_delegate.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/memory_lru_reference_delegate.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/memory_persistence.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/memory_persistence.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/memory_persistence.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/memory_persistence.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/memory_query_cache.cc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/memory_query_cache.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/memory_remote_document_cache.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/memory_remote_document_cache.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/memory_remote_document_cache.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/memory_remote_document_cache.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/persistence.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/persistence.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/proto_sizer.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/proto_sizer.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/proto_sizer.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/proto_sizer.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/query_cache.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/query_data.cc" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/query_data.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/query_engine.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/query_engine.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/reference_delegate.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/reference_delegate.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/remote_document_cache.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/remote_document_cache.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/simple_query_engine.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/simple_query_engine.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/simple_query_engine.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/simple_query_engine.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/sizer.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/local/sizer.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/document.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/document.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/document_key.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/document_key.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/document_set.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/document_set.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/field_mask.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/field_mask.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/field_mask.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/field_mask.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/field_path.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/field_path.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/field_path.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/field_path.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/field_value.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/field_value.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/field_value.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/field_value.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/mutation.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/mutation.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/precondition.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/precondition.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/resource_path.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/resource_path.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/resource_path.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/resource_path.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/set_mutation.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/set_mutation.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/transform_operation.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/transform_operation.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/types.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/model/types.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/nanopb/byte_string.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/nanopb/byte_string.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/nanopb/byte_string.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/nanopb/byte_string.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/nanopb/reader.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/nanopb/reader.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/objc/objc_compatibility.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/exponential_backoff.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/exponential_backoff.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/grpc_completion.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/grpc_completion.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/grpc_completion.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/grpc_completion.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/grpc_connection.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/grpc_connection.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/grpc_stream.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/grpc_stream.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/grpc_stream.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/grpc_stream.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/grpc_streaming_reader.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/grpc_streaming_reader.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/grpc_unary_call.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/grpc_unary_call.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/grpc_unary_call.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/grpc_unary_call.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/online_state_tracker.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/online_state_tracker.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/remote_event.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/remote_event.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/remote_event.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/remote_event.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/remote_objc_bridge.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/remote_objc_bridge.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/remote_objc_bridge.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/remote_objc_bridge.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/remote_store.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/remote_store.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/remote_store.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/remote_store.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/serializer.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/serializer.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/serializer.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/serializer.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/watch_stream.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/watch_stream.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/watch_stream.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/watch_stream.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/write_stream.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/remote/write_stream.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/util/async_queue.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/util/async_queue.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/util/comparison.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/util/comparison.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/util/executor_std.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/util/executor_std.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/util/executor_std.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/util/executor_std.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/util/filesystem.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/util/filesystem.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/util/filesystem_apple.mm" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/util/filesystem_apple.mm" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/util/filesystem_common.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/util/filesystem_common.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/util/filesystem_detail.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/util/filesystem_posix.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/util/filesystem_posix.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/util/path.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/util/path.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/util/path.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/util/path.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/util/status.cc" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/util/status.cc" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/util/status.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/util/status.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/util/string_apple.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/util/string_apple.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/util/string_format.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/Firestore/core/src/firebase/firestore/util/string_format.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseFirestore/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRIMessageCode.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRIMessageCode.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceID+Private.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceID+Private.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceID.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceID.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDAuthKeyChain.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDAuthKeyChain.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDCheckinService.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDCheckinService.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDKeyPair.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDKeyPair.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDKeyPairStore.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDKeyPairStore.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDKeyPairUtilities.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDKeyPairUtilities.m" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDKeychain.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDKeychain.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDKeychain.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDKeychain.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDTokenDeleteOperation.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDTokenDeleteOperation.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDTokenDeleteOperation.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDTokenDeleteOperation.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDTokenFetchOperation.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDTokenFetchOperation.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDTokenFetchOperation.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDTokenFetchOperation.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDTokenManager.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDTokenManager.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDTokenManager.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDTokenManager.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDTokenOperation+Private.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDTokenOperation+Private.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDTokenOperation.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDTokenOperation.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDTokenOperation.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDTokenOperation.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDUtilities.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/FIRInstanceIDUtilities.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/Private/FIRInstanceID+Private.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/Private/FIRInstanceID+Private.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/Private/FIRInstanceID_Private.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/Firebase/InstanceID/Private/FIRInstanceID_Private.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/FirebaseInstanceID/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleAppMeasurement/Frameworks/GoogleAppMeasurement.framework/GoogleAppMeasurement" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleAppMeasurement/Frameworks/GoogleAppMeasurement.framework/GoogleAppMeasurement" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/GDTCORConsoleLogger.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/GDTCORConsoleLogger.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/GDTCOREvent.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/GDTCOREvent.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/GDTCORLifecycle.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/GDTCORLifecycle.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/GDTCORPlatform.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/GDTCORPlatform.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/GDTCORReachability.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/GDTCORReachability.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/GDTCORRegistrar.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/GDTCORRegistrar.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/GDTCORStorage.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/GDTCORStorage.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/GDTCORTransformer.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/GDTCORTransformer.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/GDTCORTransport.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/GDTCORTransport.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/GDTCORUploadCoordinator.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/GDTCORUploadCoordinator.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/GDTCORUploadPackage.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/GDTCORUploadPackage.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Private/GDTCORReachability.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Private/GDTCORReachability.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Private/GDTCORReachability_Private.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Private/GDTCORReachability_Private.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Public/GDTCORConsoleLogger.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Public/GDTCORConsoleLogger.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Public/GDTCORPlatform.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/GoogleDataTransport/GDTCORLibrary/Public/GDTCORPlatform.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransport/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransportCCTSupport/GoogleDataTransportCCTSupport/GDTCCTLibrary/GDTCCTNanopbHelpers.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransportCCTSupport/GoogleDataTransportCCTSupport/GDTCCTLibrary/GDTCCTNanopbHelpers.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransportCCTSupport/GoogleDataTransportCCTSupport/GDTCCTLibrary/GDTCCTPrioritizer.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransportCCTSupport/GoogleDataTransportCCTSupport/GDTCCTLibrary/GDTCCTPrioritizer.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransportCCTSupport/GoogleDataTransportCCTSupport/GDTCCTLibrary/GDTCCTUploader.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransportCCTSupport/GoogleDataTransportCCTSupport/GDTCCTLibrary/GDTCCTUploader.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransportCCTSupport/GoogleDataTransportCCTSupport/GDTCCTLibrary/GDTFLLPrioritizer.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransportCCTSupport/GoogleDataTransportCCTSupport/GDTCCTLibrary/GDTFLLPrioritizer.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransportCCTSupport/GoogleDataTransportCCTSupport/GDTCCTLibrary/GDTFLLUploader.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransportCCTSupport/GoogleDataTransportCCTSupport/GDTCCTLibrary/GDTFLLUploader.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransportCCTSupport/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleDataTransportCCTSupport/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/GoogleUtilities/AppDelegateSwizzler/GULAppDelegateSwizzler.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/GoogleUtilities/AppDelegateSwizzler/GULAppDelegateSwizzler.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/GoogleUtilities/AppDelegateSwizzler/Private/GULApplication.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/GoogleUtilities/AppDelegateSwizzler/Private/GULApplication.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/GoogleUtilities/Common/GULLoggerCodes.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/GoogleUtilities/Common/GULLoggerCodes.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/GoogleUtilities/Environment/third_party/GULAppEnvironmentUtil.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/GoogleUtilities/Environment/third_party/GULAppEnvironmentUtil.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/GoogleUtilities/Logger/GULLogger.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/GoogleUtilities/Logger/GULLogger.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/GoogleUtilities/MethodSwizzler/GULSwizzler.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/GoogleUtilities/MethodSwizzler/GULSwizzler.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/GoogleUtilities/NSData+zlib/GULNSData+zlib.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/GoogleUtilities/NSData+zlib/GULNSData+zlib.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/GoogleUtilities/Network/GULMutableDictionary.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/GoogleUtilities/Network/GULMutableDictionary.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/GoogleUtilities/Network/GULNetwork.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/GoogleUtilities/Network/GULNetwork.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/GoogleUtilities/Network/GULNetworkConstants.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/GoogleUtilities/Network/GULNetworkConstants.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/GoogleUtilities/Network/GULNetworkURLSession.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/GoogleUtilities/Network/GULNetworkURLSession.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/GoogleUtilities/Reachability/GULReachabilityChecker+Internal.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/GoogleUtilities/Reachability/GULReachabilityChecker+Internal.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/GoogleUtilities/Reachability/GULReachabilityChecker.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/GoogleUtilities/Reachability/GULReachabilityChecker.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/GoogleUtilities/Reachability/Private/GULReachabilityChecker.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/GoogleUtilities/Reachability/Private/GULReachabilityChecker.h" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/LICENSE" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/GoogleUtilities/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Local Podspecs/cloud_firestore.podspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Local Podspecs/cloud_firestore.podspec.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Local Podspecs/firebase_core.podspec.json" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Local Podspecs/firebase_core.podspec.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Manifest.lock" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Manifest.lock" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Pods.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Pods.xcodeproj/project.pbxproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Pods.xcodeproj/xcuserdata/adila.xcuserdatad/xcschemes/firebase_core_web.xcscheme" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Pods.xcodeproj/xcuserdata/adila.xcuserdatad/xcschemes/xcschememanagement.plist" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Pods.xcodeproj/xcuserdata/adila.xcuserdatad/xcschemes/xcschememanagement.plist" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/BoringSSL-GRPC/BoringSSL-GRPC.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/BoringSSL-GRPC/BoringSSL-GRPC.xcconfig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/Firebase/Firebase.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/Firebase/Firebase.xcconfig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/FirebaseAnalytics/FirebaseAnalytics.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/FirebaseAnalytics/FirebaseAnalytics.xcconfig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/FirebaseAuthInterop/FirebaseAuthInterop.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/FirebaseAuthInterop/FirebaseAuthInterop.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/FirebaseCore/FirebaseCore-Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/FirebaseCore/FirebaseCore-Info.plist" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/FirebaseCore/FirebaseCore.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/FirebaseCore/FirebaseCore.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/FirebaseCoreDiagnostics/FirebaseCoreDiagnostics-Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/FirebaseCoreDiagnostics/FirebaseCoreDiagnostics-Info.plist" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/FirebaseCoreDiagnostics/FirebaseCoreDiagnostics-umbrella.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/FirebaseCoreDiagnostics/FirebaseCoreDiagnostics-umbrella.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/FirebaseCoreDiagnostics/FirebaseCoreDiagnostics.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/FirebaseCoreDiagnostics/FirebaseCoreDiagnostics.xcconfig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/FirebaseCoreDiagnosticsInterop/FirebaseCoreDiagnosticsInterop.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/FirebaseCoreDiagnosticsInterop/FirebaseCoreDiagnosticsInterop.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/FirebaseFirestore/FirebaseFirestore-Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/FirebaseFirestore/FirebaseFirestore-Info.plist" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/FirebaseFirestore/FirebaseFirestore.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/FirebaseFirestore/FirebaseFirestore.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/FirebaseInstanceID/FirebaseInstanceID-Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/FirebaseInstanceID/FirebaseInstanceID-Info.plist" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/FirebaseInstanceID/FirebaseInstanceID.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/FirebaseInstanceID/FirebaseInstanceID.xcconfig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/Flutter/Flutter.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/Flutter/Flutter.xcconfig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/GoogleAppMeasurement/GoogleAppMeasurement.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/GoogleAppMeasurement/GoogleAppMeasurement.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/GoogleDataTransport/GoogleDataTransport-Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/GoogleDataTransport/GoogleDataTransport-Info.plist" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/GoogleDataTransport/GoogleDataTransport.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/GoogleDataTransport/GoogleDataTransport.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/GoogleDataTransportCCTSupport/GoogleDataTransportCCTSupport-Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/GoogleDataTransportCCTSupport/GoogleDataTransportCCTSupport-Info.plist" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/GoogleDataTransportCCTSupport/GoogleDataTransportCCTSupport.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/GoogleDataTransportCCTSupport/GoogleDataTransportCCTSupport.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/GoogleUtilities/GoogleUtilities-Info.plist" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/GoogleUtilities/GoogleUtilities-Info.plist" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/GoogleUtilities/GoogleUtilities.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/GoogleUtilities/GoogleUtilities.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/Pods-Runner/Pods-Runner-acknowledgements.markdown" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/Pods-Runner/Pods-Runner-acknowledgements.markdown" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/Pods-Runner/Pods-Runner-acknowledgements.plist" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/Pods-Runner/Pods-Runner-acknowledgements.plist" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/Pods-Runner/Pods-Runner.debug.xcconfig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/Pods-Runner/Pods-Runner.profile.xcconfig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/abseil/abseil.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/abseil/abseil.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/cloud_firestore/cloud_firestore-umbrella.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/cloud_firestore/cloud_firestore-umbrella.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/cloud_firestore/cloud_firestore.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/cloud_firestore/cloud_firestore.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/firebase_core/firebase_core-umbrella.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/firebase_core/firebase_core-umbrella.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/firebase_core/firebase_core.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/firebase_core/firebase_core.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/firebase_core_web/firebase_core_web.xcconfig" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/gRPC-C++/gRPC-C++-umbrella.h" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/gRPC-C++/gRPC-C++-umbrella.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/gRPC-C++/gRPC-C++.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/gRPC-C++/gRPC-C++.xcconfig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/gRPC-Core/gRPC-Core.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/gRPC-Core/gRPC-Core.xcconfig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/leveldb-library/leveldb-library.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/leveldb-library/leveldb-library.xcconfig" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/nanopb/nanopb.xcconfig" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Pods/Target Support Files/nanopb/nanopb.xcconfig" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Runner.xcodeproj/project.pbxproj" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Runner.xcodeproj/project.pbxproj" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/ios/Runner/GeneratedPluginRegistrant.m" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/ios/Runner/GeneratedPluginRegistrant.m" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/lib/main.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/lib/signUpPage.dart" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/pubspec.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/rental_manager/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/rental_manager/pubspec.yaml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -376,22 +53,15 @@
   <component name="DefaultGradleProjectSettings">
     <option name="isMigrated" value="true" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="Nexus_6_API_28" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/rental_manager/lib/main.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="2190">
+            <state relative-caret-position="3555">
               <caret line="239" column="14" selection-start-line="239" selection-start-column="14" selection-end-line="239" selection-end-column="14" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
-                <element signature="e#662#996#0" />
-                <element signature="e#5004#6089#0" />
-                <element signature="e#5121#5166#0" />
-                <element signature="e#5185#7168#0" />
-                <element signature="e#6495#7132#0" />
-                <element signature="e#7187#7259#0" />
               </folding>
             </state>
           </provider>
@@ -400,7 +70,7 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/rental_manager/lib/mainView.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="150">
+            <state relative-caret-position="90">
               <caret line="10" column="32" selection-start-line="10" selection-start-column="32" selection-end-line="10" selection-end-column="32" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
@@ -412,8 +82,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/rental_manager/lib/tabs/locations.dart">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1395">
-              <caret line="93" column="102" selection-start-line="93" selection-start-column="102" selection-end-line="93" selection-end-column="102" />
+            <state relative-caret-position="555">
+              <caret line="37" column="2" selection-start-line="37" selection-start-column="2" selection-end-line="37" selection-end-column="2" />
               <folding>
                 <element signature="e#0#39#0" expanded="true" />
               </folding>
@@ -422,33 +92,9 @@
         </entry>
       </file>
       <file pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/rental_manager/lib/Locations/arc.dart">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-207">
-              <caret line="24" column="31" lean-forward="true" selection-start-line="24" selection-start-column="31" selection-end-line="24" selection-end-column="31" />
-              <folding>
-                <element signature="e#0#39#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/rental_manager/lib/Locations/ItemDetails.dart">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="285">
-              <caret line="19" column="26" lean-forward="true" selection-start-line="19" selection-start-column="26" selection-end-line="19" selection-end-column="26" />
-              <folding>
-                <element signature="e#560#5746#0" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/rental_manager/pubspec.yaml">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="330">
+            <state relative-caret-position="223">
               <caret line="22" selection-start-line="22" selection-end-line="22" />
             </state>
           </provider>
@@ -497,16 +143,17 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="54" />
-    <option name="y" value="41" />
+    <option name="x" value="17" />
+    <option name="y" value="23" />
     <option name="width" value="1263" />
-    <option name="height" value="918" />
+    <option name="height" value="777" />
   </component>
   <component name="ProjectView">
     <navigator currentView="ProjectPane" proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -548,7 +195,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
       <pane id="PackagesPane" />
     </panes>
   </component>
@@ -605,11 +251,11 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="262" y="132" width="1263" height="918" extended-state="0" />
+    <frame x="17" y="23" width="1263" height="777" extended-state="0" />
     <editor active="true" />
     <layout>
       <window_info id="Captures" order="0" weight="0.25" />
-      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.18591319" />
+      <window_info active="true" content_ui="combo" id="Project" order="1" visible="true" weight="0.18837018" />
       <window_info id="Structure" order="2" side_tool="true" />
       <window_info id="Image Layers" order="3" />
       <window_info id="Designer" order="4" />
@@ -652,13 +298,7 @@
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/rental_manager/lib/signUpPage.dart" />
-    <entry file="file://$USER_HOME$/Desktop/flutter/packages/flutter/lib/src/material/text_field.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-396">
-          <caret line="286" column="8" selection-start-line="286" selection-start-column="8" selection-end-line="286" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../../flutter/packages/flutter/lib/src/material/text_field.dart" />
     <entry file="file://$PROJECT_DIR$/rental_manager/android/gradle.properties">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -669,13 +309,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$USER_HOME$/Desktop/flutter/packages/flutter/lib/src/widgets/async.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="229">
-          <caret line="380" column="8" selection-start-line="380" selection-start-column="8" selection-end-line="380" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/../../flutter/packages/flutter/lib/src/widgets/async.dart" />
     <entry file="file://$PROJECT_DIR$/rental_manager/ios/Podfile.lock">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -738,29 +372,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/rental_manager/pubspec.yaml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="330">
-          <caret line="22" selection-start-line="22" selection-end-line="22" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/rental_manager/lib/main.dart">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2190">
-          <caret line="239" column="14" selection-start-line="239" selection-start-column="14" selection-end-line="239" selection-end-column="14" />
-          <folding>
-            <element signature="e#0#39#0" expanded="true" />
-            <element signature="e#662#996#0" />
-            <element signature="e#5004#6089#0" />
-            <element signature="e#5121#5166#0" />
-            <element signature="e#5185#7168#0" />
-            <element signature="e#6495#7132#0" />
-            <element signature="e#7187#7259#0" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/rental_manager/ios/Runner/GoogleService-Info.plist">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="105">
@@ -785,9 +396,19 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/rental_manager/lib/main.dart">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3555">
+          <caret line="239" column="14" selection-start-line="239" selection-start-column="14" selection-end-line="239" selection-end-column="14" />
+          <folding>
+            <element signature="e#0#39#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/rental_manager/lib/mainView.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="150">
+        <state relative-caret-position="90">
           <caret line="10" column="32" selection-start-line="10" selection-start-column="32" selection-end-line="10" selection-end-column="32" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
@@ -795,10 +416,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/rental_manager/lib/tabs/locations.dart">
+    <entry file="file://$PROJECT_DIR$/rental_manager/lib/Locations/arc.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1395">
-          <caret line="93" column="102" selection-start-line="93" selection-start-column="102" selection-end-line="93" selection-end-column="102" />
+        <state relative-caret-position="360">
+          <caret line="24" column="31" lean-forward="true" selection-start-line="24" selection-start-column="31" selection-end-line="24" selection-end-column="31" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
@@ -815,13 +436,20 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/rental_manager/lib/Locations/arc.dart">
+    <entry file="file://$PROJECT_DIR$/rental_manager/lib/tabs/locations.dart">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-207">
-          <caret line="24" column="31" lean-forward="true" selection-start-line="24" selection-start-column="31" selection-end-line="24" selection-end-column="31" />
+        <state relative-caret-position="555">
+          <caret line="37" column="2" selection-start-line="37" selection-start-column="2" selection-end-line="37" selection-end-column="2" />
           <folding>
             <element signature="e#0#39#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/rental_manager/pubspec.yaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="223">
+          <caret line="22" selection-start-line="22" selection-end-line="22" />
         </state>
       </provider>
     </entry>

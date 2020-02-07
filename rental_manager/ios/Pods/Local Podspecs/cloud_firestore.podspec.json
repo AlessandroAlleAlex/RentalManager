@@ -22,18 +22,13 @@
     "Flutter": [
 
     ],
-    "Firebase/Database": [
-
-    ],
     "Firebase/Core": [
 
     ],
-    "Firebase/Auth": [
-
-    ],
     "Firebase/Firestore": [
-
+      "~> 6.0"
     ]
   },
-  "static_framework": true
+  "static_framework": true,
+  "prepare_command": "echo // Generated file, do not edit > Classes/UserAgent.h\necho \"#define LIBRARY_VERSION @\\\"0.12.11\\\"\" >> Classes/UserAgent.h\necho \"#define LIBRARY_NAME @\\\"flutter-fire-fst\\\"\" >> Classes/UserAgent.h"
 }

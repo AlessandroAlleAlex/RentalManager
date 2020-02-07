@@ -10,7 +10,8 @@
 #endif
 #endif
 
-#import "FirebaseCorePlugin.h"
+#import "FLTFirebaseCorePlugin.h"
+#import "UserAgent.h"
 
 FOUNDATION_EXPORT double firebase_coreVersionNumber;
 FOUNDATION_EXPORT const unsigned char firebase_coreVersionString[];

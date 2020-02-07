@@ -11,6 +11,7 @@
 #endif
 
 #import "CloudFirestorePlugin.h"
+#import "UserAgent.h"
 
 FOUNDATION_EXPORT double cloud_firestoreVersionNumber;
 FOUNDATION_EXPORT const unsigned char cloud_firestoreVersionString[];
