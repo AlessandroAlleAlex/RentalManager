@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../globals.dart' as globals;
 class FourthTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -16,7 +16,7 @@ class FourthTab extends StatelessWidget {
                     backgroundImage: AssetImage('images/appstore.png'),
                   ),
                   Text(
-                    'UserName',
+                    globals.username,
                     style: TextStyle(
                       fontFamily: 'Source Sans Pro',
                       color: Colors.teal,

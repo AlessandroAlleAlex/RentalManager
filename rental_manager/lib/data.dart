@@ -128,11 +128,11 @@ class User {
 class item{
   String name;
   String itemID;
+  
 }
 
 class reservation{
   User user;
   item items;
-
 }
 
