@@ -35,19 +35,19 @@ class MyHomeState extends State<MyHome1> with SingleTickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       // Appbar
-      appBar: AppBar(
-        // Title
-        title: Text(
-          "Rental Manager",
-          style:  TextStyle(
-            fontFamily: 'Pacifico',
-            fontSize: 20,
-            color: Colors.white,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        backgroundColor: Colors.teal,
-      ),
+      // appBar: AppBar(
+      //   // Title
+      //   title: Text(
+      //     "Rental Manager",
+      //     style:  TextStyle(
+      //       fontFamily: 'Pacifico',
+      //       fontSize: 20,
+      //       color: Colors.white,
+      //       fontWeight: FontWeight.bold,
+      //     ),
+      //   ),
+      //   backgroundColor: Colors.teal,
+      // ),
 
       body: TabBarView(
         // Add tabs as widgets
