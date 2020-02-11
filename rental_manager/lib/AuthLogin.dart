@@ -12,20 +12,15 @@ class Auth {
   final FirebaseAuth auth = FirebaseAuth.instance;
   String userID = '';
   bool isSignUp = false;
-  Future<String> signIn(username,password) async {
+  Future<IdTokenResult> signIn(username,password) async {
     try {
       FirebaseUser user = (await auth.signInWithEmailAndPassword(
           email: username, password: password)).user;
 
-      assert(user != null);
-      assert(await user.getIdToken() != null);
-
-      final FirebaseUser currentUser = await auth.currentUser();
-      assert(user.uid == currentUser.uid);
-      return user.uid;
+      return user.getIdToken();
     } catch (e) {
       print(e);
-      return e.toString();
+      return null;
     }
 
   }

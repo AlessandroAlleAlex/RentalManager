@@ -726,49 +726,9 @@ class _MyHomePageState extends State<MyHomePage> {
                               defaultActionText: Strings.ok,
                             ).show(context);
                           }else{
-                            var e = await authHandler.signIn(username, password);
-                            if(ErrorDetect(e)){
-                              PlatformAlertDialog(
-                                title: errorDetect(e, pos: 0),
-                                content: errorDetect(e, pos: 1),
-                                defaultActionText: Strings.ok,
-                              ).show(context);
-                            }else{
-                              var email = username;
-                              globals.email = email;
-
-                              final QuerySnapshot result =
-                              await Firestore.instance.collection('users').getDocuments();
-                              final List<DocumentSnapshot> documents = result.documents;
-                              List<String> userNameList = [];
-                              documents.forEach((data) => userNameList.add(data.documentID));
-                              String value = '';
-                              bool found = false;
-                              for(var i = 0; i < userNameList.length; i++){
-                                String currentOne = userNameList[i];
-                                Firestore.instance
-                                    .collection('users')
-                                    .document('$currentOne')
-                                    .get()
-                                    .then((DocumentSnapshot ds) {
-                                  // use ds as a snapshot
-                                  var user_email = ds["email"];
-                                  if(user_email == email){
-                                    globals.username = currentOne;
-                                    globals.uid = ds["uid"];
-                                    found = true;
-                                    print('Found');
-                                  }
-
-                                });
-
-                                if(found){
-                                  break;
-                                }
-                              }
-
-                              Navigator.of(context).pushReplacementNamed('/MainViewScreen');
-                            }
+                            IdTokenResult e = await authHandler.signIn(username, password);
+                            print(e.token);
+                            //Navigator.of(context).pushReplacementNamed('/MainViewScreen');
                           }
 
 
