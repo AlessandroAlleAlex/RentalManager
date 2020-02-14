@@ -1,8 +1,12 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import '../globals.dart' as globals;
+import 'package:intl/intl.dart';
+
 class FourthTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
       home: Scaffold(
         backgroundColor: Colors.white,
@@ -213,7 +217,7 @@ class FourthTab extends StatelessWidget {
                 child: FlatButton(
                   onPressed: (){
                     print("Theme Color");
-
+                    testingReservations();
                   },
                   child: Column(
                     children: <Widget>[
@@ -302,4 +306,45 @@ class FourthTab extends StatelessWidget {
       ),
     );
   }
+  testingReservations() async{ 
+    print(globals.uid);
+    final QuerySnapshot result =
+    await Firestore.instance.collection('items').getDocuments();
+    final List<DocumentSnapshot> documents = result.documents;
+    List<String> itemIDs = [];
+    documents.forEach((data) => itemIDs.add(data.documentID));
+    print(documents.length);
+    for(int i = 0; i< documents.length;i++){
+      print(itemIDs[i]);
+    }
+    var now = new DateTime.now();
+    var time = DateFormat("yyyy-MM-dd hh:mm:ss").format(now);
+    var pickUpBefore = now.add(new Duration(minutes: 10));
+    print("Reservation Created time: " + time);
+    print("Reservation pickup before time: " + DateFormat("yyyy-MM-dd hh:mm:ss").format(pickUpBefore));
+    var date1 = DateTime.parse(time);
+    var date2 = DateTime.parse(DateFormat("yyyy-MM-dd hh:mm:ss").format(pickUpBefore));
+    bool valid = false;
+    if(date1.isBefore(date2)){
+      valid = true;
+    }else if(date2.isAfter(date1)){
+      valid = true;
+    }
+    print(date1.isBefore(date2)); // => true
+    uploadData(itemIDs[4], globals.uid,time);
+  }
+}
+void uploadData(itemID,uid, dateTime) async{
+  final databaseReference = Firestore.instance;
+  await databaseReference.collection("reservation")
+      .document()
+      .setData({
+    'item': itemID,
+    'uid': uid,
+    'amount': "1",
+    'startTime': dateTime,
+    'status': "Picked Up",
+    'endTime': "TBD",
+  });
+  print("success!");
 }

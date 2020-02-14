@@ -16,13 +16,11 @@ class Auth {
     try {
       FirebaseUser user = (await auth.signInWithEmailAndPassword(
           email: username, password: password)).user;
-
       return user.getIdToken();
     } catch (e) {
       print(e);
       return null;
     }
-
   }
 
   Future<String> signUp(email, password) async {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'custom_gridcell.dart';
+import 'item_page.dart';
 
 class CategoryPage extends StatefulWidget {
   final DocumentSnapshot passedFirestoreData;
@@ -14,6 +15,13 @@ class CategoryPage extends StatefulWidget {
 }
 
 class _CategoryPageState extends State<CategoryPage> {
+  navigateToItem(String categorySelected) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ItemPage(category: categorySelected)));
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
@@ -35,12 +43,20 @@ class _CategoryPageState extends State<CategoryPage> {
                 childAspectRatio: 1.0,
                 mainAxisSpacing: 4.0,
                 crossAxisSpacing: 4.0,
-                children: widget.passedFirestoreData.data['categories']
-                    .map<Widget>((categoryInfo) {
-                  return GridTile(
-                    child: CustomCell(categoryInfo),
-                  );
-                }).toList(),
+                children:
+                    widget.passedFirestoreData.data['categories'].map<Widget>(
+                  (categoryInfo) {
+                    return GestureDetector(
+                      child: GridTile(
+                        child: CustomCell(categoryInfo),
+                      ),
+                      onTap: () {
+                        // print("tapped ${categoryInfo.toString()}");
+                        navigateToItem(categoryInfo['name']);
+                      },
+                    );
+                  },
+                ).toList(),
               ),
             ),
           ),

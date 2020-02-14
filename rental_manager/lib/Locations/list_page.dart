@@ -19,7 +19,7 @@ class _ListPageState extends State<ListPage> {
     return arrayOfLocationDocuments.documents;
   }
 
-  navigateToDetail(DocumentSnapshot indexedData) {
+  navigateToCategory(DocumentSnapshot indexedData) {
     Navigator.push(
         context,
         MaterialPageRoute(
@@ -31,35 +31,37 @@ class _ListPageState extends State<ListPage> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Container(
-        child: FutureBuilder(
-            future: getFirestoreData(),
-            builder: (_, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(
-                  child: Text('Loading...'),
+      child: FutureBuilder(
+        future: getFirestoreData(),
+        builder: (_, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: Text('Loading...'),
+            );
+          } else {
+            return ListView.builder(
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int index) =>
+                    customCard(index, snapshot)
+                // return ListTile(
+                //   title: Text(snapshot.data[index].data['name']),
+                //   leading: CircleAvatar(
+                //     child: Image.network(
+                //         snapshot.data[index].data['imageURL']),
+                //   ),
+                //   onTap: () => navigateToDetail(snapshot.data[index]),
+                // );
                 );
-              } else {
-                return ListView.builder(
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (BuildContext context, int index) =>
-                        customCard(index, snapshot)
-                    // return ListTile(
-                    //   title: Text(snapshot.data[index].data['name']),
-                    //   leading: CircleAvatar(
-                    //     child: Image.network(
-                    //         snapshot.data[index].data['imageURL']),
-                    //   ),
-                    //   onTap: () => navigateToDetail(snapshot.data[index]),
-                    // );
-                    );
-              }
-            }));
+          }
+        },
+      ),
+    );
   }
 
   Widget customCard(int index, AsyncSnapshot snapshot) {
     return Material(
       child: InkWell(
-        onTap: () => navigateToDetail(snapshot.data[index]),
+        onTap: () => navigateToCategory(snapshot.data[index]),
         child: Container(
           decoration: BoxDecoration(
             boxShadow: [

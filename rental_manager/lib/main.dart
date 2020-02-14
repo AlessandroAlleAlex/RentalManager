@@ -489,27 +489,29 @@ import 'package:rental_manager/PlatformWidget/strings.dart';
 import 'globals.dart' as globals;
 import 'dart:core';
 
-
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       home: MyHomePage(title: 'Flutter Demo Home Page'),
       routes: {
-      '/LoginScreen': (context) => MyApp(),
-    '/MainViewScreen': (context) => MyHome1(),
-    },
-    initialRoute: 'LoginScreen',
+        '/LoginScreen': (context) => MyApp(),
+        '/MainViewScreen': (context) => MyHome1(),
+      },
+      initialRoute: 'LoginScreen',
     );
   }
+
   @override
-  Widget know (BuildContext context) {
+  Widget know(BuildContext context) {
     return new StreamBuilder(
-        stream: Firestore.instance.collection('CollectionA').document('DOc1').snapshots(),
+        stream: Firestore.instance
+            .collection('CollectionA')
+            .document('DOc1')
+            .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
             print('1');
@@ -518,12 +520,9 @@ class MyApp extends StatelessWidget {
           var userDocument = snapshot.data;
           print('2');
           return new Text(userDocument["a"]);
-        }
-    );
+        });
   }
-
 }
-
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -545,16 +544,11 @@ final FirebaseAuth auth = FirebaseAuth.instance;
 //  ).show(context);
 //}
 
-
-
-
 // setState(() => sessionID = info['session_id']);
 
-void uploadData(username,email,uid) async{
+void uploadData(username, email, uid) async {
   final databaseReference = Firestore.instance;
-  await databaseReference.collection("users")
-      .document(username)
-      .setData({
+  await databaseReference.collection("users").document(username).setData({
     'email': email,
     'uid': uid,
   });
@@ -569,7 +563,6 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     var authHandler = new Auth();
     var screenWidth = MediaQuery.of(context).size.width;
-
 
     return MaterialApp(
       home: Scaffold(
@@ -609,18 +602,16 @@ class _MyHomePageState extends State<MyHomePage> {
                   color: Colors.teal.shade900,
                 ),
               ),
-              SizedBox(
-                  height: 10, width: 150
-              ),
-
+              SizedBox(height: 10, width: 150),
               TextField(
-                onChanged:(text){
+                onChanged: (text) {
                   username = text;
                   print("First text field: $text");
                 },
                 // controller: _username,
                 cursorColor: Colors.teal.shade900,
-                scrollPadding:  const EdgeInsets.symmetric(vertical: 10.0,horizontal: 30),
+                scrollPadding:
+                    const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30),
                 decoration: InputDecoration(
                   border: new OutlineInputBorder(
                     borderRadius: const BorderRadius.all(
@@ -635,24 +626,21 @@ class _MyHomePageState extends State<MyHomePage> {
                   prefixIcon: const Icon(Icons.person, color: Colors.black),
                   // labelStyle:
                   // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
-                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 30),
-
+                  contentPadding: const EdgeInsets.symmetric(
+                      vertical: 10.0, horizontal: 30),
                 ),
-
               ),
-              SizedBox(
-                  height: 20,width: 150
-              ),
+              SizedBox(height: 20, width: 150),
               TextField(
-                onChanged:(text){
+                onChanged: (text) {
                   password = text;
                   print("First text field: $text");
                 },
-
                 obscureText: true,
                 cursorColor: Colors.teal.shade900,
                 decoration: InputDecoration(
-                  contentPadding: new EdgeInsets.fromLTRB(20.0, 10.0, 100.0, 10.0),
+                  contentPadding:
+                      new EdgeInsets.fromLTRB(20.0, 10.0, 100.0, 10.0),
                   border: new OutlineInputBorder(
                     borderRadius: const BorderRadius.all(
                       const Radius.circular(8.0),
@@ -669,8 +657,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   // contentPadding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 50),
                 ),
               ),
-
-
               Container(
                 alignment: Alignment(1.0, 0.0),
                 padding: EdgeInsets.only(top: 15.0, left: 20.0),
@@ -699,7 +685,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       highlightColor: Colors.green,
                       elevation: 0.0,
                       color: Colors.green,
-                      shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(30.0)),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
@@ -714,35 +701,70 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ),
                           ),
-
                         ],
                       ),
-                      onPressed: () async{
-
-                          if(username == null || password == null){
+                      onPressed: () async {
+                        if (username == null || password == null) {
+                          PlatformAlertDialog(
+                            title: 'Warning',
+                            content:
+                                'Email Adress and Password Cannot be empty',
+                            defaultActionText: Strings.ok,
+                          ).show(context);
+                        } else {
+                          var e = await authHandler.signIn(username, password);
+                          if (ErrorDetect(e)) {
                             PlatformAlertDialog(
-                              title: 'Warning',
-                              content: 'Email Adress and Password Cannot be empty',
+                              title: "Sign In Failed",
+                              content:
+                                  "Your email and your password does not match",
                               defaultActionText: Strings.ok,
                             ).show(context);
-                          }else{
-                            IdTokenResult e = await authHandler.signIn(username, password);
-                            print(e.token);
-                            //Navigator.of(context).pushReplacementNamed('/MainViewScreen');
+                          } else {
+                            var email = username;
+                            globals.email = email;
+                            final QuerySnapshot result = await Firestore
+                                .instance
+                                .collection('users')
+                                .getDocuments();
+                            final List<DocumentSnapshot> documents =
+                                result.documents;
+                            List<String> userNameList = [];
+                            documents.forEach(
+                                (data) => userNameList.add(data.documentID));
+                            String value = '';
+                            bool found = false;
+                            for (var i = 0; i < userNameList.length; i++) {
+                              String currentOne = userNameList[i];
+                              Firestore.instance
+                                  .collection('users')
+                                  .document('$currentOne')
+                                  .get()
+                                  .then((DocumentSnapshot ds) {
+                                // use ds as a snapshot
+                                var user_email = ds["email"];
+                                if (user_email == email) {
+                                  globals.username = currentOne;
+                                  globals.uid = ds["uid"];
+                                  found = true;
+                                  print('Found');
+                                }
+                              });
+                              if (found) {
+                                break;
+                              }
+                            }
+                            Navigator.of(context)
+                                .pushReplacementNamed('/MainViewScreen');
                           }
-
-
-
+                        }
                       },
                       padding: EdgeInsets.all(7.0),
                       //color: Colors.teal.shade900,
                       disabledColor: Colors.black,
                       disabledTextColor: Colors.black,
-
                     ),
                   ),
-
-
                 ],
               ),
               Row(
@@ -756,13 +778,13 @@ class _MyHomePageState extends State<MyHomePage> {
                       highlightColor: Colors.green,
                       elevation: 0.0,
                       color: Colors.green,
-                      shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(30.0)),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Center(
-                            child:
-                              ImageIcon(AssetImage('images/facebook.png')),
+                            child: ImageIcon(AssetImage('images/facebook.png')),
                           ),
                           SizedBox(width: 20.0),
                           Center(
@@ -776,23 +798,19 @@ class _MyHomePageState extends State<MyHomePage> {
                               ),
                             ),
                           ),
-
                         ],
                       ),
-                      onPressed: (){
-                        Navigator.of(context).pushReplacementNamed('/MainViewScreen');
-
-
+                      onPressed: () {
+                        //TODO: Implement facebook login
+                        Navigator.of(context)
+                            .pushReplacementNamed('/MainViewScreen');
                       },
                       padding: EdgeInsets.all(7.0),
                       //color: Colors.teal.shade900,
                       disabledColor: Colors.black,
                       disabledTextColor: Colors.black,
-
                     ),
                   ),
-
-
                 ],
               ),
               SizedBox(
@@ -808,7 +826,10 @@ class _MyHomePageState extends State<MyHomePage> {
                   SizedBox(width: 5.0),
                   InkWell(
                     onTap: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpPage()));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SignUpPage()));
                     },
                     child: Text(
                       'Register',
@@ -822,8 +843,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ],
               ),
               Row(
-                children: <Widget>[
-                ],
+                children: <Widget>[],
               ),
             ],
           ),
@@ -832,9 +852,8 @@ class _MyHomePageState extends State<MyHomePage> {
       //home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
-
-
 }
+
 class SignUpPage extends StatefulWidget {
   @override
   _State createState() => _State();
@@ -844,7 +863,6 @@ class _State extends State<SignUpPage> {
   @override
   String email, username, password, confirmpw;
   var authHandler = new Auth();
-
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -856,14 +874,14 @@ class _State extends State<SignUpPage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-
             TextField(
-              onChanged:(text){
+              onChanged: (text) {
                 email = text;
                 //print("First text field: $text");
               },
               cursorColor: Colors.teal.shade900,
-              scrollPadding:  const EdgeInsets.symmetric(vertical: 20.0,horizontal: 50),
+              scrollPadding:
+                  const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50),
               decoration: InputDecoration(
                 border: new OutlineInputBorder(
                   borderRadius: const BorderRadius.all(
@@ -878,14 +896,15 @@ class _State extends State<SignUpPage> {
                 prefixIcon: const Icon(Icons.email, color: Colors.black),
                 // labelStyle:
                 // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
-                contentPadding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 50),
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50),
               ),
             ),
             SizedBox(
               height: 20,
             ),
             TextField(
-              onChanged:(text){
+              onChanged: (text) {
                 username = text;
                 //print("username: $text");
               },
@@ -906,20 +925,22 @@ class _State extends State<SignUpPage> {
                 prefixIcon: const Icon(Icons.person, color: Colors.black),
                 // labelStyle:
                 // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
-                contentPadding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 50),
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50),
               ),
             ),
             SizedBox(
               height: 20,
             ),
             TextField(
-              onChanged:(text){
+              onChanged: (text) {
                 password = text;
                 //print("First password field: $text");
               },
               obscureText: true,
               cursorColor: Colors.teal.shade900,
-              scrollPadding:  const EdgeInsets.symmetric(vertical: 20.0,horizontal: 50),
+              scrollPadding:
+                  const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50),
               decoration: InputDecoration(
                 border: new OutlineInputBorder(
                   borderRadius: const BorderRadius.all(
@@ -934,14 +955,15 @@ class _State extends State<SignUpPage> {
                 prefixIcon: const Icon(Icons.lock, color: Colors.black),
                 // labelStyle:
                 // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
-                contentPadding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 50),
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50),
               ),
             ),
             SizedBox(
               height: 20,
             ),
             TextField(
-              onChanged:(text){
+              onChanged: (text) {
                 confirmpw = text;
                 //print("Second password field: $text");
               },
@@ -962,7 +984,8 @@ class _State extends State<SignUpPage> {
                 prefixIcon: const Icon(Icons.lock, color: Colors.black),
                 // labelStyle:
                 // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
-                contentPadding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 50),
+                contentPadding:
+                    const EdgeInsets.symmetric(vertical: 20.0, horizontal: 50),
               ),
             ),
             SizedBox(
@@ -973,30 +996,31 @@ class _State extends State<SignUpPage> {
               textColor: Colors.white,
               color: Colors.teal.shade900,
               child: Text('SIGN UP'),
-
-              onPressed: () async{
+              onPressed: () async {
                 final QuerySnapshot result =
-                await Firestore.instance.collection('users').getDocuments();
+                    await Firestore.instance.collection('users').getDocuments();
                 final List<DocumentSnapshot> documents = result.documents;
                 List<String> userNameList = [];
                 documents.forEach((data) => userNameList.add(data.documentID));
                 bool localCheck = true;
-                if(username == null || password == null ||  username == null || confirmpw == null){
+                if (username == null ||
+                    password == null ||
+                    username == null ||
+                    confirmpw == null) {
                   localCheck = false;
                   PlatformAlertDialog(
                     title: 'Warning',
                     content: 'Each Field should be filled in',
                     defaultActionText: Strings.ok,
                   ).show(context);
-                }else if(password != confirmpw){
+                } else if (password != confirmpw) {
                   localCheck = false;
                   PlatformAlertDialog(
                     title: 'Warning',
                     content: 'Your Password should be matched',
                     defaultActionText: Strings.ok,
                   ).show(context);
-
-                }else if(FindSameName(userNameList, username)){
+                } else if (FindSameName(userNameList, username)) {
                   localCheck = false;
                   PlatformAlertDialog(
                     title: 'Warning',
@@ -1005,28 +1029,26 @@ class _State extends State<SignUpPage> {
                   ).show(context);
                 }
 
-
-                if(localCheck){
+                if (localCheck) {
                   var e = await authHandler.signUp(email, password);
-                  if(ErrorDetect(e)) {
+                  if (ErrorSignup(e)) {
                     PlatformAlertDialog(
-                      title: errorDetect(e, pos: 0),
-                      content: errorDetect(e, pos: 1),
+                      title: error_Detect(e, pos: 0),
+                      content: error_Detect(e, pos: 1),
                       defaultActionText: Strings.ok,
                     ).show(context);
-                  }else {
-                    uploadData(username, email,  errorDetect(e));
-                    print(errorDetect(e));
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
+                  } else {
+                    uploadData(username, email, error_Detect(e));
+                    print(error_Detect(e));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => MyApp()));
                   }
                 }
               },
               padding: EdgeInsets.all(10.0),
               disabledColor: Colors.black,
               disabledTextColor: Colors.black,
-
             ),
-
           ],
         ),
       ),
@@ -1034,47 +1056,52 @@ class _State extends State<SignUpPage> {
   }
 }
 
-bool ErrorDetect(String e){
-  if(e.contains('PlatformException')){
+bool ErrorDetect(IdTokenResult e) {
+  if (e == null) {
     return true;
-  }else{
+  } else {
     return false;
   }
 }
 
-String errorDetect(String e, {int pos = 1}){
-  if(e.contains('PlatformException')){
+bool ErrorSignup(String e) {
+  if (e.contains('PlatformException')) {
+    return true;
+  } else {
+    return false;
+  }
+}
+
+String error_Detect(String e, {int pos = 1}) {
+  if (e.contains('PlatformException')) {
     List<String> strList = e.split(",");
     String _retstr = strList[pos];
 
-
-    if(pos == 0){
+    if (pos == 0) {
       strList.clear();
       strList = _retstr.split("(");
       _retstr = strList[1];
-      try{
+      try {
         _retstr = _retstr.replaceAll("_", " ");
-      }catch (e){
+      } catch (e) {
         print(e);
       }
     }
 
-
     return _retstr;
-  }else{
+  } else {
     return e;
   }
 }
 
-bool FindSameName(List<String> userNameList, username){
+bool FindSameName(List<String> userNameList, username) {
   bool SameUserName = false;
 
-  for(var i = 0; i < userNameList.length; i++){
-    if(userNameList[i] == username){
+  for (var i = 0; i < userNameList.length; i++) {
+    if (userNameList[i] == username) {
       SameUserName = true;
       break;
     }
   }
   return SameUserName;
 }
-
