@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+
 class reservationCell extends StatefulWidget {
   final DocumentSnapshot passedFirestoreData;
   reservationCell({this.passedFirestoreData});
@@ -43,9 +44,9 @@ class _reservationCell extends State<reservationCell> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
                 Text(
-                  'Status: Returned',
+                  'Item Information',
                   style: TextStyle(
-                    fontFamily: 'Source Sans Pro',
+                    fontFamily: '',
                     color: Colors.teal,
                     fontSize: 20,
                     letterSpacing: 2.5,
@@ -76,7 +77,7 @@ class _reservationCell extends State<reservationCell> {
             Row(
               children: <Widget>[
                 Text(
-                  '· Item ID: ${widget.passedFirestoreData.data["item"]}',
+                  '· Item Name: ${widget.passedFirestoreData.data["name"]}',
                   style: TextStyle(
                     fontFamily: 'Source Sans Pro',
                     color: Colors.teal,

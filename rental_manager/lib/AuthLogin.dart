@@ -12,24 +12,39 @@ class Auth {
   final FirebaseAuth auth = FirebaseAuth.instance;
   String userID = '';
   bool isSignUp = false;
-  Future<IdTokenResult> signIn(username,password) async {
+  Future<String> signIn(username,password) async {
     try {
       FirebaseUser user = (await auth.signInWithEmailAndPassword(
           email: username, password: password)).user;
-      return user.getIdToken();
+
+      assert(user != null);
+      assert(await user.getIdToken() != null);
+
+      final FirebaseUser currentUser = await auth.currentUser();
+
+      if(currentUser.isEmailVerified == false){
+        print("False!");
+        return "false";
+      }
+
+      assert(user.uid == currentUser.uid);
+      return user.uid;
     } catch (e) {
       print(e);
-      return null;
+      return e.toString();
     }
+
   }
 
   Future<String> signUp(email, password) async {
-
-    FirebaseUser user;
+    final FirebaseAuth auth = FirebaseAuth.instance;
 
     try {
       AuthResult authResult = await auth.createUserWithEmailAndPassword(
           email: email, password: password);
+      var user = await auth.currentUser();
+
+      user.sendEmailVerification();
       isSignUp = true;
       print('True here');
       user = authResult.user;
@@ -41,9 +56,10 @@ class Auth {
       userID = e.toString();
       return e.toString();
     }
+  }
 
-
-
+  Future<void> resetPassword(String email) async {
+    await auth.sendPasswordResetEmail(email: email);
   }
 
 

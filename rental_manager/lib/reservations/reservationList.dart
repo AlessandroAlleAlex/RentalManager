@@ -43,6 +43,7 @@ class _ReservationListPage extends State<ReservationListPage> {
                     itemCount: snapshot.data.length,
                     itemBuilder: (BuildContext context, int index) =>
                         customCell(index, snapshot));
+
               }
             }));
   }
@@ -123,7 +124,7 @@ class _ReservationListPage extends State<ReservationListPage> {
                                   // getItemName(snapshot.data[index].data['item']),
                                   // res,
                                   // getFirestoreItemData().toString(),
-                                  snapshot.data[index].data['item'],
+                                  snapshot.data[index].data['name'],
                                   style: TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
@@ -166,3 +167,4 @@ class _ReservationListPage extends State<ReservationListPage> {
     );
   }
 }
+

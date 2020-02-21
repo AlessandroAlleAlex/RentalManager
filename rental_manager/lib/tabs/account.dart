@@ -1,14 +1,136 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:rental_manager/HistoryReservation.dart';
+import 'package:rental_manager/data.dart';
 import '../globals.dart' as globals;
-import 'package:intl/intl.dart';
+import 'package:rental_manager/editProfile.dart';
+import 'package:rental_manager/CurrentReservation.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:progress_dialog/progress_dialog.dart';
+
+ProgressDialog pr;
+
+Future<List<globals.ReservationItem>> setData() async{
+  List<globals.ReservationItem> itemList = new List();
+
+  final QuerySnapshot result =
+  await Firestore.instance.collection('reservation').getDocuments();
+  final List<DocumentSnapshot> documents = result.documents;
+  List<String> reservationList = [];
+  documents.forEach((data) => reservationList.add(data.documentID));
+
+  for(var i = 0; i < reservationList.length; i++){
+    String currentOne = reservationList[i];
+
+
+    await Firestore.instance
+        .collection('reservation')
+        .document('$currentOne')
+        .get()
+        .then((DocumentSnapshot ds) {
+      // use ds as a snapshot
+      var item = new globals.ReservationItem(
+        ds["amount"],
+        ds["startTime"],
+        ds["endTime"],
+        ds["item"],
+        ds["status"],
+        ds["uid"],
+      );
+      item.name = ds["name"];
+      item.imageURL = ds["imageURL"];
+      itemList.add(item);
+    });
+
+    //print(itemList[i].status);
+
+  }
+
+  return itemList;
+}
+
+Future<List<globals.ReservationItem>> setDataNew() async{
+  List<globals.ReservationItem> itemList = new List();
+
+  final QuerySnapshot result =
+  await Firestore.instance.collection('reservation').getDocuments();
+  final List<DocumentSnapshot> documents = result.documents;
+  List<String> reservationList = [];
+  documents.forEach((data) => reservationList.add(data.documentID));
+
+  for(var i = 0; i < reservationList.length; i++){
+    String currentOne = reservationList[i];
+
+
+    await Firestore.instance
+        .collection('reservation')
+        .document('$currentOne')
+        .get()
+        .then((DocumentSnapshot ds) {
+      // use ds as a snapshot
+      var item = new globals.ReservationItem(
+        ds["amount"],
+        ds["startTime"],
+        ds["endTime"],
+        ds["item"],
+        ds["status"],
+        ds["uid"],
+      );
+      item.name = ds["name"];
+      item.imageURL = ds["imageURL"];
+
+      itemList.add(item);
+    });
+    var index = itemList.length;
+
+    if(itemList[index - 1 ].imageURL != null){
+      print('URL: ' +  itemList[index - 1 ].imageURL);
+    }else{
+      itemList[index - 1 ].imageURL = "www.google.com";
+    }
+
+
+  }
+
+  for(int i = 0; i < itemList.length; i++){
+    print("URL:" + itemList[i].imageURL);
+  }
+
+  return itemList;
+}
+
 
 class FourthTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
+    pr.style(message: 'Showing some progress...');
+    pr.style(
+      message: 'Please wait...',
+      borderRadius: 10.0,
+      backgroundColor: Colors.white,
+      progressWidget: CircularProgressIndicator(),
+      elevation: 10.0,
+      insetAnimCurve: Curves.easeInOut,
+      progressTextStyle: TextStyle(
+          color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+      messageTextStyle: TextStyle(
+          color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600),
+    );
 
     return MaterialApp(
       home: Scaffold(
+        appBar: AppBar(
+          title: Text(
+            "Rental Manager",
+            style:  TextStyle(
+              fontFamily: 'Pacifico',
+              // backgroundColor: Colors.teal,
+            ),
+          ),
+
+          backgroundColor: Colors.teal,
+        ),
         backgroundColor: Colors.white,
         body: SafeArea(
           child: Column(
@@ -66,8 +188,22 @@ class FourthTab extends StatelessWidget {
                 margin:EdgeInsets.only(left:0, right:0,),
                 color: Colors.teal,
                 child: FlatButton(
-                  onPressed: (){
-                    print('Current Reservation');
+                  onPressed: () async{
+                    await pr.show();
+                    pr.update(
+                      message: 'Please wait...',
+                      progressWidget: CircularProgressIndicator(),
+                      progressTextStyle: TextStyle(
+                          color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+                      messageTextStyle: TextStyle(
+                          color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600),
+                    );
+                    var mylist = await setDataNew();
+                    globals.itemList = mylist;
+
+                    pr.hide();
+                    print(mylist.length.toString());
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => CureentReservation()));
                   },
                   child: Column(
                     children: <Widget>[
@@ -116,8 +252,21 @@ class FourthTab extends StatelessWidget {
                 margin:EdgeInsets.only(left:0, right:0,),
                 color: Colors.teal,
                 child: FlatButton(
-                  onPressed: (){
-                    print('History Reservation');
+                  onPressed: () async{
+                    await pr.show();
+                    pr.update(
+                      message: 'Please wait...',
+                      progressWidget: CircularProgressIndicator(),
+                      progressTextStyle: TextStyle(
+                          color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+                      messageTextStyle: TextStyle(
+                          color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600),
+                    );
+                    var mylist = await setDataNew();
+                    globals.itemList = mylist;
+                    pr.hide();
+                    print(mylist.length.toString());
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => HistoryReservation()));
                   },
                   child: Column(
                     children: <Widget>[
@@ -167,8 +316,10 @@ class FourthTab extends StatelessWidget {
                 color: Colors.teal,
                 child: FlatButton(
                   onPressed: (){
-                    print('Edit Profile');
+
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfile()));
                   },
+
                   child: Column(
                     children: <Widget>[
                       Row(
@@ -217,7 +368,7 @@ class FourthTab extends StatelessWidget {
                 child: FlatButton(
                   onPressed: (){
                     print("Theme Color");
-                    testingReservations();
+
                   },
                   child: Column(
                     children: <Widget>[
@@ -265,8 +416,20 @@ class FourthTab extends StatelessWidget {
                 margin:EdgeInsets.only(left:0, right:0,),
                 color: Colors.teal,
                 child: FlatButton(
-                  onPressed: (){
+                  onPressed: () async{
                     print('Log out');
+                    await pr.show();
+                    pr.update(
+                      message: 'Logging out...',
+                      progressWidget: CircularProgressIndicator(),
+                      progressTextStyle: TextStyle(
+                          color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+                      messageTextStyle: TextStyle(
+                          color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600),
+                    );
+                    Future.delayed(Duration(seconds: 2)).then((onValue){
+                    });
+                    pr.hide();
                     Navigator.of(context).pushReplacementNamed('/LoginScreen');
                   },
                   child: Column(
@@ -275,7 +438,7 @@ class FourthTab extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Icon(
-                            Icons.history ,
+                            Icons.exit_to_app ,
                             color: Colors.white,
                           ),
                           Text(
@@ -306,45 +469,4 @@ class FourthTab extends StatelessWidget {
       ),
     );
   }
-  testingReservations() async{ 
-    print(globals.uid);
-    final QuerySnapshot result =
-    await Firestore.instance.collection('items').getDocuments();
-    final List<DocumentSnapshot> documents = result.documents;
-    List<String> itemIDs = [];
-    documents.forEach((data) => itemIDs.add(data.documentID));
-    print(documents.length);
-    for(int i = 0; i< documents.length;i++){
-      print(itemIDs[i]);
-    }
-    var now = new DateTime.now();
-    var time = DateFormat("yyyy-MM-dd hh:mm:ss").format(now);
-    var pickUpBefore = now.add(new Duration(minutes: 10));
-    print("Reservation Created time: " + time);
-    print("Reservation pickup before time: " + DateFormat("yyyy-MM-dd hh:mm:ss").format(pickUpBefore));
-    var date1 = DateTime.parse(time);
-    var date2 = DateTime.parse(DateFormat("yyyy-MM-dd hh:mm:ss").format(pickUpBefore));
-    bool valid = false;
-    if(date1.isBefore(date2)){
-      valid = true;
-    }else if(date2.isAfter(date1)){
-      valid = true;
-    }
-    print(date1.isBefore(date2)); // => true
-    uploadData(itemIDs[4], globals.uid,time);
-  }
-}
-void uploadData(itemID,uid, dateTime) async{
-  final databaseReference = Firestore.instance;
-  await databaseReference.collection("reservation")
-      .document()
-      .setData({
-    'item': itemID,
-    'uid': uid,
-    'amount': "1",
-    'startTime': dateTime,
-    'status': "Picked Up",
-    'endTime': "TBD",
-  });
-  print("success!");
 }
