@@ -5,7 +5,6 @@ import 'package:intl/intl.dart';
 import 'package:rental_manager/PlatformWidget/platform_alert_dialog.dart';
 import 'package:rental_manager/PlatformWidget/strings.dart';
 import 'package:flutter/services.dart';
-import 'detail_page.dart';
 
 class ItemPage extends StatefulWidget {
   String category;
@@ -37,12 +36,6 @@ class _ItemPageState extends State<ItemPage> {
   //       .getDocuments();
   //   return arrayOfLocationDocuments.documents;
   // }
-  navigateToDetail(DocumentSnapshot indexedData) {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => DetailPage(itemSelected: indexedData)));
-  }
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,11 +57,8 @@ class _ItemPageState extends State<ItemPage> {
                     snapshot.data.documents[index].data['name'].toString()),
                 subtitle: Text(
                     'Total amount: ${snapshot.data.documents[index].data['# of items'].toString()}'),
-                onTap: () {
-                  navigateToDetail(snapshot.data.documents[index]);
-                  testingReservations(
-                      snapshot.data.documents[index].documentID);
-                },
+                onTap: () => testingReservations(
+                    snapshot.data.documents[index].documentID),
               ),
             );
           }),
@@ -132,40 +122,47 @@ class _ItemPageState extends State<ItemPage> {
 
   void uploadData(itemID, uid, dateTime) async {
     String itemName, imageURL;
+    int num = 0;
     final databaseReference = Firestore.instance;
-    await Firestore.instance
-        .collection('ARC_items')
-        .document(itemID)
-        .get()
-        .then((DocumentSnapshot ds) {
+    await  Firestore.instance.collection('ARC_items').document(itemID).get().then((DocumentSnapshot ds) {
       try {
         itemName = ds["name"];
         print("Found in ARC_items");
-      } catch (e) {
+      }catch(e){
         print(e);
       }
     });
 
-    await Firestore.instance
-        .collection('ARC_items')
-        .document(itemID)
-        .get()
-        .then((DocumentSnapshot ds) {
+    await  Firestore.instance.collection('ARC_items').document(itemID).get().then((DocumentSnapshot ds) {
       try {
         imageURL = ds["imageURL"];
         print("Found in ARC_items");
-      } catch (e) {
+      }catch(e){
         print(e);
       }
     });
 
-    if (itemName == null) {
-      print("UID Not Found");
+    await  Firestore.instance.collection('ARC_items').document(itemID).get().then((DocumentSnapshot ds) {
+      try {
+        num = ds["# of items"];
+        print("Found in ARC_items");
+      }catch(e){
+        print(e);
+      }
+    });
+
+
+    if(itemName == null){
+      print("UID Not Found1");
       itemName = "UID Not Found";
     }
-    if (imageURL == null) {
-      print("UID Not Found");
+    if(imageURL == null){
+      print("UID Not Found2");
       imageURL = "www.gooogle.com";
+    }
+    if(num == null){
+      print("UID Not Found3");
+      num = 0;
     }
 
     await databaseReference.collection("reservation").document().setData({
@@ -182,9 +179,18 @@ class _ItemPageState extends State<ItemPage> {
     PlatformAlertDialog(
       title: 'Your item has placed',
       content:
-          'Your reservation is successful confirmed, please pick it up on time',
+      'Your reservation is successful confirmed, please pick it up on time',
       defaultActionText: Strings.ok,
     ).show(context);
     print("success!");
+    _updateData(itemID, num - 1);
+
   }
+
+}
+_updateData(String uid, int num) async {
+  await Firestore.instance
+      .collection('ARC_items')
+      .document(uid)
+      .updateData({'# of items': num});
 }

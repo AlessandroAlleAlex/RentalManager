@@ -150,7 +150,7 @@ class ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
         ),
 
         body: new Column(children: <Widget>[
-           
+
           new Flexible(
               child: new ListView.builder(
                   padding: new EdgeInsets.all(8.0),

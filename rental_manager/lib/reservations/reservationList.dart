@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import '../reservations/reservationCell.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 
 class ReservationListPage extends StatefulWidget {
   @override
@@ -27,9 +30,28 @@ class _ReservationListPage extends State<ReservationListPage> {
                 reservationCell(passedFirestoreData: indexedData)));
   }
 
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+    final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
+    Future<void> _handleRefresh() {
+      final Completer<void> completer = Completer<void>();
+      Timer(const Duration(seconds: 1), () {
+        completer.complete();
+      });
+      return completer.future.then<void>((_) {
+        _scaffoldKey.currentState?.showSnackBar(SnackBar(
+            content: const Text('Refresh complete'),
+            action: SnackBarAction(
+                label: 'RETRY',
+                onPressed: () {
+                  _refreshIndicatorKey.currentState.show();
+                })));
+      });
+    }
+
     return Container(
         child: FutureBuilder(
             future: getFirestoreData(),
@@ -39,13 +61,37 @@ class _ReservationListPage extends State<ReservationListPage> {
                   child: Text('Loading...'),
                 );
               } else {
-                return ListView.builder(
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (BuildContext context, int index) =>
-                        customCell(index, snapshot));
+                return LiquidPullToRefresh(
+                  color: Colors.teal,
+                  showChildOpacityTransition: false,
+                  key: _refreshIndicatorKey,	// key if you want to add
+                  onRefresh: _handleRefresh,
+                  child: ListView.builder(
+                      itemCount: snapshot.data.length,
+                      itemBuilder: (context,index) {
+                        return Dismissible(
+                          background: stackBehindDismiss(),
+                          key: ObjectKey(snapshot.data[index]),
+                          child: customCell(index, snapshot),
+                        );
+                      }
+                  ),
+                );
 
               }
             }));
+  }
+
+  Widget stackBehindDismiss() {
+    return Container(
+      alignment: Alignment.centerRight,
+      padding: EdgeInsets.only(right: 20.0),
+      color: Colors.red,
+      child: Icon(
+        Icons.delete,
+        color: Colors.white,
+      ),
+    );
   }
 
   String lala;
