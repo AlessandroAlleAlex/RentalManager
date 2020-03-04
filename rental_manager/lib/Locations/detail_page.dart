@@ -37,9 +37,24 @@ class _DetailPage extends State<DetailPage> {
     );
   }
 
-  Container getButton() {
+  // Container reserveButton() {
+  //   return Container(
+  //     alignment: Alignment.center,
+  //     child: RaisedButton(
+  //       onPressed: () {
+  //         print('button pressed! (reserve)');
+  //         testingReservations(widget.itemSelected.documentID);
+  //       },
+  //       child: Text('Reserve Now', style: TextStyle(color: Colors.white)),
+  //       color: Colors.teal,
+  //     ),
+  //   );
+  // }
+
+  Container reserveButton() {
     return Container(
-      alignment: Alignment.center,
+      padding: EdgeInsets.symmetric(vertical: 16.0),
+      width: MediaQuery.of(context).size.width,
       child: RaisedButton(
         onPressed: () {
           print('button pressed! (reserve)');
@@ -51,34 +66,97 @@ class _DetailPage extends State<DetailPage> {
     );
   }
 
+  Container top() {
+    return Container(
+      // padding: EdgeInsets.only(left: 10.0),
+      height: MediaQuery.of(context).size.height * 0.5,
+      // width: MediaQuery.of(context).size.width * 0.5,
+      decoration: new BoxDecoration(
+        image: new DecorationImage(
+          image: NetworkImage(widget.itemSelected.data['imageURL']),
+          // image: new AssetImage("drive-steering-wheel.jpg"),
+          fit: BoxFit.cover,
+        ),
+      ),
+    );
+  }
+
+  Text descriptionText() {
+    return Text('Some Item Description???', style: TextStyle(fontSize: 18.0));
+  }
+
+  Widget amount() {
+    return Container(
+      padding: EdgeInsets.fromLTRB(0, 20, 30, 0),
+      child: Align(
+        alignment: Alignment.centerRight,
+        child: StreamBuilder(
+          stream: Firestore.instance
+              .collection('ARC_items')
+              .document(widget.itemSelected.documentID)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) return const Text('loading...');
+            return Text('Remaining Amount: ${snapshot.data['# of items']}',
+                style: TextStyle(
+                    fontSize: 14.0,
+                    color: Colors.redAccent,
+                    fontWeight: FontWeight.bold));
+          },
+        ),
+      ),
+    );
+  }
+
+  Container bottom() {
+    return Container(
+      // height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      // color: Theme.of(context).primaryColor,
+      padding: EdgeInsets.fromLTRB(30.0, 10.0, 30.0, 30.0),
+      // padding: EdgeInsets.all(40.0),
+      child: Center(
+        child: Column(
+          children: <Widget>[descriptionText(), reserveButton()],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Details of: ${widget.itemSelected.data['name']}'),
-        backgroundColor: Colors.teal,
-      ),
-      backgroundColor: Colors.blueGrey,
-      // body: Image.network(
-      //   widget.itemSelected.data['imageURL'],
-      // ),
-      body: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: <Widget>[
-          getImage(),
-          getDescription(),
-          getButton(),
-        ],
-      ),
+        appBar: AppBar(
+          title: Text('Details of: ${widget.itemSelected.data['name']}'),
+          backgroundColor: Colors.teal,
+        ),
+        backgroundColor: Colors.blueGrey,
+        // body: Image.network(
+        //   widget.itemSelected.data['imageURL'],
+        // ),
+        body: Scaffold(
+          body: Column(
+            children: <Widget>[top(), amount(), bottom()],
+          ),
+        )
 
-      // constraints: BoxConstraints.expand(),
-      // color: Colors.blueGrey,
-      // child: Stack(children: <Widget>[
-      //   getImage(),
-      //   getDescription(),
-      // ]),
-    );
+        // Column(
+        //   crossAxisAlignment: CrossAxisAlignment.stretch,
+        //   children: <Widget>[
+        //     getImage(),
+        //     getDescription(),
+        //     getButton(),
+        //   ],
+        // ),
+
+        // constraints: BoxConstraints.expand(),
+        // color: Colors.blueGrey,
+        // child: Stack(children: <Widget>[
+        //   getImage(),
+        //   getDescription(),
+        // ]),
+        );
   }
 // }
 
