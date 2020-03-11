@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../globals.dart' as globals;
-import 'package:intl/intl.dart';
-import 'package:rental_manager/PlatformWidget/platform_alert_dialog.dart';
-import 'package:rental_manager/PlatformWidget/strings.dart';
-import 'package:flutter/services.dart';
-import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:awesome_dialog/animated_button.dart';
-import 'package:rental_manager/CurrentReservation.dart';
+// import '../globals.dart' as globals;
+// import 'package:intl/intl.dart';
+// import 'package:rental_manager/PlatformWidget/platform_alert_dialog.dart';
+// import 'package:rental_manager/PlatformWidget/strings.dart';
+// import 'package:flutter/services.dart';
+import 'detail_page.dart';
+
 class ItemPage extends StatefulWidget {
   String category;
   ItemPage({this.category});
@@ -19,15 +18,15 @@ class ItemPage extends StatefulWidget {
   }
 }
 
-showAlertDialog(BuildContext context) {
-  // set up the buttons
-  Widget remindButton = RaisedButton(
-    child: Text("Reservation have been created"),
-    onPressed: () {
-      // Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
-    },
-  );
-}
+// showAlertDialog(BuildContext context) {
+//   // set up the buttons
+//   Widget remindButton = RaisedButton(
+//     child: Text("Reservation have been created"),
+//     onPressed: () {
+//       // Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
+//     },
+//   );
+// }
 
 class _ItemPageState extends State<ItemPage> {
   // Future getFirestoreData() async {
@@ -38,6 +37,12 @@ class _ItemPageState extends State<ItemPage> {
   //       .getDocuments();
   //   return arrayOfLocationDocuments.documents;
   // }
+  navigateToDetail(DocumentSnapshot indexedData) {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => DetailPage(itemSelected: indexedData)));
+  }
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -59,8 +64,11 @@ class _ItemPageState extends State<ItemPage> {
                     snapshot.data.documents[index].data['name'].toString()),
                 subtitle: Text(
                     'Total amount: ${snapshot.data.documents[index].data['# of items'].toString()}'),
-                onTap: () => testingReservations(
-                    snapshot.data.documents[index].documentID, context),
+                onTap: () {
+                  navigateToDetail(snapshot.data.documents[index]);
+                  // testingReservations(
+                  //     snapshot.data.documents[index].documentID);
+                },
               ),
             );
           }),
@@ -102,113 +110,81 @@ class _ItemPageState extends State<ItemPage> {
   //       ));
   // }
 
-  testingReservations(String itemID, mycontext) async {
-    print(globals.uid);
-    // final QuerySnapshot result =
-    // await Firestore.instance.collection('items').getDocuments();
-    // final List<DocumentSnapshot> documents = result.documents;
-    // List<String> itemIDs = [];
-    // documents.forEach((data) => itemIDs.add(data.documentID));
-    // print(documents.length);
-    //for(int i = 0; i< snapshot.length;i++){
-    print(itemID);
-    //}
-    var now = new DateTime.now();
-    var time = DateFormat("yyyy-MM-dd hh:mm:ss").format(now);
-    var pickUpBefore = now.add(new Duration(minutes: 10));
-    print("Reservation Created time: " + time);
-    print("Reservation pickup before time: " +
-        DateFormat("yyyy-MM-dd hh:mm:ss").format(pickUpBefore));
-    uploadData(itemID, globals.uid, time, mycontext);
-  }
+//   testingReservations(String itemID) async {
+//     print(globals.uid);
+//     // final QuerySnapshot result =
+//     // await Firestore.instance.collection('items').getDocuments();
+//     // final List<DocumentSnapshot> documents = result.documents;
+//     // List<String> itemIDs = [];
+//     // documents.forEach((data) => itemIDs.add(data.documentID));
+//     // print(documents.length);
+//     //for(int i = 0; i< snapshot.length;i++){
+//     print(itemID);
+//     //}
+//     var now = new DateTime.now();
+//     var time = DateFormat("yyyy-MM-dd hh:mm:ss").format(now);
+//     var pickUpBefore = now.add(new Duration(minutes: 10));
+//     print("Reservation Created time: " + time);
+//     print("Reservation pickup before time: " +
+//         DateFormat("yyyy-MM-dd hh:mm:ss").format(pickUpBefore));
+//     uploadData(itemID, globals.uid, time);
+//   }
 
-  void uploadData(itemID, uid, dateTime, mycontext) async {
-    String itemName, imageURL;
-    int num = 0;
-    final databaseReference = Firestore.instance;
-    await  Firestore.instance.collection('ARC_items').document(itemID).get().then((DocumentSnapshot ds) {
-      try {
-        itemName = ds["name"];
-        print("Found in ARC_items");
-      }catch(e){
-        print(e);
-      }
-    });
-    // add codes by Rick here
-    await  Firestore.instance.collection('ARC_items').document(itemID).get().then((DocumentSnapshot ds) {
-      try {
-        imageURL = ds["imageURL"];
-        print("Found in ARC_items");
-      }catch(e){
-        print(e);
-      }
-    });
+//   void uploadData(itemID, uid, dateTime) async {
+//     String itemName, imageURL;
+//     final databaseReference = Firestore.instance;
+//     await Firestore.instance
+//         .collection('ARC_items')
+//         .document(itemID)
+//         .get()
+//         .then((DocumentSnapshot ds) {
+//       try {
+//         itemName = ds["name"];
+//         print("Found in ARC_items");
+//       } catch (e) {
+//         print(e);
+//       }
+//     });
 
-    // add codes by Rick here
-    await  Firestore.instance.collection('ARC_items').document(itemID).get().then((DocumentSnapshot ds) {
-      try {
-        num = ds["# of items"];
-        print("Found in ARC_items");
-      }catch(e){
-        print(e);
-      }
-    });
+//     await Firestore.instance
+//         .collection('ARC_items')
+//         .document(itemID)
+//         .get()
+//         .then((DocumentSnapshot ds) {
+//       try {
+//         imageURL = ds["imageURL"];
+//         print("Found in ARC_items");
+//       } catch (e) {
+//         print(e);
+//       }
+//     });
 
-    // add codes by Rick here
-    if(itemName == null){
-      print("UID Not Found1");
-      itemName = "UID Not Found";
-    }
-    if(imageURL == null){
-      print("UID Not Found2");
-      imageURL = "www.gooogle.com";
-    }
-    if(num == null){
-      print("UID Not Found3");
-      num = 0;
-    }
-    // add codes by Rick here
-    await databaseReference.collection("reservation").document().setData({
-      'imageURL': imageURL,
-      'name': itemName,
-      'uid': uid,
-      'item': itemID,
-      'uid': uid,
-      'amount': "1",
-      'startTime': dateTime,
-      'status': "Picked Up",
-      'endTime': "TBD",
-    });
-    PlatformAlertDialog(
-      title: 'Your item has placed',
-      content:
-      'Your reservation is successful confirmed, please pick it up on time',
-      defaultActionText: Strings.ok,
-    ).show(context);
+//     if (itemName == null) {
+//       print("UID Not Found");
+//       itemName = "UID Not Found";
+//     }
+//     if (imageURL == null) {
+//       print("UID Not Found");
+//       imageURL = "www.gooogle.com";
+//     }
 
-
-
-
-    print("success!");
-    //_updateData(itemID, num - 1);
-
-  }
-
-}
-_updateData(String uid, int num) async {
-  await Firestore.instance
-      .collection('ARC_items')
-      .document(uid)
-      .updateData({'# of items': num});
-}
-
-_buildFancyButtonOk(BuildContext cmycontext) {
-  return AnimatedButton(
-    pressEvent: () {
-
-
-    },
-    color: Color(0xFF00CA71),
-
-  );
+//     await databaseReference.collection("reservation").document().setData({
+//       'imageURL': imageURL,
+//       'name': itemName,
+//       'uid': uid,
+//       'item': itemID,
+//       'uid': uid,
+//       'amount': "1",
+//       'startTime': dateTime,
+//       'status': "Picked Up",
+//       'endTime': "TBD",
+//     });
+//     PlatformAlertDialog(
+//       title: 'Your item has placed',
+//       content:
+//           'Your reservation is successful confirmed, please pick it up on time',
+//       defaultActionText: Strings.ok,
+//     ).show(context);
+//     print("success!");
+//   }
 }
