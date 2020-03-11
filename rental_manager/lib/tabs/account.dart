@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:rental_manager/HistoryReservation.dart';
+import 'package:rental_manager/QRCode/generate.dart';
+
+
 import 'package:rental_manager/data.dart';
+import 'package:rental_manager/main.dart';
 import '../globals.dart' as globals;
 import 'package:rental_manager/editProfile.dart';
 import 'package:rental_manager/CurrentReservation.dart';
@@ -16,89 +20,20 @@ Future<List<globals.ReservationItem>> setData() async{
   final QuerySnapshot result =
   await Firestore.instance.collection('reservation').getDocuments();
   final List<DocumentSnapshot> documents = result.documents;
-  List<String> reservationList = [];
-  documents.forEach((data) => reservationList.add(data.documentID));
+  List<globals.ReservationItem> reservationList = new List();
 
-  for(var i = 0; i < reservationList.length; i++){
-    String currentOne = reservationList[i];
+  documents.forEach((ds) => reservationList.add(globals.ReservationItem(ds["amount"],
+    ds["startTime"],
+    ds["endTime"],
+    ds["item"],
+    ds["status"],
+    ds["uid"],
+    ds["name"],
+    ds["imageURL"],
+    )));
 
-
-    await Firestore.instance
-        .collection('reservation')
-        .document('$currentOne')
-        .get()
-        .then((DocumentSnapshot ds) {
-      // use ds as a snapshot
-      var item = new globals.ReservationItem(
-        ds["amount"],
-        ds["startTime"],
-        ds["endTime"],
-        ds["item"],
-        ds["status"],
-        ds["uid"],
-      );
-      item.name = ds["name"];
-      item.imageURL = ds["imageURL"];
-      itemList.add(item);
-    });
-
-    //print(itemList[i].status);
-
-  }
-
-  return itemList;
+  return reservationList;
 }
-
-Future<List<globals.ReservationItem>> setDataNew() async{
-  List<globals.ReservationItem> itemList = new List();
-
-  final QuerySnapshot result =
-  await Firestore.instance.collection('reservation').getDocuments();
-  final List<DocumentSnapshot> documents = result.documents;
-  List<String> reservationList = [];
-  documents.forEach((data) => reservationList.add(data.documentID));
-
-  for(var i = 0; i < reservationList.length; i++){
-    String currentOne = reservationList[i];
-
-
-    await Firestore.instance
-        .collection('reservation')
-        .document('$currentOne')
-        .get()
-        .then((DocumentSnapshot ds) {
-      // use ds as a snapshot
-      var item = new globals.ReservationItem(
-        ds["amount"],
-        ds["startTime"],
-        ds["endTime"],
-        ds["item"],
-        ds["status"],
-        ds["uid"],
-      );
-      item.name = ds["name"];
-      item.imageURL = ds["imageURL"];
-
-      itemList.add(item);
-    });
-    var index = itemList.length;
-
-    if(itemList[index - 1 ].imageURL != null){
-      print('URL: ' +  itemList[index - 1 ].imageURL);
-    }else{
-      itemList[index - 1 ].imageURL = "www.google.com";
-    }
-
-
-  }
-
-  for(int i = 0; i < itemList.length; i++){
-    print("URL:" + itemList[i].imageURL);
-  }
-
-  return itemList;
-}
-
 
 class FourthTab extends StatelessWidget {
   @override
@@ -139,7 +74,7 @@ class FourthTab extends StatelessWidget {
                 children: <Widget>[
                   CircleAvatar(
                     radius: 50,
-                    backgroundImage: AssetImage('images/appstore.png'),
+                    backgroundImage: globals.UserImageUrl == ""? AssetImage('images/appstore.png'): NetworkImage(globals.UserImageUrl),
                   ),
                   Text(
                     globals.username,
@@ -198,7 +133,7 @@ class FourthTab extends StatelessWidget {
                       messageTextStyle: TextStyle(
                           color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600),
                     );
-                    var mylist = await setDataNew();
+                    var mylist = await setData();
                     globals.itemList = mylist;
 
                     pr.hide();
@@ -215,7 +150,7 @@ class FourthTab extends StatelessWidget {
                             color: Colors.white,
                           ),
                           Text(
-                              'Current Reservation',
+                              'Orders',
                               style: TextStyle(
                                 fontSize: 20,
                                 color: Colors.white,
@@ -262,7 +197,7 @@ class FourthTab extends StatelessWidget {
                       messageTextStyle: TextStyle(
                           color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600),
                     );
-                    var mylist = await setDataNew();
+                    var mylist = await setData();
                     globals.itemList = mylist;
                     pr.hide();
                     print(mylist.length.toString());
@@ -278,7 +213,7 @@ class FourthTab extends StatelessWidget {
                             color: Colors.white,
                           ),
                           Text(
-                              'History Reservation',
+                              'History',
                               style: TextStyle(
                                 fontSize: 20,
                                 color: Colors.white,
@@ -330,7 +265,7 @@ class FourthTab extends StatelessWidget {
                             color: Colors.white,
                           ),
                           Text(
-                            'Edit Profile',
+                            'Details & Password',
                             style: TextStyle(
                               fontSize: 20,
                               color: Colors.white,
@@ -430,7 +365,9 @@ class FourthTab extends StatelessWidget {
                     Future.delayed(Duration(seconds: 2)).then((onValue){
                     });
                     pr.hide();
-                    Navigator.of(context).pushReplacementNamed('/LoginScreen');
+                    Navigator.of(context).pushNamedAndRemoveUntil('/LoginScreen', (Route route) => false);
+                    //Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
+                    print(context);
                   },
                   child: Column(
                     children: <Widget>[
@@ -463,6 +400,57 @@ class FourthTab extends StatelessWidget {
                   ),
                 ),
               ),
+              Row(
+                children: <Widget>[
+                  SizedBox(
+                    height: 1,
+                    child: Divider(
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                padding:EdgeInsets.all(0.6),
+                margin:EdgeInsets.only(left:0, right:0,),
+                color: Colors.teal,
+                child: FlatButton(
+                  onPressed: () async{
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => GenerateScreen()));
+                  },
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Icon(
+                            Icons.perm_identity,
+                            color: Colors.white,
+                          ),
+                          Text(
+                              'QR Code',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontFamily: 'Source Sans Pro',
+                              )
+                          ),
+                          Text(
+                              '>>',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontFamily: 'Source Sans Pro',
+                              )
+                          ),
+                        ],
+                      ),
+
+                    ],
+                  ),
+                ),
+              ),
+
             ],
           ),
         ),
@@ -470,3 +458,53 @@ class FourthTab extends StatelessWidget {
     );
   }
 }
+
+//Future<List<globals.ReservationItem>> setDataNew() async{
+//  List<globals.ReservationItem> itemList = new List();
+//
+//  final QuerySnapshot result =
+//  await Firestore.instance.collection('reservation').getDocuments();
+//  final List<DocumentSnapshot> documents = result.documents;
+//  List<String> reservationList = [];
+//  documents.forEach((data) => reservationList.add(data.documentID));
+//
+//  for(var i = 0; i < reservationList.length; i++){
+//    String currentOne = reservationList[i];
+//
+//
+//    await Firestore.instance
+//        .collection('reservation')
+//        .document('$currentOne')
+//        .get()
+//        .then((DocumentSnapshot ds) {
+//      // use ds as a snapshot
+//      var item = new globals.ReservationItem(
+//        ds["amount"],
+//        ds["startTime"],
+//        ds["endTime"],
+//        ds["item"],
+//        ds["status"],
+//        ds["uid"],
+//      );
+//      item.name = ds["name"];
+//      item.imageURL = ds["imageURL"];
+//
+//      itemList.add(item);
+//    });
+//    var index = itemList.length;
+//
+//    if(itemList[index - 1 ].imageURL != null){
+//      print('URL: ' +  itemList[index - 1 ].imageURL);
+//    }else{
+//      itemList[index - 1 ].imageURL = "www.google.com";
+//    }
+//
+//
+//  }
+//
+//  for(int i = 0; i < itemList.length; i++){
+//    print("URL:" + itemList[i].imageURL);
+//  }
+//
+//  return itemList;
+//}

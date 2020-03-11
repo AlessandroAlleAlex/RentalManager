@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rental_manager/mainView.dart';
 import 'package:rental_manager/PlatformWidget/platform_alert_dialog.dart';
 import 'package:rental_manager/AuthLogin.dart';
@@ -10,11 +11,15 @@ import 'package:rental_manager/PlatformWidget/platform_exception_alert_dialog.da
 import 'package:flutter/services.dart';
 import 'package:rental_manager/PlatformWidget/strings.dart';
 //import 'package:email_validator/email_validator.dart';
-
+import 'dart:convert' show json;
 import 'globals.dart' as globals;
 import 'dart:core';
 import 'package:rental_manager/CurrentReservation.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import "package:http/http.dart" as http;
+import 'package:awesome_dialog/awesome_dialog.dart';
+
+import 'package:giffy_dialog/giffy_dialog.dart';
 
 void main() => runApp(MyApp());
 
@@ -97,8 +102,8 @@ void updateData(String collectionName) async{
   documents.forEach((data) => userNameList.add(data.documentID));
 
   for(var i = 0; i < userNameList.length; i++){
-    final databaseReference = Firestore.instance;
-    await databaseReference.collection(collectionName)
+
+    await Firestore.instance.collection(collectionName)
         .document(userNameList[i])
         .updateData({
       'Rentable': true,
@@ -106,15 +111,66 @@ void updateData(String collectionName) async{
   }
 
 
+
+
 }
+
 
 class _MyHomePageState extends State<MyHomePage> {
   String username;
   String password;
   bool _Accountvalidate = false;
+  String _contactText;
+  GoogleSignInAccount _currentUser;
+
+  GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: [
+      'email',
+      'https://www.googleapis.com/auth/contacts.readonly',
+    ],
+  );
+
+  Future<FirebaseUser> _handleSignIn() async {
+    try {
+      await _googleSignIn.signIn();
+    } catch (error) {
+      print(error);
+    }
+  }
+
+  String googleLogInName = '';
+
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final GoogleSignIn googleSignIn = new GoogleSignIn();
+  FirebaseUser _user;
+
+  Future<FirebaseUser> _myGoogleSignIn() async {
+    GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+    GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
+    print("signed in " + user.displayName);
+    print("signed in " + user.email);
+
+    return user;
+  }
+
+  List<Key> keys = [
+    Key("Network"),
+    Key("NetworkDialog"),
+    Key("Flare"),
+    Key("FlareDialog"),
+    Key("Asset"),
+    Key("AssetDialog")
+  ];
+
 
   @override
   Widget build(BuildContext context) {
+//    resetData('ArcItemsByName');
     var authHandler = new Auth();
     var screenWidth = MediaQuery.of(context).size.width;
     ProgressDialog prLOGIN;
@@ -268,25 +324,72 @@ class _MyHomePageState extends State<MyHomePage> {
                       onPressed: () async{
 
                         if(username == null || password == null){
-                          PlatformAlertDialog(
-                            title: 'Warning',
-                            content: 'Email Adress and Password Cannot be empty',
-                            defaultActionText: Strings.ok,
-                          ).show(context);
+//                          AwesomeDialog(
+//                              context: context,
+//                              dialogType: DialogType.ERROR,
+//                              animType: AnimType.RIGHSLIDE,
+//                              headerAnimationLoop: false,
+//                              tittle: 'Warning',
+//                              desc:
+//                              'Email Adress and Password Cannot be empty',
+//                              btnOkOnPress: () {
+//                                Navigator.of(context).pop();
+//                              },
+//                              btnOkColor: Colors.red)
+//                              .show();
+                          showDialog(
+                              context: context,
+                              builder: (_) => NetworkGiffyDialog(
+                                key: keys[1],
+                                image: Image.network(
+                                  "https://i.pinimg.com/originals/2c/dd/d1/2cddd1796354e90f4aab7fb1e48eafb4.gif",
+                                  fit: BoxFit.cover,
+                                ),
+                                entryAnimation: EntryAnimation.TOP_RIGHT,
+                                title: Text(
+                                  'Warning',
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      fontSize: 22.0, fontWeight: FontWeight.w600),
+                                ),
+                                description: Text(
+                                  'Email Adress and Password Cannot be empty',
+                                  textAlign: TextAlign.center,
+
+                                ),
+                                  onlyCancelButton: true,
+                                  buttonCancelColor: Colors.teal,
+                                  buttonCancelText: Text('Try Again!'),
+                              ));
+
+
+
                         }else{
                           var e = await authHandler.signIn(username, password);
                           if(e == "false"){
-                            PlatformAlertDialog(
-                              title: 'ERROR Email NEED VERFIED',
-                              content: 'Verify Your Email Please',
-                              defaultActionText: Strings.ok,
-                            ).show(context);
+                            AwesomeDialog(
+                                context: context,
+                                dialogType: DialogType.ERROR,
+                                animType: AnimType.RIGHSLIDE,
+                                headerAnimationLoop: false,
+                                tittle: 'ERROR Email NEED VERFIED',
+                                desc:
+                                'Verify Your Email Please',
+                                btnOkOnPress: () {},
+                                btnOkColor: Colors.red)
+                                .show();
                           }else if(ErrorDetect(e)){
-                            PlatformAlertDialog(
-                              title: errorDetect(e, pos: 0),
-                              content: errorDetect(e, pos: 1),
-                              defaultActionText: Strings.ok,
-                            ).show(context);
+                            AwesomeDialog(
+                                context: context,
+                                dialogType: DialogType.ERROR,
+                                animType: AnimType.RIGHSLIDE,
+                                headerAnimationLoop: false,
+                                tittle: errorDetect(e, pos: 0),
+                                desc:errorDetect(e, pos: 1),
+                                btnOkOnPress: () {},
+                                btnOkColor: Colors.red)
+                                .show();
+
                           }else{
                             prLOGIN.update(
                               message: 'Successfully Login...',
@@ -366,14 +469,11 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Center(
-                            child:
-                            ImageIcon(AssetImage('images/facebook.png')),
-                          ),
+                          Image(image: NetworkImage('https://pluspng.com/img-png/google-logo-png-open-2000.png'), height: 30,),
                           SizedBox(width: 20.0),
                           Center(
                             child: Text(
-                              "LOGIN WITH FACEBOOK",
+                              "Sign In with Google",
                               style: TextStyle(
                                 fontSize: 15,
                                 // backgroundColor:  Colors.teal[50],
@@ -385,9 +485,34 @@ class _MyHomePageState extends State<MyHomePage> {
 
                         ],
                       ),
-                      onPressed: (){
+                      onPressed: () async{
+                        //_handleSignIn();
+
+                        try{
+                          FirebaseUser googleuser = await _myGoogleSignIn();
+
+                          if(googleuser != null){
+                           globals.username = googleuser.displayName;
+                           globals.email = googleuser.email;
+                           globals.uid = 'GoogleSignInUser' + globals.email;
+                           prLOGIN.update(
+                             message: 'Successfully Login...',
+                             progressWidget: CircularProgressIndicator(),
+                             progressTextStyle: TextStyle(
+                                 color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+                             messageTextStyle: TextStyle(
+                                 color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600),
+                           );
+                           await prLOGIN.show();
+                           prLOGIN.hide();
+                           Navigator.of(context).pushReplacementNamed('/MainViewScreen');
+                          }
+                        }catch(e){
+                          print(e);
+                        }
+
                         //rewriteData();
-                        Navigator.of(context).pushReplacementNamed('/MainViewScreen');
+                        //Navigator.of(context).pushReplacementNamed('/MainViewScreen');
 
 
                       },
@@ -405,6 +530,8 @@ class _MyHomePageState extends State<MyHomePage> {
               SizedBox(
                 height: 15,
               ),
+
+
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -490,6 +617,7 @@ class _State extends State<SignUpPage> {
     );
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: Text('Account Sign Up'),
         backgroundColor: Colors.teal,
@@ -654,19 +782,31 @@ class _State extends State<SignUpPage> {
                 bool localCheck = true;
                 if(email == null || password == null ||  usernameFirst == null || usernameLast == null|| confirmpw == null){
                   localCheck = false;
-                  PlatformAlertDialog(
-                    title: 'Warning',
-                    content: 'Each Field should be filled in',
-                    defaultActionText: Strings.ok,
-                  ).show(context);
+
+                  AwesomeDialog(
+                      context: context,
+                      dialogType: DialogType.ERROR,
+                      animType: AnimType.RIGHSLIDE,
+                      headerAnimationLoop: false,
+                      tittle: 'Warning',
+                      desc:
+                      'Each Field should be filled in',
+                      btnOkOnPress: () {},
+                      btnOkColor: Colors.red)
+                      .show();
                 }else if(password != confirmpw){
                   localCheck = false;
-                  PlatformAlertDialog(
-                    title: 'Warning',
-                    content: 'Your Password should be matched',
-                    defaultActionText: Strings.ok,
-                  ).show(context);
-
+                  AwesomeDialog(
+                      context: context,
+                      dialogType: DialogType.ERROR,
+                      animType: AnimType.RIGHSLIDE,
+                      headerAnimationLoop: false,
+                      tittle: 'Warning',
+                      desc:
+                      'Your Password should be matched',
+                      btnOkOnPress: () {},
+                      btnOkColor: Colors.red)
+                      .show();
                 }
 //                else if(FindSameName(userNameList, username)){
 //                  localCheck = false;
@@ -683,12 +823,17 @@ class _State extends State<SignUpPage> {
 
 
                  if(ErrorDetect(e)) {
-
-                    PlatformAlertDialog(
-                      title: errorDetect(e, pos: 0),
-                      content: errorDetect(e, pos: 1),
-                      defaultActionText: Strings.ok,
-                    ).show(context);
+                    AwesomeDialog(
+                        context: context,
+                        dialogType: DialogType.ERROR,
+                        animType: AnimType.RIGHSLIDE,
+                        headerAnimationLoop: false,
+                        tittle: errorDetect(e, pos: 0),
+                        desc:
+                        errorDetect(e, pos: 1),
+                        btnOkOnPress: () {},
+                        btnOkColor: Colors.red)
+                        .show();
                   }else {
                     prSIGNUP.update(
                       message: 'Successfully Sign Up...',
@@ -742,6 +887,10 @@ class _resetPasswordState extends State<resetPassword> {
         appBar: AppBar(
           title: Text('Reset PassWord'),
           backgroundColor: Colors.teal,
+          leading: new IconButton(
+            icon: new Icon(Icons.arrow_back_ios, color: Colors.white),
+            onPressed: () => Navigator.of(context).pop(),
+          ),
         ),
         backgroundColor: Colors.white,
         body: SafeArea(
@@ -843,7 +992,26 @@ class _resetPasswordState extends State<resetPassword> {
                         ],
                       ),
                       onPressed: () async{
-                        email = email.trim();
+
+                        bool isEmpty = false;
+                        if(email == null){
+                          isEmpty = true;
+                          AwesomeDialog(
+                              context: context,
+                              dialogType: DialogType.ERROR,
+                              animType: AnimType.RIGHSLIDE,
+                              headerAnimationLoop: false,
+                              tittle: 'Warning',
+                              desc:
+                              'Email Adress Cannot be empty',
+                              btnOkOnPress: () {},
+                              btnOkColor: Colors.red)
+                              .show();
+                        }
+
+                        for(int i = 0; i < 100000; i++) {
+                          email = email.trim();
+                        }
 
                         final QuerySnapshot result =
                         await Firestore.instance.collection('usersByFullName').getDocuments();
@@ -896,12 +1064,19 @@ class _resetPasswordState extends State<resetPassword> {
 
 
                         }else{
-                          PlatformAlertDialog(
-                            title: 'Warning',
-                            content: 'Email Adress Not Found in Records',
-                            defaultActionText: Strings.ok,
-                          ).show(context);
+                          AwesomeDialog(
+                              context: context,
+                              dialogType: DialogType.ERROR,
+                              animType: AnimType.RIGHSLIDE,
+                              headerAnimationLoop: false,
+                              tittle: 'Warning',
+                              desc:
+                              'Email Adress Not Found in Records',
+                              btnOkOnPress: () {},
+                              btnOkColor: Colors.red)
+                              .show();
                         }
+
 
 
 
@@ -921,50 +1096,50 @@ class _resetPasswordState extends State<resetPassword> {
               SizedBox(
                 height: 5,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  SizedBox(
-                    width: screenWidth / 6 * 5,
-                    child: RaisedButton(
-                      highlightElevation: 0.0,
-                      splashColor: Colors.greenAccent,
-                      highlightColor: Colors.green,
-                      elevation: 0.0,
-                      color: Colors.green,
-                      shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Center(
-                            child: Text(
-                              "Back to Login Page",
-                              style: TextStyle(
-                                fontSize: 15,
-                                // backgroundColor:  Colors.teal[50],
-                                color: Colors.white,
-                                fontFamily: 'Montserrat',
-                              ),
-                            ),
-                          ),
-
-                        ],
-                      ),
-                      onPressed: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
-                      },
-                      padding: EdgeInsets.all(7.0),
-                      //color: Colors.teal.shade900,
-                      disabledColor: Colors.black,
-                      disabledTextColor: Colors.black,
-
-                    ),
-                  ),
-
-
-
-                ],
-              ),
+//              Row(
+//                mainAxisAlignment: MainAxisAlignment.center,
+//                children: <Widget>[
+//                  SizedBox(
+//                    width: screenWidth / 6 * 5,
+//                    child: RaisedButton(
+//                      highlightElevation: 0.0,
+//                      splashColor: Colors.greenAccent,
+//                      highlightColor: Colors.green,
+//                      elevation: 0.0,
+//                      color: Colors.green,
+//                      shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+//                      child: Row(
+//                        mainAxisAlignment: MainAxisAlignment.center,
+//                        children: <Widget>[
+//                          Center(
+//                            child: Text(
+//                              "Back to Login Page",
+//                              style: TextStyle(
+//                                fontSize: 15,
+//                                // backgroundColor:  Colors.teal[50],
+//                                color: Colors.white,
+//                                fontFamily: 'Montserrat',
+//                              ),
+//                            ),
+//                          ),
+//
+//                        ],
+//                      ),
+//                      onPressed: () {
+//                        Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
+//                      },
+//                      padding: EdgeInsets.all(7.0),
+//                      //color: Colors.teal.shade900,
+//                      disabledColor: Colors.black,
+//                      disabledTextColor: Colors.black,
+//
+//                    ),
+//                  ),
+//
+//
+//
+//                ],
+//              ),
             ],
           ),
         ),
@@ -1006,4 +1181,50 @@ String errorDetect(String e, {int pos = 1}){
   }
 }
 
+void resetData(String collectionName) async{
+  await Firestore.instance.collection(collectionName).document('Badminton Racquet').setData({'name': 'Badminton Racquet', 'num': 30,});
+  await Firestore.instance.collection(collectionName).document('Badminton Birdie').setData({'name': 'Badminton Birdie/Shuttle Cock-White', 'num': 30,});
+  await Firestore.instance.collection(collectionName).document('Band-Resistance (Orange) "').setData({'name': 'Band-Resistance (Orange) 1/2"', 'num': 3,});
+  await Firestore.instance.collection(collectionName).document('Band-Resistance (Green)  "').setData({'name': 'Band-Resistance (Green) 3/4"', 'num': 3,});
+  await Firestore.instance.collection(collectionName).document('Band-Resistance (Red)"').setData({'name': 'Band-Resistance (Red) 1"', 'num': 3,});
+  await Firestore.instance.collection(collectionName).document('Band-Resistance (Blue)"').setData({'name': 'Band-Resistance (Blue) 1-3/4"', 'num': 3,});
+  await Firestore.instance.collection(collectionName).document('Band-Resistance (Purple)"').setData({'name': 'Band-Resistance (Purple) 2-1/2"', 'num': 3,});
+  await Firestore.instance.collection(collectionName).document('Band-Tube: Very Light (Yellow)').setData({'name': 'Band-Tube: Very Light (Yellow)', 'num': 3,});
+  await Firestore.instance.collection(collectionName).document('Band-Tube: Light (Green)').setData({'name': 'Band-Tube: Light (Green)', 'num': 3,});
+  await Firestore.instance.collection(collectionName).document('Band-Tube: Medium (Red)').setData({'name': 'Band-Tube: Medium (Red)', 'num': 3,});
+  await Firestore.instance.collection(collectionName).document('Band-Tube: Heavy (Blue)').setData({'name': 'Band-Tube: Heavy (Blue)', 'num': 3,});
+  await Firestore.instance.collection(collectionName).document('Band-Tube: Ultra Heavy (Purple)').setData({'name': 'Band-Tube: Ultra Heavy (Purple)', 'num': 3,});
+  await Firestore.instance.collection(collectionName).document('Barbell Pad-Blue').setData({'name': 'Barbell Pad-Blue', 'num': 10,});
+  await Firestore.instance.collection(collectionName).document('Basketball (Men\'s)').setData({'name': 'Basketball (Men\'s)', 'num': 10,});
+  await Firestore.instance.collection(collectionName).document('Basketball (Men\'s)').setData({'name': 'Basketball (Men\'s)', 'num': 10,});
+  await Firestore.instance.collection(collectionName).document('Basketball (Women\'s)').setData({'name': 'Basketball (Women\'s)', 'num': 5,});
+  await Firestore.instance.collection(collectionName).document('Belt-Chain').setData({'name': 'Belt-Chain', 'num': 3,});
+  await Firestore.instance.collection(collectionName).document('Belt-Weight (Small)').setData({'name': 'Belt-Weight (Small)', 'num': 2,});
+  await Firestore.instance.collection(collectionName).document('Belt-Weight (Medium)').setData({'name': 'Belt-Weight (Medium)', 'num': 2,});
+  await Firestore.instance.collection(collectionName).document('Belt-Weight (Large)').setData({'name': 'Belt-Weight (Large)', 'num': 2,});
+  await Firestore.instance.collection(collectionName).document('Belt-Weight (X-Large)').setData({'name': 'Belt-Weight (X-Large)', 'num': 2,});
+  await Firestore.instance.collection(collectionName).document('Belt-Weight (XX-Large)').setData({'name': 'Belt-Weight (XX-Large)', 'num': 2,});
+  await Firestore.instance.collection(collectionName).document('Dumbbells (1 lbs.)').setData({'name': 'Dumbbells (1 lbs.)', 'num': 3,});
+  await Firestore.instance.collection(collectionName).document('Dumbbells (2 lbs.)').setData({'name': 'Dumbbells (2 lbs.)', 'num': 3,});
+  await Firestore.instance.collection(collectionName).document('Dumbbells (3 lbs.)').setData({'name': 'Dumbbells (3 lbs.)', 'num': 3,});
+  await Firestore.instance.collection(collectionName).document('Foam Rollers').setData({'name': 'Foam Rollers', 'num': 20,});
+  await Firestore.instance.collection(collectionName).document('Goggles').setData({'name': 'Goggles', 'num': 50,});
+  await Firestore.instance.collection(collectionName).document('Indoor Soccer Ball').setData({'name': 'Indoor Soccer Ball', 'num': 5,});
+  await Firestore.instance.collection(collectionName).document('Jump Rope (7 foot)').setData({'name': 'Jump Rope (7 foot)', 'num': 2,});
+  await Firestore.instance.collection(collectionName).document('Jump Rope (8 foot)').setData({'name': 'Jump Rope (8 foot)', 'num': 2,});
+  await Firestore.instance.collection(collectionName).document('Jump Rope (9 foot)').setData({'name': 'Jump Rope (9 foot)', 'num': 2,});
+  await Firestore.instance.collection(collectionName).document('Racquetball Racquet').setData({'name': 'Racquetball Racquet', 'num': 30,});
+  await Firestore.instance.collection(collectionName).document('Racquetball Ball').setData({'name': 'Racquetball Ball', 'num': 20,});
+  await Firestore.instance.collection(collectionName).document('Rock Wall ATC').setData({'name': 'Rock Wall ATC', 'num': 20,});
+  await Firestore.instance.collection(collectionName).document('Rock Wall Carabiner').setData({'name': 'Rock Wall Carabiner', 'num': 20,});
+  await Firestore.instance.collection(collectionName).document('Rock Wall Harnesses').setData({'name': 'Rock Wall Harnesses', 'num': 20,});
+  await Firestore.instance.collection(collectionName).document('Rock Wall Shoes (Rock Wall Staff)').setData({'name': 'Rock Wall Shoes (Rock Wall Staff)', 'num': 50,});
+  await Firestore.instance.collection(collectionName).document('squash Racquet').setData({'name': 'squash Racquet', 'num': 8,});
+  await Firestore.instance.collection(collectionName).document('squash Ball-Single Dot').setData({'name': 'squash Ball-Single Dot', 'num': 5,});
+  await Firestore.instance.collection(collectionName).document('squash Ball-Double Dot').setData({'name': 'squash Ball-Double Dot', 'num': 5,});
+  await Firestore.instance.collection(collectionName).document('Table Tennis Paddle').setData({'name': 'Table Tennis Paddle', 'num': 20,});
+  await Firestore.instance.collection(collectionName).document('Table Tennis Ball').setData({'name': 'Table Tennis Ball', 'num': 30,});
+  await Firestore.instance.collection(collectionName).document('Volleyball').setData({'name': 'Volleyball', 'num': 8,});
+  await Firestore.instance.collection(collectionName).document('Walleyball').setData({'name': 'Walleyball', 'num': 2,});
+}
 

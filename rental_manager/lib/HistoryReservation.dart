@@ -70,6 +70,10 @@ List<Widget> _getListings(BuildContext context) { // <<<<< Note this change for 
   List listings = new List<Widget>();
   var list = globals.itemList;
   for (var i = 0; i < list.length; i++) {
+    if(list[i].uid != globals.uid){
+      continue;
+    }
+
     if(list[i].status == "pending"){
 
       var name = list[i].name;

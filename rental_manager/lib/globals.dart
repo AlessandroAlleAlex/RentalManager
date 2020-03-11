@@ -7,6 +7,7 @@ String email = '';
 String studentID = '91xxxxxx';
 String phoneNumber = '530-xxx-xxxx';
 String sex = 'Male';
+String UserImageUrl = '';
 class Item{
   String itemName;
   String itemLocation;
@@ -31,7 +32,7 @@ class ReservationItem{
   String itemDocID;
   String status;
   String uid;
-  ReservationItem(this.amount, this.startTime, this.endTime, this.itemDocID, this.status, this.uid);
+  ReservationItem(this.amount, this.startTime, this.endTime, this.itemDocID, this.status, this.uid, this.name, this.imageURL);
 }
 
 List<ReservationItem> itemList = new List();

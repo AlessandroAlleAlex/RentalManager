@@ -63,19 +63,12 @@ class _ListPageState extends State<ListPage> {
       child: InkWell(
         onTap: () => navigateToCategory(snapshot.data[index]),
         child: Container(
-          padding: const EdgeInsets.fromLTRB(0, 0, 0, 18),
-          height: 200,
           decoration: BoxDecoration(
             boxShadow: [
               BoxShadow(
-                color: Colors.blue,
-                blurRadius: 100.0, // has the effect of softening the shadow
-                spreadRadius: 0, // has the effect of extending the shadow
-                offset: Offset(
-                  30.0, // horizontal, move right 10
-                  0.0, // vertical, move down 10
-                ),
-              )
+                color: Colors.grey,
+                blurRadius: 20.0, // has the effect of softening the shadow
+              ),
             ],
           ),
           child: Card(
@@ -83,7 +76,7 @@ class _ListPageState extends State<ListPage> {
               decoration: BoxDecoration(
                 image: DecorationImage(
                   image: NetworkImage(snapshot.data[index].data['imageURL']),
-                  fit: BoxFit.fill,
+                  fit: BoxFit.cover,
                 ),
               ),
               child: Padding(

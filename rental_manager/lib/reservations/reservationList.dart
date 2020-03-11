@@ -1,7 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import '../reservations/reservationCell.dart';
+import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
+import '../globals.dart' as globals;
 
 class ReservationListPage extends StatefulWidget {
   @override
@@ -27,9 +31,36 @@ class _ReservationListPage extends State<ReservationListPage> {
                 reservationCell(passedFirestoreData: indexedData)));
   }
 
+
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    // add for the refresh page
+    final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+    final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
+    Future<void> _handleRefresh() {
+      final Completer<void> completer = Completer<void>();
+      Timer(const Duration(seconds: 1), () {
+        completer.complete();
+      });
+      return completer.future.then<void>((_) {
+        _scaffoldKey.currentState?.showSnackBar(SnackBar(
+            content: const Text('Refresh complete'),
+            action: SnackBarAction(
+                label: 'RETRY',
+                onPressed: () {
+                  _refreshIndicatorKey.currentState.show();
+                })));
+      });
+    }
+
+    // add CancelReservation buttoon
+    Future<void> CancelReservation(String jobId){
+      return Firestore.instance.collection('reservation').document(jobId).delete();
+    }
+
+
+
     return Container(
         child: FutureBuilder(
             future: getFirestoreData(),
@@ -39,13 +70,49 @@ class _ReservationListPage extends State<ReservationListPage> {
                   child: Text('Loading...'),
                 );
               } else {
-                return ListView.builder(
-                    itemCount: snapshot.data.length,
-                    itemBuilder: (BuildContext context, int index) =>
-                        customCell(index, snapshot));
+                return LiquidPullToRefresh(
+                  color: Colors.teal,
+                  showChildOpacityTransition: false,
+                  key: _refreshIndicatorKey,	// key if you want to add
+                  onRefresh: _handleRefresh,
+                  child: ListView.builder(
+                      itemCount: snapshot.data.length,
+                      // add change here make the itemBuilder return Dismissible type
+                      itemBuilder: (context,index) {
+                        return Dismissible(
+                          background: stackBehindDismiss(),
+                          onDismissed: (DismissDirection direction){
+                            setState(() {
+                             try{
+                                print(snapshot.data[index].documentID);
+                                CancelReservation(snapshot.data[index].documentID);
+                             }catch(e){
+                               print(e);
+                             }
+                            });
+                          },
+                          key: ObjectKey(snapshot.data[index]),
+                          child: customCell(index, snapshot),
+
+                        );
+                      }
+                  ),
+                );
 
               }
             }));
+  }
+
+  Widget stackBehindDismiss() {
+    return Container(
+      alignment: Alignment.centerRight,
+      padding: EdgeInsets.only(right: 20.0),
+      color: Colors.red,
+      child: Icon(
+        Icons.delete,
+        color: Colors.white,
+      ),
+    );
   }
 
   String lala;
@@ -90,6 +157,10 @@ class _ReservationListPage extends State<ReservationListPage> {
       });
       return "null3";
       // return res;
+    }
+
+    if(snapshot.data[index].data["uid"] != globals.uid){
+      return null;
     }
 
     return Material(
