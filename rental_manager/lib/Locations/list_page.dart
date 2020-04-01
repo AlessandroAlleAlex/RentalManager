@@ -42,16 +42,7 @@ class _ListPageState extends State<ListPage> {
             return ListView.builder(
                 itemCount: snapshot.data.length,
                 itemBuilder: (BuildContext context, int index) =>
-                    customCard(index, snapshot)
-                // return ListTile(
-                //   title: Text(snapshot.data[index].data['name']),
-                //   leading: CircleAvatar(
-                //     child: Image.network(
-                //         snapshot.data[index].data['imageURL']),
-                //   ),
-                //   onTap: () => navigateToDetail(snapshot.data[index]),
-                // );
-                );
+                    customCard(index, snapshot));
           }
         },
       ),
