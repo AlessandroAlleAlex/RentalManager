@@ -39,7 +39,10 @@ class _showAllState extends State<showAll> {
         ],
       ),
       body: StreamBuilder(
-          stream: Firestore.instance.collection('ARC_items').snapshots(),
+          stream: Firestore.instance
+              .collection('ARC_items')
+              .orderBy('name')
+              .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) return const Text('loading...');
             // print(snapshot.data.documents.length);

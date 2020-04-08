@@ -43,6 +43,7 @@ class _ItemPageState extends State<ItemPage> {
           stream: Firestore.instance
               .collection('ARC_items')
               .where('category', isEqualTo: widget.category)
+              .orderBy('name')
               .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) return const Text('loading...');
@@ -146,6 +147,7 @@ class CustomSearchDelegate extends SearchDelegate {
         stream: Firestore.instance
             .collection('ARC_items')
             .where('category', isEqualTo: category)
+            .orderBy('name')
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) return const Text('loading...');
