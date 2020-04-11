@@ -10,7 +10,8 @@ import 'package:path_provider/path_provider.dart';
 import 'package:barcode_scan/barcode_scan.dart';
 import 'package:rental_manager/PlatformWidget/platform_alert_dialog.dart';
 import 'package:rental_manager/PlatformWidget/strings.dart';
-
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rental_manager/globals.dart' as globals;
 class GenerateScreen extends StatefulWidget {
 
   @override
@@ -47,6 +48,8 @@ class GenerateScreenState extends State<GenerateScreen> {
   Future scan() async {
     try {
       String barcode = await BarcodeScanner.scan();
+      setQRLoginIn(barcode);
+      print("OK");
       PlatformAlertDialog(
         title: 'QR Code Scanned',
         content: barcode,
@@ -131,3 +134,33 @@ class GenerateScreenState extends State<GenerateScreen> {
     );
   }
 }
+
+void setQRLoginIn(String uniqueID) async{
+  final databaseReference = Firestore.instance;
+  await databaseReference.collection("LoginQRCode")
+      .document("RequestLogin$uniqueID")
+      .setData({
+    'Confirmed': "true",
+    'uid' : globals.uid,
+    'email': globals.email,
+    'studentID': globals.studentID,
+    'phoneNumber':globals.phoneNumber,
+    'sex': globals.sex,
+    'UserImageUrl': globals.UserImageUrl,
+    'FirebaseUser': globals.mygoogleuser.toString(),
+    'username': globals.username,
+  });
+  print("Finished setting");
+}
+/*
+* String uid = '';
+String username = 'Xu Liu';
+String email = '';
+String studentID = '91xxxxxx';
+String phoneNumber = '530-xxx-xxxx';
+String sex = 'Male';
+String UserImageUrl = '';
+FirebaseUser mygoogleuser;
+*
+*
+* */

@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:rental_manager/HistoryReservation.dart';
 import 'package:rental_manager/QRCode/generate.dart';
 
-
 import 'package:rental_manager/data.dart';
 import 'package:rental_manager/main.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../globals.dart' as globals;
 import 'package:rental_manager/editProfile.dart';
 import 'package:rental_manager/CurrentReservation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:progress_dialog/progress_dialog.dart';
-
+import 'map.dart';
 ProgressDialog pr;
 
 Future<List<globals.ReservationItem>> setData() async{
@@ -303,7 +303,7 @@ class FourthTab extends StatelessWidget {
                 child: FlatButton(
                   onPressed: (){
                     print("Theme Color");
-
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => TheMap()));
                   },
                   child: Column(
                     children: <Widget>[
@@ -364,6 +364,8 @@ class FourthTab extends StatelessWidget {
                     );
                     Future.delayed(Duration(seconds: 2)).then((onValue){
                     });
+                    var prefs = await SharedPreferences.getInstance();
+                    prefs.remove("user");
                     pr.hide();
                     Navigator.of(context).pushNamedAndRemoveUntil('/LoginScreen', (Route route) => false);
                     //Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));

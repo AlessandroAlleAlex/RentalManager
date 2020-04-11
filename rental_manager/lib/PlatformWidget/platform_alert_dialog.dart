@@ -4,7 +4,7 @@ import 'package:rental_manager/PlatformWidget/keys.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
 class PlatformAlertDialog extends PlatformWidget {
   PlatformAlertDialog({
     @required this.title,
@@ -70,7 +70,11 @@ class PlatformAlertDialog extends PlatformWidget {
           defaultActionText,
           key: Key(Keys.alertDefault),
         ),
-        onPressed: () => Navigator.of(context).pop(true),
+        onPressed: (){
+          Navigator.of(context).pop(true);
+          if(defaultActionText == "Yes?")
+            Fluttertoast.showToast(msg: "You will be emailed when the item is in stock");
+        },
       ),
     );
     return actions;

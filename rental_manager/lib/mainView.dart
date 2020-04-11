@@ -51,6 +51,7 @@ class MyHomeState extends State<MyHome1> with SingleTickerProviderStateMixin {
 
       body: TabBarView(
         // Add tabs as widgets
+        physics: NeverScrollableScrollPhysics(),
         children: <Widget>[FirstTab(), SecondTab(), ThirdTab(), FourthTab()],
         // set the controller
         controller: controller,
@@ -68,6 +69,11 @@ class MyHomeState extends State<MyHome1> with SingleTickerProviderStateMixin {
           controller: controller,
         ),
       ),
+
+
     );
   }
 }
+
+
+

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-
+import '../globals.dart' as globals;
 import 'pill_gesture.dart';
 
 class SlideDialog extends StatefulWidget {
@@ -26,43 +26,56 @@ class _SlideDialogState extends State<SlideDialog> {
   Widget build(BuildContext context) {
     final deviceWidth = MediaQuery.of(context).size.width;
     final deviceHeight = MediaQuery.of(context).size.height;
+    //resizeToAvoidBottomInset: false,
 
     return AnimatedPadding(
       padding: MediaQuery.of(context).viewInsets +
-          EdgeInsets.only(top: deviceHeight / 3.0 + _currentPosition),
+          EdgeInsets.only(top:  100),
       duration: Duration(milliseconds: 100),
       curve: Curves.decelerate,
-      child: MediaQuery.removeViewInsets(
-        removeLeft: true,
-        removeTop: true,
-        removeRight: true,
-        removeBottom: true,
-        context: context,
-        child: Center(
-          child: Container(
-            width: deviceWidth,
-            height: deviceHeight / 1.5,
-            child: Material(
-              color: widget.backgroundColor ??
-                  Theme.of(context).dialogBackgroundColor,
-              elevation: 24.0,
-              type: MaterialType.card,
-              child: Column(
-                children: <Widget>[
-                  PillGesture(
-                    pillColor: widget.pillColor,
-                    onVerticalDragStart: _onVerticalDragStart,
-                    onVerticalDragEnd: _onVerticalDragEnd,
-                    onVerticalDragUpdate: _onVerticalDragUpdate,
+      child: GestureDetector(
+        behavior: HitTestBehavior.opaque,
+        onPanDown: (_) {
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        onTap: (){
+
+          FocusScope.of(context).requestFocus(new FocusNode());
+        },
+        child: SingleChildScrollView(
+          child: MediaQuery.removeViewInsets(
+            removeLeft: true,
+            removeTop: true,
+            removeRight: true,
+            removeBottom: true,
+            context: context,
+            child: Center(
+              child: Container(
+                width: deviceWidth,
+                height: deviceHeight,
+                child: Material(
+                  color: widget.backgroundColor ??
+                      Theme.of(context).dialogBackgroundColor,
+                  elevation: 24.0,
+                  type: MaterialType.card,
+                  child: Column(
+                    children: <Widget>[
+                      PillGesture(
+                        pillColor: widget.pillColor,
+                        onVerticalDragStart: _onVerticalDragStart,
+                        onVerticalDragEnd: _onVerticalDragEnd,
+                        onVerticalDragUpdate: _onVerticalDragUpdate,
+                      ),
+                      widget.child,
+                      widget.textField,
+                    ],
                   ),
-                  widget.child,
-                  widget.textField,
-                ],
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20.0),
-                  topRight: Radius.circular(20.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20.0),
+                      topRight: Radius.circular(20.0),
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -70,6 +83,7 @@ class _SlideDialogState extends State<SlideDialog> {
         ),
       ),
     );
+
   }
 
   void _onVerticalDragStart(DragStartDetails drag) {
