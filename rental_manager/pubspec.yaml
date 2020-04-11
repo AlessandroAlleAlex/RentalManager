@@ -54,13 +54,22 @@ dependencies:
   path_provider: ^1.6.5
   barcode_scan: ^2.0.1
   qr_flutter: ^3.2.0
-
+  mailer: ^3.0.4
   cached_network_image: ^2.0.0
-
+  grouped_buttons: ^1.0.4
+  flutter_ticket_widget: ^0.0.1
+  wc_flutter_share: ^0.2.0
+  geolocator: ^5.3.0
+  google_maps_flutter: ^0.5.25+2
+  flutter_polyline_points: ^0.1.0
+  google_map_polyline: ^0.2.0+1
+  http: ^0.12.0+4
+  file_picker: ^1.6.1
+  flappy_search_bar: 1.4.1
 dev_dependencies:
   flutter_test:
     sdk: flutter
-  
+
 
 
 # For information on the generic Dart part of this file, see the
