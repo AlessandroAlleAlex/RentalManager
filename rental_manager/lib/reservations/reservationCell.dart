@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-
 class reservationCell extends StatefulWidget {
   final DocumentSnapshot passedFirestoreData;
   reservationCell({this.passedFirestoreData});
@@ -23,10 +22,6 @@ class reservationCell extends StatefulWidget {
 class _reservationCell extends State<reservationCell> {
   @override
   Widget build(BuildContext context) {
-    var num = 2;
-    var totalnum = 10;
-    var TimeLimit = "4 hr";
-    var MaxAmount = "10";
     var Location = "Gym";
     // TODO: implement build
     return Scaffold(

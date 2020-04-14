@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../globals.dart' as globals;
@@ -57,7 +58,7 @@ class _DetailPage extends State<DetailPage> {
       width: MediaQuery.of(context).size.width,
       child: RaisedButton(
         onPressed: () {
-          print('button pressed! (reserve)');
+          // print('button pressed! (reserve)');
           testingReservations(widget.itemSelected.documentID);
         },
         child: Text('Reserve Now', style: TextStyle(color: Colors.white)),
@@ -161,7 +162,7 @@ class _DetailPage extends State<DetailPage> {
 // }
 
   testingReservations(String itemID) async {
-    print(globals.uid);
+    // print(globals.uid);
     // final QuerySnapshot result =
     // await Firestore.instance.collection('items').getDocuments();
     // final List<DocumentSnapshot> documents = result.documents;
@@ -174,9 +175,9 @@ class _DetailPage extends State<DetailPage> {
     var now = new DateTime.now();
     var time = DateFormat("yyyy-MM-dd hh:mm:ss").format(now);
     var pickUpBefore = now.add(new Duration(minutes: 10));
-    print("Reservation Created time: " + time);
-    print("Reservation pickup before time: " +
-        DateFormat("yyyy-MM-dd hh:mm:ss").format(pickUpBefore));
+    // print("Reservation Created time: " + time);
+    // print("Reservation pickup before time: " +
+    //     DateFormat("yyyy-MM-dd hh:mm:ss").format(pickUpBefore));
     uploadData(itemID, globals.uid, time);
   }
 
@@ -218,15 +219,18 @@ class _DetailPage extends State<DetailPage> {
       imageURL = "www.gooogle.com";
     }
 
+    final FirebaseUser user = await FirebaseAuth.instance.currentUser();
+    final userID = user.uid;
+
     await databaseReference.collection("reservation").document().setData({
       'imageURL': imageURL,
       'name': itemName,
       'uid': uid,
       'item': itemID,
-      'uid': uid,
+      'userID': userID,
       'amount': "1",
       'startTime': dateTime,
-      'status': "Picked Up",
+      'status': "Reserved",
       'endTime': "TBD",
     });
     PlatformAlertDialog(
@@ -235,6 +239,6 @@ class _DetailPage extends State<DetailPage> {
           'Your reservation is successful confirmed, please pick it up on time',
       defaultActionText: Strings.ok,
     ).show(context);
-    print("success!");
+    // print("success!");
   }
 }
