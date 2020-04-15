@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -12,6 +13,24 @@ class reservationCell extends StatefulWidget {
 }
 
 class _reservationCell extends State<reservationCell> {
+  Future pickedUp() async {
+    final firestore = Firestore.instance;
+    await firestore
+        .collection('reservation')
+        .document(widget.passedFirestoreData.documentID.toString())
+        .updateData({'status': 'Picked Up'}).catchError(
+            (error) => print(error));
+  }
+
+  Future cancelReservation() async {
+    final firestore = Firestore.instance;
+    await firestore
+        .collection('reservation')
+        .document(widget.passedFirestoreData.documentID.toString())
+        .delete()
+        .catchError((error) => print(error));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,7 +139,11 @@ class _reservationCell extends State<reservationCell> {
                 shape: new RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(40.0),
                 ),
-                onPressed: () {},
+                onPressed: () async {
+                  // print(widget.passedFirestoreData.documentID.toString());
+                  pickedUp();
+                  Navigator.pop(context);
+                },
                 icon: Icon(Icons.insert_emoticon, size: 30.0),
                 label: Text(
                   'Pick Up',
@@ -139,7 +162,10 @@ class _reservationCell extends State<reservationCell> {
                 shape: new RoundedRectangleBorder(
                   borderRadius: new BorderRadius.circular(40.0),
                 ),
-                onPressed: () {},
+                onPressed: () async {
+                  cancelReservation();
+                  Navigator.pop(context);
+                },
                 icon: Icon(
                   Icons.cancel,
                   size: 30.0,
