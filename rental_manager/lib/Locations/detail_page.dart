@@ -239,6 +239,5 @@ class _DetailPage extends State<DetailPage> {
           'Your reservation is successful confirmed, please pick it up on time',
       defaultActionText: Strings.ok,
     ).show(context);
-    // print("success!");
   }
 }
