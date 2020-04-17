@@ -74,7 +74,7 @@ List<Widget> _getListings(BuildContext context) { // <<<<< Note this change for 
       continue;
     }
 
-    if(list[i].status == "pending"){
+    if(list[i].status == "Returned"){
 
       var name = list[i].name;
       var url = list[i].imageURL;

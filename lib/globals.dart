@@ -1,5 +1,8 @@
 library my_prj.globals;
 import 'dart:collection';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 String uid = '';
 String username = 'Xu Liu';
@@ -8,6 +11,10 @@ String studentID = '91xxxxxx';
 String phoneNumber = '530-xxx-xxxx';
 String sex = 'Male';
 String UserImageUrl = '';
+FirebaseUser mygoogleuser;
+BuildContext mycontext;
+String CancelledItemDocID = "";
+List<DocumentSnapshot> myds;
 class Item{
   String itemName;
   String itemLocation;
