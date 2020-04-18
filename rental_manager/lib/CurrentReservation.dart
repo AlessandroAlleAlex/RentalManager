@@ -10,6 +10,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
+import 'package:rental_manager/data.dart';
+import 'package:rental_manager/reservations/reservationCell.dart';
 
 
 import 'globals.dart' as globals;
@@ -40,7 +42,8 @@ class ItemInfo{
   String Return;
   String timeNow;
   String uid;
-  ItemInfo(this.imageUrl,this.person, this.date, this.item, this.status, this.start, this.Return, this.timeNow, this.uid);
+  String documentID;
+  ItemInfo(this.imageUrl,this.person, this.date, this.item, this.status, this.start, this.Return, this.timeNow, this.uid, this.documentID);
 }
 
 
@@ -77,43 +80,13 @@ class _CureentReservationState extends State<CureentReservation> {
   Widget build(BuildContext context) {
     // Scaffold is a layout for the major Material Components.
 
-    void setData() async{
-      globalitemList.clear();
-      List<globals.ReservationItem> itemList = new List();
 
-      final QuerySnapshot result =
-          await Firestore.instance.collection('reservation').getDocuments();
-      final List<DocumentSnapshot> documents = result.documents;
-
-      documents.forEach((ds) => itemList.add(globals.ReservationItem(ds["amount"],
-        ds["startTime"],
-        ds["endTime"],
-        ds["item"],
-        ds["status"],
-        ds["uid"],
-        ds["name"],
-        ds["imageURL"],
-      )
-      ));
-
-      for(int i = 0; i < itemList.length; i++){
-        if(itemList[i].uid != globals.uid || itemList[i].status == "Returned"){
-          itemList.removeAt(i);
-        }
-        String a = itemList[i].name;
-        if(a != null && a.contains("asketball")){
-
-        }
-      }
-
-      globalitemList = itemList;
-      print(globalitemList.length);
-    }
 
 
     List<Widget> _getListings(BuildContext context, itemList) { // <<<<< Note this change for the return type
       List listings = new List<Widget>();
       var list = itemList;
+
 
       for (var i = 0; i < list.length; i++) {
         if(list[i].uid != globals.uid){
@@ -148,11 +121,11 @@ class _CureentReservationState extends State<CureentReservation> {
                       //ItemInfo(person, date, item, status, start, Return)
                       String person = globals.username, date = list[i].startTime, item = list[i].name;
                       String status = list[i].status, start = list[i].startTime, Return = list[i].endTime;
-                      String uid = list[i].uid;
+                      String uid = list[i].uid, docuementID = list[i].documentID;
                       DateTime now = DateTime.now();
                       String timeNow = DateFormat('kk:mm:ss \n EEE d MMM').format(now);
 
-                      var theitem = ItemInfo(url, person, date, item, status, start, Return, timeNow, uid);
+                      var theitem = ItemInfo(url, person, date, item, status, start, Return, timeNow, uid, docuementID);
 
                       Navigator.push(context,
                           MaterialPageRoute(builder: (context) => Ticket(theitem)));
@@ -184,25 +157,16 @@ class _CureentReservationState extends State<CureentReservation> {
       return listings;
     }
 
+    bool isEarly(String a, String b){
 
+      var time_a = DateTime.parse(a), time_b = DateTime.parse(b);
 
-    Widget _getContainer(String test, IconData icon) {
-      return new Column(
-        children: <Widget>[
-          new ListTile(
-            //显示在title之前
-            leading: new Icon(icon),
-            //显示在title之后
-            trailing: new Icon(Icons.chevron_right),
-            title: new Text(test),
-            subtitle:new Text("我是subtitle") ,
-          ),
-          Divider(height: 2.0,),
-        ],
-
-
-      );
+      var difference = time_a.difference(time_b);
+      return difference.isNegative;
     }
+
+
+
 
     return new Scaffold(
         appBar: AppBar(
@@ -213,8 +177,12 @@ class _CureentReservationState extends State<CureentReservation> {
           stream: Firestore.instance.collection('reservation').snapshots(),
           builder: (context, snapshot){
             if (!snapshot.hasData) return const Text('loading...');
+
             List<globals.ReservationItem> itemList = new List();
+
+
             final List<DocumentSnapshot> documents = snapshot.data.documents;
+
 
 
             documents.forEach((ds) => itemList.add(globals.ReservationItem(ds["amount"],
@@ -225,18 +193,41 @@ class _CureentReservationState extends State<CureentReservation> {
               ds["uid"],
               ds["name"],
               ds["imageURL"],
+              ds.documentID
             )
             ));
 
+
+
+
             for(int i = 0; i < itemList.length; i++){
-              if(itemList[i].uid != globals.uid || itemList[i].status == "Returned"){
+              if(itemList[i].uid != globals.uid || itemList[i].status == "Returned" || itemList[i].startTime == null){
                 itemList.removeAt(i);
               }
-              String a = itemList[i].name;
-              if(a != null && a.contains("asketball")){
+            }
 
+            for(int i = 0; i < itemList.length; i++){
+              if(itemList[i].startTime == null){
+                itemList.removeAt(i);
               }
             }
+
+            for(int i = 0; i < itemList.length - 1; i++){
+              for(int j = 0; j < itemList.length - i - 1; j++){
+                var a = itemList[j].startTime, b = itemList[j + 1].startTime;
+                if(a == null || b == null)
+                {
+                  continue;
+                }
+
+                if(isEarly(a, b) == false){
+                  var swap = itemList[j];
+                  itemList[j] = itemList[j + 1];
+                  itemList[j + 1] = swap;
+                }
+              }
+            }
+
 
             return  Container(
               child: Column(children: <Widget>[
@@ -331,7 +322,8 @@ void GetImageURL(String uid) async{
 class TicketView extends StatelessWidget {
   @override
   ItemInfo theItem;
-  TicketView(theItem){
+
+  TicketView(theItem ){
     this.theItem = theItem;
   }
   Widget build(BuildContext context) {
@@ -346,16 +338,21 @@ class TicketView extends StatelessWidget {
 class Ticket extends StatefulWidget {
   @override
   ItemInfo theItem;
-  Ticket(ItemInfo theItem){
+
+  Ticket(ItemInfo theItem ){
     this.theItem = theItem;
+
+
   }
   _TicketState createState() => _TicketState(theItem);
 }
 
 class _TicketState extends State<Ticket> {
   ItemInfo theItem;
-  _TicketState(ItemInfo theItem){
+
+  _TicketState(ItemInfo theItem ){
     this.theItem = theItem;
+
   }
 
   GlobalKey theGlobalKey = new GlobalKey();
@@ -395,6 +392,9 @@ class _TicketState extends State<Ticket> {
     String uid = theItem.uid;
     String timeNow = theItem.timeNow;
     print(MediaQuery.of(context).size.width);
+
+    var reservationID = theItem.documentID;// this is reservationID
+    print(reservationID);
 
     File _imageFile;
 
