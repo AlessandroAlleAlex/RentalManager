@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
+
 
 import 'globals.dart' as globals;
 import 'package:awesome_dialog/animated_button.dart';
@@ -41,6 +43,9 @@ class ItemInfo{
   ItemInfo(this.imageUrl,this.person, this.date, this.item, this.status, this.start, this.Return, this.timeNow, this.uid);
 }
 
+
+List<globals.ReservationItem> globalitemList = [];
+
 class CureentReservation extends StatefulWidget {
   @override
   _CureentReservationState createState() => _CureentReservationState();
@@ -63,110 +68,94 @@ class _CureentReservationState extends State<CureentReservation> {
               label: 'RETRY',
               onPressed: () {
                 _refreshIndicatorKey.currentState.show();
+
               })));
     });
   }
-
+  int firstCount = 0;
   @override
   Widget build(BuildContext context) {
     // Scaffold is a layout for the major Material Components.
-    return new Scaffold(
-        appBar: AppBar(
-          title: Text('Orders'),
-          backgroundColor: Colors.teal,
-        ),
-        body: new SafeArea(
-            child: Container( child: Column(children: <Widget>[
 
-              Expanded(child:  LiquidPullToRefresh(
-                color: Colors.teal,
-                key: _refreshIndicatorKey,	// key if you want to add
-                onRefresh: _handleRefresh,
-                child: ListView(
-                  padding: const EdgeInsets.all(20.0),
-                  children: _getListings(context), // <<<<< Note this change for the return type
-                ),
-              ),
-              )
-            ])
-            )));
-  }
+    void setData() async{
+      globalitemList.clear();
+      List<globals.ReservationItem> itemList = new List();
 
-}
+      final QuerySnapshot result =
+          await Firestore.instance.collection('reservation').getDocuments();
+      final List<DocumentSnapshot> documents = result.documents;
 
-List<globals.ReservationItem> globallList = new List();
+      documents.forEach((ds) => itemList.add(globals.ReservationItem(ds["amount"],
+        ds["startTime"],
+        ds["endTime"],
+        ds["item"],
+        ds["status"],
+        ds["uid"],
+        ds["name"],
+        ds["imageURL"],
+      )
+      ));
 
-Widget _getContainer(String test, IconData icon) {
-  return new Column(
-    children: <Widget>[
-      new ListTile(
-        //显示在title之前
-        leading: new Icon(icon),
-        //显示在title之后
-        trailing: new Icon(Icons.chevron_right),
-        title: new Text(test),
-        subtitle:new Text("我是subtitle") ,
-      ),
-      Divider(height: 2.0,),
-    ],
+      for(int i = 0; i < itemList.length; i++){
+        if(itemList[i].uid != globals.uid || itemList[i].status == "Returned"){
+          itemList.removeAt(i);
+        }
+        String a = itemList[i].name;
+        if(a != null && a.contains("asketball")){
 
+        }
+      }
 
-  );
-}
-
-List _listings = new List();
-
-class ItemNameLocation{
-  String itemName;
-  String imageURL;
-}
-
-List<ItemNameLocation>myList = [];
-
-List<Widget> _getListings(BuildContext context) { // <<<<< Note this change for the return type
-  List listings = new List<Widget>();
-  var list = globals.itemList;
-
-  for (var i = 0; i < list.length; i++) {
-    if(list[i].uid != globals.uid){
-      continue;
+      globalitemList = itemList;
+      print(globalitemList.length);
     }
 
-    if(list[i].status == "Picked Up"){
-      var name = list[i].name;
-      if(name == null){
-        name = 'Error no name';
-      }
-      if(list[i].imageURL != null){
-        print("CR: " + list[i].imageURL);
-      }
 
-      var url = list[i].imageURL;
-      listings.add(
-        Column(
-          children: <Widget>[
-            new ListTile(
+    List<Widget> _getListings(BuildContext context, itemList) { // <<<<< Note this change for the return type
+      List listings = new List<Widget>();
+      var list = itemList;
 
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(url),
-                ),
-                //显示在title之后
-                trailing: new Icon(Icons.chevron_right),
-                title: new Text(name),
-                subtitle:new Text(list[i].startTime) ,
-                onTap: () {
-                  String value = itemInfo(list[i]);
-                  //ItemInfo(person, date, item, status, start, Return)
-                  String person = globals.username, date = list[i].startTime, item = list[i].name;
-                  String status = list[i].status, start = list[i].startTime, Return = list[i].endTime;
-                  String uid = list[i].uid;
-                  DateTime now = DateTime.now();
-                  String timeNow = DateFormat('kk:mm:ss \n EEE d MMM').format(now);
+      for (var i = 0; i < list.length; i++) {
+        if(list[i].uid != globals.uid){
+          continue;
+        }
 
-                  var theitem = ItemInfo(url, person, date, item, status, start, Return, timeNow, uid);
+        if(list[i].status != "Returned"){
+          var name = list[i].name;
+          if(name == null){
+            name = 'Error no name';
+          }
+          if(list[i].imageURL != null){
+            //print("CR: " + list[i].imageURL);
+          }
 
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Ticket(theitem)));
+          var url = list[i].imageURL;
+          listings.add(
+            Column(
+              children: <Widget>[
+                new ListTile(
+
+                    leading: CircleAvatar(
+                      backgroundImage: NetworkImage(url),
+                    ),
+                    //显示在title之后
+                    trailing: new Icon(Icons.chevron_right),
+                    title: new Text(name),
+                    subtitle:new Text(list[i].startTime) ,
+                    onTap: () {
+
+                      String value = itemInfo(list[i]);
+                      //ItemInfo(person, date, item, status, start, Return)
+                      String person = globals.username, date = list[i].startTime, item = list[i].name;
+                      String status = list[i].status, start = list[i].startTime, Return = list[i].endTime;
+                      String uid = list[i].uid;
+                      DateTime now = DateTime.now();
+                      String timeNow = DateFormat('kk:mm:ss \n EEE d MMM').format(now);
+
+                      var theitem = ItemInfo(url, person, date, item, status, start, Return, timeNow, uid);
+
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => Ticket(theitem)));
 
 //                AwesomeDialog(
 //                  context: context,
@@ -183,17 +172,108 @@ List<Widget> _getListings(BuildContext context) { // <<<<< Note this change for 
 //                  btnOkOnPress: () {},
 //                ).show();
 //              },
-                }
+                    }
+                ),
+                Divider(height: 2.0,),
+              ],
             ),
-            Divider(height: 2.0,),
-          ],
-        ),
+
+          );
+        }
+      }
+      return listings;
+    }
+
+
+
+    Widget _getContainer(String test, IconData icon) {
+      return new Column(
+        children: <Widget>[
+          new ListTile(
+            //显示在title之前
+            leading: new Icon(icon),
+            //显示在title之后
+            trailing: new Icon(Icons.chevron_right),
+            title: new Text(test),
+            subtitle:new Text("我是subtitle") ,
+          ),
+          Divider(height: 2.0,),
+        ],
+
 
       );
     }
+
+    return new Scaffold(
+        appBar: AppBar(
+          title: Text('Orders'),
+          backgroundColor: Colors.teal,
+        ),
+        body: StreamBuilder(
+          stream: Firestore.instance.collection('reservation').snapshots(),
+          builder: (context, snapshot){
+            if (!snapshot.hasData) return const Text('loading...');
+            List<globals.ReservationItem> itemList = new List();
+            final List<DocumentSnapshot> documents = snapshot.data.documents;
+
+
+            documents.forEach((ds) => itemList.add(globals.ReservationItem(ds["amount"],
+              ds["startTime"],
+              ds["endTime"],
+              ds["item"],
+              ds["status"],
+              ds["uid"],
+              ds["name"],
+              ds["imageURL"],
+            )
+            ));
+
+            for(int i = 0; i < itemList.length; i++){
+              if(itemList[i].uid != globals.uid || itemList[i].status == "Returned"){
+                itemList.removeAt(i);
+              }
+              String a = itemList[i].name;
+              if(a != null && a.contains("asketball")){
+
+              }
+            }
+
+            return  Container(
+              child: Column(children: <Widget>[
+
+                Expanded(child:  LiquidPullToRefresh(
+                  color: Colors.teal,
+                  key: _refreshIndicatorKey,	// key if you want to add
+                  onRefresh: _handleRefresh,
+                  child: ListView(
+                    padding: const EdgeInsets.all(20.0),
+                    children:  _getListings(context, itemList)// <<<<< Note this change for the return type
+                  ),
+                ),
+                )
+              ]),
+            );
+          }
+
+        ),
+
+    );
   }
-  return listings;
+
 }
+
+List<globals.ReservationItem> globallList = new List();
+
+
+
+class ItemNameLocation{
+  String itemName;
+  String imageURL;
+}
+
+List<ItemNameLocation>myList = [];
+
+
 
 String itemInfo(globals.ReservationItem item){
   String ret = '';
@@ -307,7 +387,7 @@ class _TicketState extends State<Ticket> {
     String date = theItem.date.substring(0,10);
     String item = theItem.item;
     String status = theItem.status;
-    status = status.substring(0,6);
+
     String start = theItem.start;
     start = start.substring(11);
     String Return = theItem.Return;
@@ -408,7 +488,7 @@ class _TicketState extends State<Ticket> {
                         ticketDetailsWidget(
                             'Person', '$person', 'Date', '$date'),
                         Padding(
-                          padding: const EdgeInsets.only(top: 12.0, right: 40.0),
+                          padding: const EdgeInsets.only(top: 12.0, right: 50.0),
                           child: ticketDetailsWidget(
                               'Item', '$item', 'Status', '$status'),
                         ),
