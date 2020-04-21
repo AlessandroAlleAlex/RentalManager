@@ -2,6 +2,7 @@ library my_prj.globals;
 import 'dart:collection';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 String uid = '';
 String username = 'Xu Liu';
@@ -12,8 +13,8 @@ String sex = 'Male';
 String UserImageUrl = '';
 FirebaseUser mygoogleuser;
 BuildContext mycontext;
-
-
+String CancelledItemDocID = "";
+List<DocumentSnapshot> myds;
 class Item{
   String itemName;
   String itemLocation;
@@ -38,7 +39,9 @@ class ReservationItem{
   String itemDocID;
   String status;
   String uid;
-  ReservationItem(this.amount, this.startTime, this.endTime, this.itemDocID, this.status, this.uid, this.name, this.imageURL);
+  String documentID;
+  //ReservationItem(this.amount, this.startTime, this.endTime, this.itemDocID, this.status, this.uid, this.name, this.imageURL);
+  ReservationItem(this.amount, this.startTime, this.endTime, this.itemDocID, this.status, this.uid, this.name, this.imageURL, this.documentID);
 }
 
 List<ReservationItem> itemList = new List();
