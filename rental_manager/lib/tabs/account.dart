@@ -21,7 +21,7 @@ Future<List<globals.ReservationItem>> setData() async{
   await Firestore.instance.collection('reservation').getDocuments();
   final List<DocumentSnapshot> documents = result.documents;
   List<globals.ReservationItem> reservationList = new List();
-
+  int count = 0;
   documents.forEach((ds) => reservationList.add(globals.ReservationItem(ds["amount"],
     ds["startTime"],
     ds["endTime"],
@@ -30,7 +30,9 @@ Future<List<globals.ReservationItem>> setData() async{
     ds["uid"],
     ds["name"],
     ds["imageURL"],
-    )));
+    ds.documentID,
+  )
+  ));
 
   return reservationList;
 }
