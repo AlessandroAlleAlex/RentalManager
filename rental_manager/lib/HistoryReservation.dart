@@ -23,17 +23,17 @@ class _HistoryReservationState extends State<HistoryReservation> {
           backgroundColor: Colors.teal,
         ),
         body: new SafeArea(
-            child: Container(child: Column(children: <Widget>[
-
-              Expanded(child:  ListView(
-                padding: const EdgeInsets.all(20.0),
-                children: _getListings(context), // <<<<< Note this change for the return type
-              ),
-              )
-            ])
-            )));
+            child: Container(
+                child: Column(children: <Widget>[
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.all(20.0),
+              children: _getListings(
+                  context), // <<<<< Note this change for the return type
+            ),
+          )
+        ]))));
   }
-
 }
 
 List<globals.ReservationItem> globallList = new List();
@@ -47,52 +47,49 @@ Widget _getContainer(String test, IconData icon) {
         //显示在title之后
         trailing: new Icon(Icons.chevron_right),
         title: new Text(test),
-        subtitle:new Text("我是subtitle") ,
+        subtitle: new Text("我是subtitle"),
       ),
-      Divider(height: 2.0,),
+      Divider(
+        height: 2.0,
+      ),
     ],
-
-
   );
 }
 
 List _listings = new List();
 
-class ItemNameLocation{
+class ItemNameLocation {
   String itemName;
   String imageURL;
 }
 
-List<ItemNameLocation>myList = [];
+List<ItemNameLocation> myList = [];
 
-
-List<Widget> _getListings(BuildContext context) { // <<<<< Note this change for the return type
+List<Widget> _getListings(BuildContext context) {
+  // <<<<< Note this change for the return type
   List listings = new List<Widget>();
   var list = globals.itemList;
   for (var i = 0; i < list.length; i++) {
-    if(list[i].uid != globals.uid){
+    if (list[i].uid != globals.uid) {
       continue;
     }
 
-    if(list[i].status == "pending"){
-
+    if (list[i].status == "Expired") {
       var name = list[i].name;
       var url = list[i].imageURL;
-
 
       listings.add(
         Column(
           children: <Widget>[
             new ListTile(
-
               leading: CircleAvatar(
                 backgroundImage: NetworkImage(url),
               ),
               //显示在title之后
               trailing: new Icon(Icons.chevron_right),
               title: new Text(name),
-              subtitle:new Text(list[i].startTime) ,
-              onTap: (){
+              subtitle: new Text(list[i].startTime),
+              onTap: () {
                 String value = itemInfo(list[i]);
                 //Navigator.push(context, MaterialPageRoute(builder: (context) => HistoryReservation()));
                 PlatformAlertDialog(
@@ -100,22 +97,20 @@ List<Widget> _getListings(BuildContext context) { // <<<<< Note this change for 
                   content: value,
                   defaultActionText: Strings.ok,
                 ).show(context);
-
               },
-
             ),
-            Divider(height: 2.0,),
+            Divider(
+              height: 2.0,
+            ),
           ],
         ),
-
       );
     }
   }
   return listings;
 }
 
-
-String itemInfo(globals.ReservationItem item){
+String itemInfo(globals.ReservationItem item) {
   String ret;
   ret = 'Item Name:' + item.name + '\n';
   ret += 'Item Amount: ' + item.amount + '\n';

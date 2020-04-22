@@ -10,9 +10,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/services.dart';
 import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:rental_manager/data.dart';
 import 'package:rental_manager/reservations/reservationCell.dart';
-
 
 import 'globals.dart' as globals;
 import 'package:awesome_dialog/animated_button.dart';
@@ -27,12 +27,9 @@ import 'package:wc_flutter_share/wc_flutter_share.dart';
 
 import 'package:meta/meta.dart' show visibleForTesting;
 
-
-
 import 'dart:typed_data';
 
-
-class ItemInfo{
+class ItemInfo {
   String imageUrl;
   String person;
   String date;
@@ -43,9 +40,9 @@ class ItemInfo{
   String timeNow;
   String uid;
   String documentID;
-  ItemInfo(this.imageUrl,this.person, this.date, this.item, this.status, this.start, this.Return, this.timeNow, this.uid, this.documentID);
+  ItemInfo(this.imageUrl, this.person, this.date, this.item, this.status,
+      this.start, this.Return, this.timeNow, this.uid, this.documentID);
 }
-
 
 List<globals.ReservationItem> globalitemList = [];
 
@@ -55,10 +52,10 @@ class CureentReservation extends StatefulWidget {
 }
 
 class _CureentReservationState extends State<CureentReservation> {
-
   List<globals.ReservationItem> localList = new List();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey = GlobalKey<RefreshIndicatorState>();
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+      GlobalKey<RefreshIndicatorState>();
   Future<void> _handleRefresh() {
     final Completer<void> completer = Completer<void>();
     Timer(const Duration(seconds: 1), () {
@@ -71,34 +68,31 @@ class _CureentReservationState extends State<CureentReservation> {
               label: 'RETRY',
               onPressed: () {
                 _refreshIndicatorKey.currentState.show();
-
               })));
     });
   }
+
   int firstCount = 0;
   @override
   Widget build(BuildContext context) {
     // Scaffold is a layout for the major Material Components.
 
-
-
-
-    List<Widget> _getListings(BuildContext context, itemList) { // <<<<< Note this change for the return type
+    List<Widget> _getListings(BuildContext context, itemList) {
+      // <<<<< Note this change for the return type
       List listings = new List<Widget>();
       var list = itemList;
 
-
       for (var i = 0; i < list.length; i++) {
-        if(list[i].uid != globals.uid){
+        if (list[i].uid != globals.uid) {
           continue;
         }
 
-        if(list[i].status != "Returned"){
+        if (list[i].status != "Returned") {
           var name = list[i].name;
-          if(name == null){
+          if (name == null) {
             name = 'Error no name';
           }
-          if(list[i].imageURL != null){
+          if (list[i].imageURL != null) {
             //print("CR: " + list[i].imageURL);
           }
 
@@ -107,28 +101,35 @@ class _CureentReservationState extends State<CureentReservation> {
             Column(
               children: <Widget>[
                 new ListTile(
-
                     leading: CircleAvatar(
                       backgroundImage: NetworkImage(url),
                     ),
                     //显示在title之后
                     trailing: new Icon(Icons.chevron_right),
                     title: new Text(name),
-                    subtitle:new Text(list[i].startTime) ,
+                    subtitle: new Text(list[i].startTime),
                     onTap: () {
-
                       String value = itemInfo(list[i]);
                       //ItemInfo(person, date, item, status, start, Return)
-                      String person = globals.username, date = list[i].startTime, item = list[i].name;
-                      String status = list[i].status, start = list[i].startTime, Return = list[i].endTime;
-                      String uid = list[i].uid, docuementID = list[i].documentID;
+                      String person = globals.username,
+                          date = list[i].startTime,
+                          item = list[i].name;
+                      String status = list[i].status,
+                          start = list[i].startTime,
+                          Return = list[i].endTime;
+                      String uid = list[i].uid,
+                          docuementID = list[i].documentID;
                       DateTime now = DateTime.now();
-                      String timeNow = DateFormat('kk:mm:ss \n EEE d MMM').format(now);
+                      String timeNow =
+                          DateFormat('kk:mm:ss \n EEE d MMM').format(now);
 
-                      var theitem = ItemInfo(url, person, date, item, status, start, Return, timeNow, uid, docuementID);
+                      var theitem = ItemInfo(url, person, date, item, status,
+                          start, Return, timeNow, uid, docuementID);
 
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) => Ticket(theitem)));
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Ticket(theitem)));
 
 //                AwesomeDialog(
 //                  context: context,
@@ -145,82 +146,75 @@ class _CureentReservationState extends State<CureentReservation> {
 //                  btnOkOnPress: () {},
 //                ).show();
 //              },
-                    }
+                    }),
+                Divider(
+                  height: 2.0,
                 ),
-                Divider(height: 2.0,),
               ],
             ),
-
           );
         }
       }
       return listings;
     }
 
-    bool isEarly(String a, String b){
-
+    bool isEarly(String a, String b) {
       var time_a = DateTime.parse(a), time_b = DateTime.parse(b);
 
       var difference = time_a.difference(time_b);
       return difference.isNegative;
     }
 
-
-
-
     return new Scaffold(
-        appBar: AppBar(
-          title: Text('Orders'),
-          backgroundColor: Colors.teal,
-        ),
-        body: StreamBuilder(
-          stream: Firestore.instance.collection('reservation').snapshots(),
-          builder: (context, snapshot){
+      appBar: AppBar(
+        title: Text('Picked Up Items List'),
+        backgroundColor: Colors.teal,
+      ),
+      body: StreamBuilder(
+          stream: Firestore.instance
+              .collection('reservation')
+              .where('status', isEqualTo: 'Picked Up')
+              .snapshots(),
+          builder: (context, snapshot) {
             if (!snapshot.hasData) return const Text('loading...');
 
             List<globals.ReservationItem> itemList = new List();
 
-
             final List<DocumentSnapshot> documents = snapshot.data.documents;
 
+            documents.forEach((ds) => itemList.add(globals.ReservationItem(
+                ds["amount"],
+                ds["startTime"],
+                ds["endTime"],
+                ds["item"],
+                ds["status"],
+                ds["uid"],
+                ds["name"],
+                ds["imageURL"],
+                ds.documentID)));
 
-
-            documents.forEach((ds) => itemList.add(globals.ReservationItem(ds["amount"],
-              ds["startTime"],
-              ds["endTime"],
-              ds["item"],
-              ds["status"],
-              ds["uid"],
-              ds["name"],
-              ds["imageURL"],
-              ds.documentID
-            )
-            ));
-
-
-
-
-            for(int i = 0; i < itemList.length; i++){
-              if(itemList[i].uid != globals.uid || itemList[i].status == "Returned" || itemList[i].startTime == null){
+            for (int i = 0; i < itemList.length; i++) {
+              if (itemList[i].uid != globals.uid ||
+                  itemList[i].status == "Returned" ||
+                  itemList[i].startTime == null) {
                 itemList.removeAt(i);
               }
             }
 
-            for(int i = 0; i < itemList.length; i++){
-              if(itemList[i].startTime == null){
+            for (int i = 0; i < itemList.length; i++) {
+              if (itemList[i].startTime == null) {
                 itemList.removeAt(i);
               }
             }
 
-            for(int i = 0; i < itemList.length - 1; i++){
-              for(int j = 0; j < itemList.length - i - 1; j++){
+            for (int i = 0; i < itemList.length - 1; i++) {
+              for (int j = 0; j < itemList.length - i - 1; j++) {
                 var a = itemList[j].startTime, b = itemList[j + 1].startTime;
-                if(a == null || b == null)
-                {
+                if (a == null || b == null) {
                   continue;
                 }
 
-                if(isEarly(a, b) == false){
+                if (isEarly(a, b) == false) {
                   var swap = itemList[j];
                   itemList[j] = itemList[j + 1];
                   itemList[j + 1] = swap;
@@ -228,45 +222,37 @@ class _CureentReservationState extends State<CureentReservation> {
               }
             }
 
-
-            return  Container(
+            return Container(
               child: Column(children: <Widget>[
-
-                Expanded(child:  LiquidPullToRefresh(
-                  color: Colors.teal,
-                  key: _refreshIndicatorKey,	// key if you want to add
-                  onRefresh: _handleRefresh,
-                  child: ListView(
-                    padding: const EdgeInsets.all(20.0),
-                    children:  _getListings(context, itemList)// <<<<< Note this change for the return type
+                Expanded(
+                  child: LiquidPullToRefresh(
+                    color: Colors.teal,
+                    key: _refreshIndicatorKey, // key if you want to add
+                    onRefresh: _handleRefresh,
+                    child: ListView(
+                        padding: const EdgeInsets.all(20.0),
+                        children: _getListings(context,
+                            itemList) // <<<<< Note this change for the return type
+                        ),
                   ),
-                ),
                 )
               ]),
             );
-          }
-
-        ),
-
+          }),
     );
   }
-
 }
 
 List<globals.ReservationItem> globallList = new List();
 
-
-
-class ItemNameLocation{
+class ItemNameLocation {
   String itemName;
   String imageURL;
 }
 
-List<ItemNameLocation>myList = [];
+List<ItemNameLocation> myList = [];
 
-
-
-String itemInfo(globals.ReservationItem item){
+String itemInfo(globals.ReservationItem item) {
   String ret = '';
   ret += 'Item Name:' + item.name + '\n';
   ret += 'Item Amount: ' + item.amount + '\n';
@@ -276,31 +262,25 @@ String itemInfo(globals.ReservationItem item){
   return ret;
 }
 
-
-
 _buildFancyButtonOk(BuildContext context) {
   return AnimatedButton(
     pressEvent: () {
       Navigator.of(context).pop();
-
     },
-    text:   'Ok',
+    text: 'Ok',
     color: Color(0xFF00CA71),
-
   );
 }
 
-
-
-void GetImageURL(String uid) async{
+void GetImageURL(String uid) async {
   globals.itemList.clear();
   final QuerySnapshot result =
-  await Firestore.instance.collection('ARC_items').getDocuments();
+      await Firestore.instance.collection('ARC_items').getDocuments();
   final List<DocumentSnapshot> documents = result.documents;
   List<String> itemList = [];
   documents.forEach((data) => itemList.add(data.documentID));
 
-  for(var i = 0; i < itemList.length; i++){
+  for (var i = 0; i < itemList.length; i++) {
     String currentOne = itemList[i];
     Firestore.instance
         .collection('reservation')
@@ -308,7 +288,7 @@ void GetImageURL(String uid) async{
         .get()
         .then((DocumentSnapshot ds) {
       // use ds as a snapshot
-      if(currentOne == uid){
+      if (currentOne == uid) {
         ItemNameLocation aItem;
         aItem.itemName = ds["name"];
         aItem.imageURL = ds["imageURL"];
@@ -316,14 +296,13 @@ void GetImageURL(String uid) async{
       }
     });
   }
-
 }
 
 class TicketView extends StatelessWidget {
   @override
   ItemInfo theItem;
 
-  TicketView(theItem ){
+  TicketView(theItem) {
     this.theItem = theItem;
   }
   Widget build(BuildContext context) {
@@ -334,25 +313,22 @@ class TicketView extends StatelessWidget {
   }
 }
 
-
 class Ticket extends StatefulWidget {
   @override
   ItemInfo theItem;
 
-  Ticket(ItemInfo theItem ){
+  Ticket(ItemInfo theItem) {
     this.theItem = theItem;
-
-
   }
   _TicketState createState() => _TicketState(theItem);
 }
 
 class _TicketState extends State<Ticket> {
   ItemInfo theItem;
+  ProgressDialog progressDialog;
 
-  _TicketState(ItemInfo theItem ){
+  _TicketState(ItemInfo theItem) {
     this.theItem = theItem;
-
   }
 
   GlobalKey theGlobalKey = new GlobalKey();
@@ -377,11 +353,18 @@ class _TicketState extends State<Ticket> {
 //      print(e.toString());
 //    }
 //  }
+  Future itemReturned() async {
+    final firestore = Firestore.instance;
+    await firestore
+        .collection('reservation')
+        .document(theItem.documentID.toString())
+        .updateData({'status': 'Expired'}).catchError((error) => print(error));
+  }
 
   @override
   Widget build(BuildContext context) {
     String person = theItem.person;
-    String date = theItem.date.substring(0,10);
+    String date = theItem.date.substring(0, 10);
     String item = theItem.item;
     String status = theItem.status;
 
@@ -391,13 +374,15 @@ class _TicketState extends State<Ticket> {
     String url = theItem.imageUrl;
     String uid = theItem.uid;
     String timeNow = theItem.timeNow;
-    print(MediaQuery.of(context).size.width);
+    // print(MediaQuery.of(context).size.width);
+    progressDialog =
+        new ProgressDialog(context, type: ProgressDialogType.Normal);
+    progressDialog.style(message: '......');
 
-    var reservationID = theItem.documentID;// this is reservationID
-    print(reservationID);
+    var reservationID = theItem.documentID; // this is reservationID
+    // print(reservationID);
 
     File _imageFile;
-
 
     return Scaffold(
       appBar: AppBar(
@@ -408,122 +393,149 @@ class _TicketState extends State<Ticket> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.share),
-            onPressed:() async{
+            onPressed: () async {
               //Share.share('check out my website https://example.com', subject: 'ok', image: NetworkImage(globals.UserImageUrl) );
 
               // If the widget was removed from the tree while the asynchronous platform
               // message was in flight, we want to discard the reply rather than calling
               // setState to update our non-existent appearance.
-              RenderRepaintBoundary boundary = theGlobalKey.currentContext.findRenderObject();
+              RenderRepaintBoundary boundary =
+                  theGlobalKey.currentContext.findRenderObject();
               ui.Image image = await boundary.toImage();
               final directory = (await getApplicationDocumentsDirectory()).path;
-              ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+              ByteData byteData =
+                  await image.toByteData(format: ui.ImageByteFormat.png);
               Uint8List pngBytes = byteData.buffer.asUint8List();
 
-
-              try{
+              try {
                 await WcFlutterShare.share(
                     sharePopupTitle: 'Order Receipt',
                     fileName: 'Order Receipt.png',
                     mimeType: 'image/png',
                     bytesOfFile: pngBytes);
-              }catch (e){
+              } catch (e) {
                 print(e.toString());
               }
               print("OK");
             },
           )
         ],
-
       ),
       backgroundColor: Colors.white,
-      body: Center(
-        child: RepaintBoundary(
-          key: theGlobalKey,
-          child: FlutterTicketWidget(
-            color: Colors.yellow,
-            width: 350.0,
-            height: 500.0,
-            isCornerRounded: true,
-            child: Padding(
-              padding: const EdgeInsets.all(20.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Column(
+        children: <Widget>[
+          SizedBox(height: 20),
+          Center(
+            child: RepaintBoundary(
+              key: theGlobalKey,
+              child: FlutterTicketWidget(
+                color: Colors.yellow,
+                width: 350.0,
+                height: 500.0,
+                isCornerRounded: true,
+                child: Padding(
+                  padding: const EdgeInsets.all(20.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
-                      Container(
-                        width: 120.0,
-                        height: 25.0,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(60.0),
-                          border: Border.all(width: 1.0, color: Colors.green),
-                        ),
-                        child: Center(
-                          child: Text(
-                            'The ARC',
-                            style: TextStyle(color: Colors.green),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Container(
+                            width: 120.0,
+                            height: 25.0,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(60.0),
+                              border:
+                                  Border.all(width: 1.0, color: Colors.green),
+                            ),
+                            child: Center(
+                              child: Text(
+                                'The ARC',
+                                style: TextStyle(color: Colors.green),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Center(
+                        child: CircleAvatar(
+                          radius: 52,
+                          backgroundColor: Colors.teal,
+                          child: CircleAvatar(
+                            radius: 50,
+                            backgroundColor: Colors.teal,
+                            backgroundImage: NetworkImage(url),
                           ),
                         ),
                       ),
-
+                      Padding(
+                        padding: const EdgeInsets.only(top: 25.0),
+                        child: Column(
+                          children: <Widget>[
+                            ticketDetailsWidget(
+                                'Person', '$person', 'Date', '$date'),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 12.0, right: 50.0),
+                              child: ticketDetailsWidget(
+                                  'Item', '$item', 'Status', '$status'),
+                            ),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(top: 12.0, right: 40.0),
+                              child: ticketDetailsWidget(
+                                  'Start', '$start', 'Return', '$Return'),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 25,
+                      ),
+                      Center(
+                        child: Align(
+                          alignment: FractionalOffset.bottomCenter,
+                          child: Padding(
+                            padding: EdgeInsets.only(bottom: 10.0),
+                            child: QrImage(
+                              data: uid,
+                              size: 0.3 * MediaQuery.of(context).size.width,
+                            ),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
-                  Center(
-                    child: CircleAvatar(
-                      radius: 52,
-                      backgroundColor: Colors.teal,
-                      child: CircleAvatar(
-                        radius: 50,
-                        backgroundColor:Colors.teal,
-                        backgroundImage: NetworkImage(url),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 25.0),
-                    child: Column(
-                      children: <Widget>[
-                        ticketDetailsWidget(
-                            'Person', '$person', 'Date', '$date'),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 12.0, right: 50.0),
-                          child: ticketDetailsWidget(
-                              'Item', '$item', 'Status', '$status'),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 12.0, right: 40.0),
-                          child: ticketDetailsWidget(
-                              'Start', '$start', 'Return', '$Return'),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: 25,
-                  ),
-                  Center(
-                    child: Align(
-                      alignment: FractionalOffset.bottomCenter,
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 10.0),
-                        child: QrImage(
-                          data: uid,
-                          size: 0.3 * MediaQuery.of(context).size.width,
-                        ),
-                      ),
-                    ),
-                  ),
-
-                ],
+                ),
               ),
             ),
           ),
-        ),
+          SizedBox(height: 20),
+          SizedBox(
+            height: 50,
+            width: double.infinity,
+            child: RaisedButton.icon(
+              color: Colors.teal,
+              textColor: Colors.white,
+              elevation: 2.0,
+              shape: new RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(40.0),
+              ),
+              onPressed: () async {
+                await itemReturned();
 
+                Navigator.pop(context);
+              },
+              icon: Icon(Icons.insert_emoticon, size: 30.0),
+              label: Text(
+                'Item Returned',
+                style: TextStyle(fontSize: 20.0),
+              ),
+            ),
+          ),
+        ],
       ),
-
     );
   }
 
@@ -584,18 +596,16 @@ class _TicketState extends State<Ticket> {
 }
 
 class Share {
-
   @visibleForTesting
   static const MethodChannel channel =
-  MethodChannel('plugins.flutter.io/share');
-
+      MethodChannel('plugins.flutter.io/share');
 
   static Future<void> share(
-      String text, {
-        String subject,
-        NetworkImage image,
-        Rect sharePositionOrigin,
-      }) {
+    String text, {
+    String subject,
+    NetworkImage image,
+    Rect sharePositionOrigin,
+  }) {
     assert(text != null);
     assert(text.isNotEmpty);
     final Map<String, dynamic> params = <String, dynamic>{
