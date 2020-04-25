@@ -32,11 +32,11 @@ class CustomCell extends StatelessWidget {
                 padding: EdgeInsets.all(10.0),
                 child: Text(
                   categoryInfo['name'],
-                  maxLines: 1,
+                  maxLines: 2,
                   softWrap: true,
                   textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 20.0,
+                    fontSize: 17.0,
                     fontWeight: FontWeight.w500,
                   ),
                 ),

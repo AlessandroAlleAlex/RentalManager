@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import '../Locations/list_page.dart';
+import 'package:rental_manager/globals.dart' as globals;
 
 class FirstTab extends StatelessWidget {
   @override
@@ -21,15 +22,33 @@ class LocationPage extends StatefulWidget {
   }
 }
 
+Color backgroundcolor() {
+
+  if (globals.dark == false) {
+    return Colors.grey[200];
+  } else {
+    return Colors.black;
+  }
+}
+
+Color textcolor( ) {
+  if (globals.dark == false) {
+    return Colors.black;
+  } else {
+    return Colors.white;
+  }
+}
+
 class _LocationPageState extends State<LocationPage> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
-        backgroundColor: Colors.teal,
-        ),
+        title: Text(widget.title, style: TextStyle(color: textcolor()),),
+        backgroundColor: backgroundcolor(),
+
+      ),
       body: ListPage(),
     );
   }
