@@ -7,6 +7,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:rental_manager/PlatformWidget/platform_alert_dialog.dart';
+import 'package:rental_manager/tabs/locations.dart';
 import 'globals.dart' as globals;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_reactive_button/flutter_reactive_button.dart';
@@ -117,11 +118,14 @@ class EditProfile extends StatelessWidget {
 
     return new Scaffold(
       appBar: new AppBar(
+        iconTheme: IconThemeData(
+          color: textcolor(), //change your color here
+        ),
         title: new Text(
           "Details",
         ),
         centerTitle: true,
-        backgroundColor: Colors.teal,
+        backgroundColor: backgroundcolor(),
         actions: <Widget>[
           new PopupMenuButton(
               icon: Icon(Icons.camera_alt),
@@ -162,6 +166,7 @@ class EditProfile extends StatelessWidget {
               ])
         ],
       ),
+
       body: new EditProfileScreen(),
     );
   }

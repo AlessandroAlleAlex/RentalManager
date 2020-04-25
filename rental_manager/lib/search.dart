@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rental_manager/PlatformWidget/platform_alert_dialog.dart';
 import 'package:rental_manager/PlatformWidget/strings.dart';
-
+import 'package:rental_manager/searchItem.dart';
+import 'package:rental_manager/tabs/locations.dart';
+import 'globals.dart' as globals;
 class Post {
   final String title;
   final String description;
@@ -51,10 +53,11 @@ class _trackState extends State<track> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: backgroundcolor(),
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
-        title: Text('Track you favor'),
-        backgroundColor: Colors.teal,
+        title: Text('Track you favor', style: TextStyle(color: textcolor()),),
+        backgroundColor: backgroundcolor(),
 
       ),
       body: GestureDetector(
@@ -65,15 +68,16 @@ class _trackState extends State<track> {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: SearchBar<Post>(
+
               onSearch: search,
               onItemFound: (Post post, int index) {
                 return ListTile(
                   leading: CircleAvatar(
                     backgroundImage: NetworkImage(post.imageUrl),
                   ),
-                  title: Text(post.title),
-                  subtitle: Text(post.description),
-                  trailing: new Icon(Icons.chevron_right),
+                  title: Text(post.title,style: TextStyle(color: textcolor()),),
+                  subtitle: Text(post.description, style: TextStyle(color: textcolor())),
+                  trailing: new Icon(Icons.chevron_right, color: textcolor(),),
                   onTap: () async {
                     String str1 = "Item In Stock",
                         str2 = "Feel free to come and Check it in",
@@ -87,17 +91,17 @@ class _trackState extends State<track> {
                       String str;
 
                       final QuerySnapshot result = await Firestore.instance
-                          .collection('reservation')
+                          .collection(globals.collectionName)
                           .getDocuments();
                       final List<DocumentSnapshot> documents = result.documents;
 
                       for (int i = 0; i < documents.length; i++) {
-                        print("OK");
+
                         var ds = documents[i].data;
 
                         if (ds["name"] == post.title) {
                           var start = ds["startTime"];
-                          print(start);
+
                           if (str == null) {
                             str = start;
                           } else {
@@ -124,12 +128,16 @@ class _trackState extends State<track> {
                           "\nWant to know what time the item will be in Stock?";
                       strDecide = "Yes?";
                     }
-                    PlatformAlertDialog(
-                      title: str1,
-                      content: str2,
-                      cancelActionText: str3,
-                      defaultActionText: strDecide,
-                    ).show(context);
+                    final QuerySnapshot result =
+                    await Firestore.instance.collection(globals.collectionName).getDocuments();
+                    List<DocumentSnapshot> documents = result.documents;
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => theItemSearch(post.title, documents)));
+//                    PlatformAlertDialog(
+//                      title: str1,
+//                      content: str2,
+//                      cancelActionText: str3,
+//                      defaultActionText: strDecide,
+//                    ).show(context);
                   },
                 );
               },

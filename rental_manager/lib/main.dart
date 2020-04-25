@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:rental_manager/tabs/reservations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:rental_manager/mainView.dart';
@@ -52,6 +54,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/LoginScreen': (context) => MyApp(),
         '/MainViewScreen': (context) => MyHome1(),
+        '/SecondTab':(context) => SecondTab(),
         '/CR View': (context) => CureentReservation(),
       },
       initialRoute: 'LoginScreen',
@@ -215,6 +218,15 @@ class _MyHomePageState extends State<MyHomePage> {
       globals.sex = list[6];
       Navigator.of(context).pushReplacementNamed('/MainViewScreen');
     }
+   try{
+     var isDark = prefs.getBool('isDark'), userSelectTheme = prefs.getInt('userSelectTheme');
+     globals.dark = isDark;
+     globals.userSelectTheme = userSelectTheme;
+     print('isDark:' + isDark.toString());
+     print('userSelectTheme: ' + userSelectTheme.toString());
+   }catch(e){
+      print(e);
+   }
 
     for(int i = 0; i < list.length; i++){
       print(list[i]);
@@ -243,6 +255,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //testfunc();
     testfunc();
     return MaterialApp(
+
       home: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
@@ -498,6 +511,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                   userinfor.add(globals.sex );
                                   var prefs = await SharedPreferences.getInstance();
                                   await prefs.setStringList("user", userinfor);
+                                  await prefs.setBool('isDark', false);
+                                  await prefs.setInt('userSelectTheme', -1);
+
 
 
                                   prLOGIN.hide();
@@ -640,6 +656,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                   userinfor.add(globals.sex );
                                   var prefs = await SharedPreferences.getInstance();
                                   await prefs.setStringList("user", userinfor);
+                                  await prefs.setBool('isDark', false);
+                                  await prefs.setInt('userSelectTheme', -1);
 
                                   Navigator.of(context).pushReplacementNamed('/MainViewScreen');
                                   getData();
@@ -781,6 +799,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
+
       //home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }

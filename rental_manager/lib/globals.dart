@@ -3,7 +3,7 @@ import 'dart:collection';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:flutter/material.dart';
 String uid = '';
 String username = 'Xu Liu';
 String email = '';
@@ -14,7 +14,10 @@ String UserImageUrl = '';
 FirebaseUser mygoogleuser;
 BuildContext mycontext;
 String CancelledItemDocID = "";
+String  collectionName = 'JingReservation';
 List<DocumentSnapshot> myds;
+bool dark= false;
+int userSelectTheme = -1;
 class Item{
   String itemName;
   String itemLocation;
@@ -28,6 +31,7 @@ class ItemNameLocation{
   String imageURL;
 }
 
+BuildContext ContextInOrder;
 var itemValueMap = new HashMap();
 
 class ReservationItem{
@@ -45,5 +49,5 @@ class ReservationItem{
 }
 
 List<ReservationItem> itemList = new List();
-
+List<String>returnDOCIDList = [];
 List<Item> detailList = [];

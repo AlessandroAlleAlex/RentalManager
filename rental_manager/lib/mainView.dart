@@ -1,9 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rental_manager/tabs/locations.dart';
 import 'package:rental_manager/tabs/reservations.dart';
 import 'package:rental_manager/tabs/help.dart';
 import 'package:rental_manager/tabs/account.dart';
 import 'package:rental_manager/chatview/login.dart';
+import 'package:flutter/foundation.dart' as foundation;
+
+bool get isIos => foundation.defaultTargetPlatform == foundation.TargetPlatform.iOS;
 
 
 class MyHome1 extends StatefulWidget {
@@ -33,45 +37,84 @@ class MyHomeState extends State<MyHome1> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      // Appbar
-      // appBar: AppBar(
-      //   // Title
-      //   title: Text(
-      //     "Rental Manager",
-      //     style:  TextStyle(
-      //       fontFamily: 'Pacifico',
-      //       fontSize: 20,
-      //       color: Colors.white,
-      //       fontWeight: FontWeight.bold,
-      //     ),
-      //   ),
-      //   backgroundColor: Colors.teal,
-      // ),
 
-      body: TabBarView(
-        // Add tabs as widgets
-        physics: NeverScrollableScrollPhysics(),
-        children: <Widget>[FirstTab(), SecondTab(), ThirdTab(), FourthTab()],
-        // set the controller
-        controller: controller,
-      ),
+    if(isIos){
+      return CupertinoTabScaffold(
+        backgroundColor: backgroundcolor(),
+          tabBar:CupertinoTabBar(
+            backgroundColor: backgroundcolor(),
+              items: [
+            BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.location, color: textcolor()), title: Text("Locations", style: TextStyle(color: textcolor()),)),
+            BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.bookmark, color: textcolor(),), title: Text("Reservation", style: TextStyle(color: textcolor()),)),
+            BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.search,  color: textcolor(),), title: Text("Help", style: TextStyle(color: textcolor()),)),
+            BottomNavigationBarItem(
+                icon: Icon(CupertinoIcons.person, color: textcolor(),), title: Text("User Info", style: TextStyle(color: textcolor()),))
+          ]),
+        tabBuilder: (context, index){
+            switch(index){
+              case 0:
+                return FirstTab();
+              case 1:
+                return SecondTab();
+              case 2:
+                return ThirdTab();
+              case 3:
+                return FourthTab();
+              default:
+                return FirstTab();
+            }
+        }
 
-      bottomNavigationBar: Material(
-        color: Colors.teal,
-        child: TabBar(
-          tabs: <Tab>[
-            Tab(icon: Icon(Icons.location_city ), text: 'Locations',),
-            Tab(icon: Icon(Icons.book ), text: 'Reservation',),
-            Tab(icon: Icon(Icons.help ), text: 'Help',),
-            Tab(icon: Icon(Icons.account_circle ), text: 'Account',),
-          ],
+      );
+    }else{
+      return Scaffold(
+        // Appbar
+        // appBar: AppBar(
+        //   // Title
+        //   title: Text(
+        //     "Rental Manager",
+        //     style:  TextStyle(
+        //       fontFamily: 'Pacifico',
+        //       fontSize: 20,
+        //       color: Colors.white,
+        //       fontWeight: FontWeight.bold,
+        //     ),
+        //   ),
+        //   backgroundColor: Colors.teal,
+        // ),
+
+        body: TabBarView(
+          // Add tabs as widgets
+          physics: NeverScrollableScrollPhysics(),
+          children: <Widget>[FirstTab(), SecondTab(), ThirdTab(), FourthTab()],
+          // set the controller
           controller: controller,
         ),
-      ),
+
+        bottomNavigationBar: Material(
+
+          color: backgroundcolor(),
+          child: TabBar(
+            indicatorColor: Colors.black,
+            labelColor: textcolor(),
+            tabs: <Tab>[
+              Tab(icon: Icon(Icons.location_city, color: textcolor(),), text: 'Locations',),
+              Tab(icon: Icon(Icons.book, color: textcolor() ), text: 'Reservation',),
+              Tab(icon: Icon(Icons.help,color: textcolor() ), text: 'Help',),
+              Tab(icon: Icon(Icons.account_circle,color: textcolor() ), text: 'Account',),
+            ],
+            controller: controller,
+          ),
+        ),
 
 
-    );
+      );
+    }
+
+
   }
 }
 
