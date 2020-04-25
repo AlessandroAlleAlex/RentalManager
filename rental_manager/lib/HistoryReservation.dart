@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:rental_manager/CurrentReservation.dart';
 import 'package:rental_manager/PlatformWidget/platform_alert_dialog.dart';
 import 'package:rental_manager/PlatformWidget/strings.dart';
 import 'package:rental_manager/data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:rental_manager/tabs/locations.dart';
 import 'globals.dart' as globals;
 
 class HistoryReservation extends StatefulWidget {
@@ -19,9 +21,21 @@ class _HistoryReservationState extends State<HistoryReservation> {
     // Scaffold is a layout for the major Material Components.
     return new Scaffold(
         appBar: AppBar(
-          title: Text('History Reservation'),
-          backgroundColor: Colors.teal,
+          title: Text('History Reservation', style: TextStyle(color: textcolor()),),
+          backgroundColor: backgroundcolor(),
+          actions: <Widget>[
+            IconButton(
+                icon: Icon(
+                  Icons.repeat_one,
+                  color: Colors.white,
+                ),
+            ),
+          ],
+          iconTheme: IconThemeData(
+            color: textcolor(), //change your color here
+          ),
         ),
+        backgroundColor: backgroundcolor(),
         body: new SafeArea(
             child: Container(child: Column(children: <Widget>[
 
@@ -31,7 +45,8 @@ class _HistoryReservationState extends State<HistoryReservation> {
               ),
               )
             ])
-            )));
+            ))
+    );
   }
 
 }
@@ -70,7 +85,11 @@ List<Widget> _getListings(BuildContext context) { // <<<<< Note this change for 
   List listings = new List<Widget>();
   var list = globals.itemList;
   for (var i = 0; i < list.length; i++) {
-    if(list[i].status == "pending"){
+    if(list[i].uid != globals.uid){
+      continue;
+    }
+    print(list[i].status);
+    if(list[i].status == "Returned"){
 
       var name = list[i].name;
       var url = list[i].imageURL;
@@ -85,9 +104,9 @@ List<Widget> _getListings(BuildContext context) { // <<<<< Note this change for 
                 backgroundImage: NetworkImage(url),
               ),
               //显示在title之后
-              trailing: new Icon(Icons.chevron_right),
-              title: new Text(name),
-              subtitle:new Text(list[i].startTime) ,
+              trailing: new Icon(Icons.chevron_right, color: textcolor(),),
+              title: new Text(name, style: TextStyle(color: textcolor()),),
+              subtitle:new Text(parseTime(list[i].startTime), style: TextStyle(color: textcolor()),) ,
               onTap: (){
                 String value = itemInfo(list[i]);
                 //Navigator.push(context, MaterialPageRoute(builder: (context) => HistoryReservation()));
@@ -100,7 +119,7 @@ List<Widget> _getListings(BuildContext context) { // <<<<< Note this change for 
               },
 
             ),
-            Divider(height: 2.0,),
+            Divider(height: 2.0, color: textcolor(),),
           ],
         ),
 
