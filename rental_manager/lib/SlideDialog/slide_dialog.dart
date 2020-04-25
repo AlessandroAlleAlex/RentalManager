@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rental_manager/tabs/reservations.dart';
 import '../globals.dart' as globals;
 import 'pill_gesture.dart';
 
@@ -68,6 +69,44 @@ class _SlideDialogState extends State<SlideDialog> {
                       ),
                       widget.child,
                       widget.textField,
+                      SizedBox(
+                        width: 300,
+                        child: RaisedButton(
+                          highlightElevation: 0.0,
+                          splashColor: Colors.greenAccent,
+                          highlightColor: Colors.green,
+                          elevation: 0.0,
+                          color: Colors.blue,
+                          shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Center(
+                                child: Text(
+                                  "Dismiss",
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    // backgroundColor:  Colors.teal[50],
+                                    color: Colors.white,
+                                    fontFamily: 'Montserrat',
+                                  ),
+                                ),
+                              ),
+
+                            ],
+                          ),
+                          onPressed: (){
+                            FocusScope.of(context).requestFocus(FocusNode());
+                            Navigator.pop(context, false);
+                            //Navigator.push(context, MaterialPageRoute(builder: (context) => SecondTab()));
+                          },
+                          padding: EdgeInsets.all(7.0),
+                          //color: Colors.teal.shade900,
+                          disabledColor: Colors.black,
+                          disabledTextColor: Colors.black,
+
+                        ),
+                      ),
                     ],
                   ),
                   shape: RoundedRectangleBorder(

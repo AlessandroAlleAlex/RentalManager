@@ -24,16 +24,42 @@ import '../globals.dart';
 
 String contents;
 
+void sendEmail(String subject, String text, BuildContext context) async{
+  String username = 'jagaoabc@gmail.com';
+  String password = 'Aa123456!';
+  text = 'UserEmail: $email\nText:\n$text';
+  final smtpServer = gmail(username, password);
+// Creating the Gmail server
+
+
+// Create our email message.
+  final message = Message()
+    ..from = Address(username)
+    ..recipients.add(globals.email) //recipent email
+    ..ccRecipients.addAll(['jagaoabc@gmail.com', 'jagaoabc2@gmail.com']) //cc Recipents emails
+    ..bccRecipients.add(Address('bccAddress@example.com')) //bcc Recipents emails
+    ..subject = subject //subject of the email
+    ..text = text; //body of the email
+
+  try {
+    final sendReport = await send(message, smtpServer);
+    print('Message sent: ' + sendReport.toString()); //print if the email is sent
+  } on MailerException catch (e) {
+    print('Message not sent. \n'+ e.toString()); //print if the email is not sent
+// e.toString() will show why the email is not sending
+  }
+
+}
+
+
+
 class ThirdTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Chat',
-      theme: ThemeData(
-        primaryColor: Colors.teal,
-      ),
-      home: LoginScreen(title: 'Chat'),
-      debugShowCheckedModeBanner: false,
+    return Scaffold(
+
+      body: LoginScreen(title: 'Chat'),
+
     );
   }
 }
@@ -456,8 +482,9 @@ class LoginScreenState extends State<LoginScreen> {
         appBar: AppBar(
           title: Text(
             widget.title,
-            style: TextStyle(color: primaryColor, fontWeight: FontWeight.bold),
+            style: TextStyle(color: textcolor(), fontWeight: FontWeight.bold),
           ),
+          backgroundColor: backgroundcolor(),
           centerTitle: true,
         ),
         floatingActionButton:buildSpeedDial(),

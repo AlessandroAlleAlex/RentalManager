@@ -24,6 +24,7 @@ class _ItemPageState extends State<ItemPage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+
       appBar: AppBar(
         title: Text('Category Selected: ${widget.category}'),
         backgroundColor: Colors.teal,
@@ -39,31 +40,31 @@ class _ItemPageState extends State<ItemPage> {
           ),
         ],
       ),
+
       body: StreamBuilder(
-        stream: Firestore.instance
-            .collection('ARC_items')
-            .where('category', isEqualTo: widget.category)
-            .orderBy('name')
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData) return const Text('loading...');
-          // print(snapshot.data.documents.length);
-          return ListView.builder(
-            itemCount: snapshot.data.documents.length,
-            itemBuilder: (BuildContext context, int index) => ListTile(
-              title:
-                  Text(snapshot.data.documents[index].data['name'].toString()),
-              subtitle: Text(
-                  'Total amount: ${snapshot.data.documents[index].data['# of items'].toString()}'),
-              onTap: () {
-                navigateToDetail(snapshot.data.documents[index]);
-                // testingReservations(
-                //     snapshot.data.documents[index].documentID);
-              },
-            ),
-          );
-        },
-      ),
+
+          stream: Firestore.instance
+              .collection('ARC_items')
+              .where('category', isEqualTo: widget.category)
+              .snapshots(),
+          builder: (context, snapshot) {
+            if (!snapshot.hasData) return const Text('loading...');
+            // print(snapshot.data.documents.length);
+            return ListView.builder(
+              itemCount: snapshot.data.documents.length,
+              itemBuilder: (BuildContext context, int index) => ListTile(
+                title: Text(
+                    snapshot.data.documents[index].data['name'].toString()),
+                subtitle: Text(
+                    'Total amount: ${snapshot.data.documents[index].data['# of items'].toString()}'),
+                onTap: () {
+                  navigateToDetail(snapshot.data.documents[index]);
+                  // testingReservations(
+                  //     snapshot.data.documents[index].documentID);
+                },
+              ),
+            );
+          }),
     );
   }
 }
@@ -80,6 +81,7 @@ class CustomSearchDelegate extends SearchDelegate {
   }
 
   displayGrids(data, context) {
+
     return Column(
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -96,6 +98,7 @@ class CustomSearchDelegate extends SearchDelegate {
               children: data.map<Widget>(
                 (categoryInfo) {
                   return GestureDetector(
+
                     child: GridTile(
                       child: CustomCell(categoryInfo),
                     ),
@@ -109,8 +112,6 @@ class CustomSearchDelegate extends SearchDelegate {
           ),
         ),
       ],
-
-      // ),
     );
   }
 
@@ -145,12 +146,11 @@ class CustomSearchDelegate extends SearchDelegate {
   @override
   Widget buildSuggestions(BuildContext context) {
     // If you want to add search suggestions as the user enters their search term, this is the place to do that.
-    // print(category);
+    print(category);
     return StreamBuilder(
         stream: Firestore.instance
             .collection('ARC_items')
             .where('category', isEqualTo: category)
-            .orderBy('name')
             .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) return const Text('loading...');

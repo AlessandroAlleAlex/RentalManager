@@ -4,6 +4,7 @@ import 'package:rental_manager/QRCode/generate.dart';
 
 import 'package:rental_manager/data.dart';
 import 'package:rental_manager/main.dart';
+import 'package:rental_manager/tabs/locations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../globals.dart' as globals;
 import 'package:rental_manager/editProfile.dart';
@@ -12,28 +13,28 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'map.dart';
-
+import 'package:rental_manager/changeColor.dart';
 ProgressDialog pr;
 
-Future<List<globals.ReservationItem>> setData() async {
+Future<List<globals.ReservationItem>> setData() async{
   List<globals.ReservationItem> itemList = new List();
 
   final QuerySnapshot result =
-      await Firestore.instance.collection('reservation').getDocuments();
+  await Firestore.instance.collection(globals.collectionName).getDocuments();
   final List<DocumentSnapshot> documents = result.documents;
   List<globals.ReservationItem> reservationList = new List();
   int count = 0;
-  documents.forEach((ds) => reservationList.add(globals.ReservationItem(
-        ds["amount"],
-        ds["startTime"],
-        ds["endTime"],
-        ds["item"],
-        ds["status"],
-        ds["uid"],
-        ds["name"],
-        ds["imageURL"],
-        ds.documentID,
-      )));
+  documents.forEach((ds) => reservationList.add(globals.ReservationItem(ds["amount"],
+    ds["startTime"],
+    ds["endTime"],
+    ds["item"],
+    ds["status"],
+    ds["uid"],
+    ds["name"],
+    ds["imageURL"],
+    ds.documentID,
+  )
+  ));
 
   return reservationList;
 }
@@ -41,7 +42,7 @@ Future<List<globals.ReservationItem>> setData() async {
 class FourthTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
+    pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
     pr.style(message: 'Showing some progress...');
     pr.style(
       message: 'Please wait...',
@@ -55,20 +56,32 @@ class FourthTab extends StatelessWidget {
       messageTextStyle: TextStyle(
           color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600),
     );
+    var screenwidth = MediaQuery.of(context).size.width;
+    Color accountBackgroundColor(){
+      if(globals.dark == true){
+        return Colors.black;
+      }else{
+        return Colors.white;
+      }
+    }
+
+
 
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: Text(
             "Rental Manager",
-            style: TextStyle(
+            style:  TextStyle(
               fontFamily: 'Pacifico',
+              color: textcolor()
               // backgroundColor: Colors.teal,
             ),
           ),
-          backgroundColor: Colors.teal,
+
+          backgroundColor: backgroundcolor(),
         ),
-        backgroundColor: Colors.white,
+        backgroundColor: backgroundcolor(),
         body: SafeArea(
           child: Column(
             children: <Widget>[
@@ -76,15 +89,13 @@ class FourthTab extends StatelessWidget {
                 children: <Widget>[
                   CircleAvatar(
                     radius: 50,
-                    backgroundImage: globals.UserImageUrl == ""
-                        ? AssetImage('images/appstore.png')
-                        : NetworkImage(globals.UserImageUrl),
+                    backgroundImage: globals.UserImageUrl == ""? AssetImage('images/appstore.png'): NetworkImage(globals.UserImageUrl),
                   ),
                   Text(
                     globals.username,
                     style: TextStyle(
                       fontFamily: 'Source Sans Pro',
-                      color: Colors.teal,
+                      color: textcolor(),
                       fontSize: 20,
                       letterSpacing: 2.5,
                     ),
@@ -104,7 +115,7 @@ class FourthTab extends StatelessWidget {
                     'Your Score: xxx',
                     style: TextStyle(
                       fontFamily: 'Source Sans Pro',
-                      color: Colors.teal.shade900,
+                      color: textcolor(),
                       fontSize: 20,
                       letterSpacing: 1.5,
                     ),
@@ -123,36 +134,19 @@ class FourthTab extends StatelessWidget {
                 ],
               ),
               Container(
-                padding: EdgeInsets.all(0.6),
-                margin: EdgeInsets.only(
-                  left: 0,
-                  right: 0,
-                ),
-                color: Colors.teal,
+                padding:EdgeInsets.all(0.6),
+                margin:EdgeInsets.only(left:0, right:0,),
+                color: accountBackgroundColor(),
                 child: FlatButton(
-                  onPressed: () async {
+                  onPressed: () async{
                     await pr.show();
-                    pr.update(
-                      message: 'Please wait...',
-                      progressWidget: CircularProgressIndicator(),
-                      progressTextStyle: TextStyle(
-                          color: Colors.black,
-                          fontSize: 13.0,
-                          fontWeight: FontWeight.w400),
-                      messageTextStyle: TextStyle(
-                          color: Colors.black,
-                          fontSize: 19.0,
-                          fontWeight: FontWeight.w600),
-                    );
+
                     var mylist = await setData();
                     globals.itemList = mylist;
 
                     pr.hide();
-                    // print(mylist.length.toString());
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CureentReservation()));
+                    print(mylist.length.toString());
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => CureentReservation()));
                   },
                   child: Column(
                     children: <Widget>[
@@ -161,22 +155,27 @@ class FourthTab extends StatelessWidget {
                         children: <Widget>[
                           Icon(
                             Icons.book,
-                            color: Colors.white,
+                            color: textcolor(),
                           ),
-                          Text('Picked Up Items',
+                          Text(
+                              'Orders',
                               style: TextStyle(
                                 fontSize: 20,
-                                color: Colors.white,
+                                color: textcolor(),
                                 fontFamily: 'Source Sans Pro',
-                              )),
-                          Text('>>',
+                              )
+                          ),
+                          Text(
+                              '>>',
                               style: TextStyle(
                                 fontSize: 20,
-                                color: Colors.white,
+                                color: textcolor(),
                                 fontFamily: 'Source Sans Pro',
-                              )),
+                              )
+                          ),
                         ],
                       ),
+
                     ],
                   ),
                 ),
@@ -185,42 +184,26 @@ class FourthTab extends StatelessWidget {
                 children: <Widget>[
                   SizedBox(
                     height: 1,
+                    width: screenwidth,
                     child: Divider(
-                      color: Colors.grey,
+                      color: backgroundcolor(),
                     ),
                   ),
                 ],
               ),
               Container(
-                padding: EdgeInsets.all(0.6),
-                margin: EdgeInsets.only(
-                  left: 0,
-                  right: 0,
-                ),
-                color: Colors.teal,
+                padding:EdgeInsets.all(0.6),
+                margin:EdgeInsets.only(left:0, right:0,),
+                color: accountBackgroundColor(),
                 child: FlatButton(
-                  onPressed: () async {
+                  onPressed: () async{
                     await pr.show();
-                    pr.update(
-                      message: 'Please wait...',
-                      progressWidget: CircularProgressIndicator(),
-                      progressTextStyle: TextStyle(
-                          color: Colors.black,
-                          fontSize: 13.0,
-                          fontWeight: FontWeight.w400),
-                      messageTextStyle: TextStyle(
-                          color: Colors.black,
-                          fontSize: 19.0,
-                          fontWeight: FontWeight.w600),
-                    );
+
                     var mylist = await setData();
                     globals.itemList = mylist;
                     pr.hide();
                     print(mylist.length.toString());
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => HistoryReservation()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => HistoryReservation()));
                   },
                   child: Column(
                     children: <Widget>[
@@ -228,23 +211,28 @@ class FourthTab extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Icon(
-                            Icons.history,
-                            color: Colors.white,
+                            Icons.history ,
+                            color: textcolor(),
                           ),
-                          Text('History',
+                          Text(
+                              'History',
                               style: TextStyle(
                                 fontSize: 20,
-                                color: Colors.white,
+                                color: textcolor(),
                                 fontFamily: 'Source Sans Pro',
-                              )),
-                          Text('>>',
+                              )
+                          ),
+                          Text(
+                              '>>',
                               style: TextStyle(
                                 fontSize: 20,
-                                color: Colors.white,
+                                color: textcolor(),
                                 fontFamily: 'Source Sans Pro',
-                              )),
+                              )
+                          ),
                         ],
                       ),
+
                     ],
                   ),
                 ),
@@ -253,24 +241,23 @@ class FourthTab extends StatelessWidget {
                 children: <Widget>[
                   SizedBox(
                     height: 1,
+                    width: screenwidth,
                     child: Divider(
-                      color: Colors.grey,
+                      color: backgroundcolor(),
                     ),
                   ),
                 ],
               ),
               Container(
                 padding: EdgeInsets.all(0.6),
-                margin: EdgeInsets.only(
-                  left: 0,
-                  right: 0,
-                ),
-                color: Colors.teal,
+                margin:EdgeInsets.only(left:0, right:0,),
+                color: accountBackgroundColor(),
                 child: FlatButton(
-                  onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => EditProfile()));
+                  onPressed: (){
+
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfile()));
                   },
+
                   child: Column(
                     children: <Widget>[
                       Row(
@@ -278,13 +265,13 @@ class FourthTab extends StatelessWidget {
                         children: <Widget>[
                           Icon(
                             Icons.account_circle,
-                            color: Colors.white,
+                            color: textcolor(),
                           ),
                           Text(
                             'Details & Password',
                             style: TextStyle(
                               fontSize: 20,
-                              color: Colors.white,
+                              color: textcolor(),
                               fontFamily: 'Source Sans Pro',
                             ),
                           ),
@@ -292,7 +279,7 @@ class FourthTab extends StatelessWidget {
                             '>>',
                             style: TextStyle(
                               fontSize: 20,
-                              color: Colors.white,
+                              color: textcolor(),
                               fontFamily: 'Source Sans Pro',
                             ),
                           ),
@@ -306,8 +293,9 @@ class FourthTab extends StatelessWidget {
                 children: <Widget>[
                   SizedBox(
                     height: 1,
+                    width: screenwidth,
                     child: Divider(
-                      color: Colors.grey,
+                      color: backgroundcolor(),
                     ),
                   ),
                 ],
@@ -315,12 +303,11 @@ class FourthTab extends StatelessWidget {
               Container(
                 padding: EdgeInsets.all(0.6),
                 margin: EdgeInsets.only(),
-                color: Colors.teal,
+                color: accountBackgroundColor(),
                 child: FlatButton(
-                  onPressed: () {
+                  onPressed: (){
                     print("Theme Color");
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => TheMap()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => changeColor()));
                   },
                   child: Column(
                     children: <Widget>[
@@ -329,13 +316,13 @@ class FourthTab extends StatelessWidget {
                         children: <Widget>[
                           Icon(
                             Icons.wb_sunny,
-                            color: Colors.white,
+                            color: textcolor(),
                           ),
                           Text(
                             'Theme Color',
                             style: TextStyle(
                               fontSize: 20,
-                              color: Colors.white,
+                              color: textcolor(),
                               fontFamily: 'Source Sans Pro',
                             ),
                           ),
@@ -343,7 +330,7 @@ class FourthTab extends StatelessWidget {
                             '>>',
                             style: TextStyle(
                               fontSize: 20,
-                              color: Colors.white,
+                              color: textcolor(),
                               fontFamily: 'Source Sans Pro',
                             ),
                           ),
@@ -357,41 +344,28 @@ class FourthTab extends StatelessWidget {
                 children: <Widget>[
                   SizedBox(
                     height: 1,
+                    width: screenwidth,
                     child: Divider(
-                      color: Colors.grey,
+                      color: backgroundcolor(),
                     ),
                   ),
                 ],
               ),
               Container(
-                padding: EdgeInsets.all(0.6),
-                margin: EdgeInsets.only(
-                  left: 0,
-                  right: 0,
-                ),
-                color: Colors.teal,
+                padding:EdgeInsets.all(0.6),
+                margin:EdgeInsets.only(left:0, right:0,),
+                color: accountBackgroundColor(),
                 child: FlatButton(
-                  onPressed: () async {
+                  onPressed: () async{
                     print('Log out');
                     await pr.show();
-                    pr.update(
-                      message: 'Logging out...',
-                      progressWidget: CircularProgressIndicator(),
-                      progressTextStyle: TextStyle(
-                          color: Colors.black,
-                          fontSize: 13.0,
-                          fontWeight: FontWeight.w400),
-                      messageTextStyle: TextStyle(
-                          color: Colors.black,
-                          fontSize: 19.0,
-                          fontWeight: FontWeight.w600),
-                    );
-                    Future.delayed(Duration(seconds: 2)).then((onValue) {});
+
+                    Future.delayed(Duration(seconds: 2)).then((onValue){
+                    });
                     var prefs = await SharedPreferences.getInstance();
                     prefs.remove("user");
                     pr.hide();
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        '/LoginScreen', (Route route) => false);
+                    Navigator.of(context).pushNamedAndRemoveUntil('/LoginScreen', (Route route) => false);
                     //Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
                     print(context);
                   },
@@ -401,21 +375,25 @@ class FourthTab extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Icon(
-                            Icons.exit_to_app,
-                            color: Colors.white,
+                            Icons.exit_to_app ,
+                            color: textcolor(),
                           ),
-                          Text('Sign Out',
+                          Text(
+                              'Sign Out',
                               style: TextStyle(
                                 fontSize: 20,
-                                color: Colors.white,
+                                color: textcolor(),
                                 fontFamily: 'Source Sans Pro',
-                              )),
-                          Text('>>',
+                              )
+                          ),
+                          Text(
+                              '>>',
                               style: TextStyle(
                                 fontSize: 20,
-                                color: Colors.white,
+                                color: textcolor(),
                                 fontFamily: 'Source Sans Pro',
-                              )),
+                              )
+                          ),
                         ],
                       ),
                     ],
@@ -426,25 +404,20 @@ class FourthTab extends StatelessWidget {
                 children: <Widget>[
                   SizedBox(
                     height: 1,
+                    width: screenwidth,
                     child: Divider(
-                      color: Colors.grey,
+                      color: backgroundcolor(),
                     ),
                   ),
                 ],
               ),
               Container(
-                padding: EdgeInsets.all(0.6),
-                margin: EdgeInsets.only(
-                  left: 0,
-                  right: 0,
-                ),
-                color: Colors.teal,
+                padding:EdgeInsets.all(0.6),
+                margin:EdgeInsets.only(left:0, right:0,),
+                color: accountBackgroundColor(),
                 child: FlatButton(
-                  onPressed: () async {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => GenerateScreen()));
+                  onPressed: () async{
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => GenerateScreen()));
                   },
                   child: Column(
                     children: <Widget>[
@@ -453,26 +426,41 @@ class FourthTab extends StatelessWidget {
                         children: <Widget>[
                           Icon(
                             Icons.perm_identity,
-                            color: Colors.white,
+                            color: textcolor(),
                           ),
-                          Text('QR Code',
+                          Text(
+                              'QR Code',
                               style: TextStyle(
                                 fontSize: 20,
-                                color: Colors.white,
+                                color: textcolor(),
                                 fontFamily: 'Source Sans Pro',
-                              )),
-                          Text('>>',
+                              )
+                          ),
+                          Text(
+                              '>>',
                               style: TextStyle(
                                 fontSize: 20,
-                                color: Colors.white,
+                                color: textcolor(),
                                 fontFamily: 'Source Sans Pro',
-                              )),
+                              )
+                          ),
                         ],
                       ),
                     ],
                   ),
                 ),
               ),
+            Row(
+              children: <Widget>[
+                SizedBox(
+                  height: 1,
+                  width: screenwidth,
+                  child: Divider(
+                    color: backgroundcolor(),
+                  ),
+                ),
+              ],
+            ),
             ],
           ),
         ),
