@@ -18,9 +18,11 @@ class CategoryPage extends StatefulWidget {
 class _CategoryPageState extends State<CategoryPage> {
   navigateToItem(String categorySelected) {
     Navigator.push(
-        context,
-        MaterialPageRoute(
-            builder: (context) => ItemPage(category: categorySelected)));
+      context,
+      MaterialPageRoute(
+        builder: (context) => ItemPage(category: categorySelected),
+      ),
+    );
   }
 
   displayGrids(data) {

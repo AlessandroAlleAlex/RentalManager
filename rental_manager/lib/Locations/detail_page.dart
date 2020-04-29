@@ -38,20 +38,6 @@ class _DetailPage extends State<DetailPage> {
     );
   }
 
-  // Container reserveButton() {
-  //   return Container(
-  //     alignment: Alignment.center,
-  //     child: RaisedButton(
-  //       onPressed: () {
-  //         print('button pressed! (reserve)');
-  //         testingReservations(widget.itemSelected.documentID);
-  //       },
-  //       child: Text('Reserve Now', style: TextStyle(color: Colors.white)),
-  //       color: Colors.teal,
-  //     ),
-  //   );
-  // }
-
   Container reserveButton() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 16.0),
@@ -190,7 +176,10 @@ class _DetailPage extends State<DetailPage> {
         print(e);
       }
     });
-    sendEmail("Order Confirmed", "Your order item is $itemName\nNumber: 1\nTime you ordered is $time", context);
+    sendEmail(
+        "Order Confirmed",
+        "Your order item is $itemName\nNumber: 1\nTime you ordered is $time",
+        context);
     print("Reservation pickup before time: " +
         DateFormat("yyyy-MM-dd HH:mm:ss").format(pickUpBefore));
     uploadData(itemID, globals.uid, time);
@@ -234,7 +223,10 @@ class _DetailPage extends State<DetailPage> {
       imageURL = "www.gooogle.com";
     }
 
-    await databaseReference.collection(globals.collectionName).document().setData({
+    await databaseReference
+        .collection(globals.collectionName)
+        .document()
+        .setData({
       'imageURL': imageURL,
       'name': itemName,
       'uid': uid,
@@ -243,8 +235,8 @@ class _DetailPage extends State<DetailPage> {
       'amount': "1",
       'startTime': dateTime,
       'status': "Reserved",
-      'reserved time' : dateTime,
-      'picked Up time' : 'NULL',
+      'reserved time': dateTime,
+      'picked Up time': 'NULL',
       'return time': 'NULL',
       'endTime': "TBD",
     });
