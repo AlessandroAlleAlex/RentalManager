@@ -5,6 +5,7 @@ import 'package:rental_manager/PlatformWidget/strings.dart';
 import 'package:rental_manager/data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:rental_manager/language.dart';
 import 'package:rental_manager/tabs/locations.dart';
 import 'globals.dart' as globals;
 
@@ -21,7 +22,7 @@ class _HistoryReservationState extends State<HistoryReservation> {
     // Scaffold is a layout for the major Material Components.
     return new Scaffold(
         appBar: AppBar(
-          title: Text('History Reservation', style: TextStyle(color: textcolor()),),
+          title: Text(langaugeSetFunc('History Reservation'), style: TextStyle(color: textcolor()),),
           backgroundColor: backgroundcolor(),
           actions: <Widget>[
             IconButton(

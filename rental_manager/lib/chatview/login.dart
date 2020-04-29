@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:rental_manager/language.dart';
 import 'package:rental_manager/search.dart';
 import 'package:rental_manager/uploadCSV.dart';
 import 'package:file_picker/file_picker.dart';
@@ -245,7 +246,7 @@ class LoginScreenState extends State<LoginScreen> {
               children: <Widget>[
 
                 Text(
-                  s,
+                  langaugeSetFunc(s),
                   style: TextStyle(
                     color: Colors.grey,
                   ),
@@ -264,8 +265,8 @@ class LoginScreenState extends State<LoginScreen> {
                   },
                   validator: (String val){
                     if(VerifyEmail(val) == false){
-                      var s = "Please enter your valid email address";
-                      return s;
+                      var str_mssage = "Please enter your valid email address";
+                      return langaugeSetFunc(str_mssage);
                     }
                     return null;
                   },
@@ -281,7 +282,7 @@ class LoginScreenState extends State<LoginScreen> {
                         width: 1.0,
                       ),
                     ),
-                    labelText: 'Email',
+                    labelText: langaugeSetFunc('Email'),
                     prefixIcon: const Icon(Icons.email, color: Colors.black),
                     // labelStyle:
                     // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
@@ -298,8 +299,8 @@ class LoginScreenState extends State<LoginScreen> {
                   },
                   validator: (String val){
                     if(val.isEmpty){
-                      var s = "Please fill in the blank";
-                      return s;
+                      var str_message = "Please fill in the blank";
+                      return langaugeSetFunc(str_message);
                     }
                     return null;
                   },
@@ -315,7 +316,7 @@ class LoginScreenState extends State<LoginScreen> {
                         width: 1.0,
                       ),
                     ),
-                    labelText: 'Subject',
+                    labelText: langaugeSetFunc('Subject'),
                     prefixIcon: const Icon(Icons.title, color: Colors.black),
                     // labelStyle:
                     // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
@@ -332,8 +333,8 @@ class LoginScreenState extends State<LoginScreen> {
                   },
                   validator: (String val){
                     if(val.isEmpty){
-                      var s = "Please fill in the blank";
-                      return s;
+                      var str_message = "Please fill in the blank";
+                      return langaugeSetFunc(str_message);
                     }
                     return null;
                   },
@@ -352,7 +353,7 @@ class LoginScreenState extends State<LoginScreen> {
                         width: 1.0,
                       ),
                     ),
-                    labelText: 'Text',
+                    labelText: langaugeSetFunc('Text'),
                     prefixIcon: const Icon(Icons.content_paste, color: Colors.black),
                     // labelStyle:
                     // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
@@ -376,7 +377,7 @@ class LoginScreenState extends State<LoginScreen> {
                       children: <Widget>[
                         Center(
                           child: Text(
-                            "Submit",
+                            langaugeSetFunc("Submit"),
                             style: TextStyle(
                               fontSize: 15,
                               // backgroundColor:  Colors.teal[50],
@@ -437,7 +438,7 @@ class LoginScreenState extends State<LoginScreen> {
             child: Icon(Icons.lock, color: Colors.white),
             backgroundColor: Colors.deepOrange,
             onTap: () => _showDialog("Describe the item and leave your contact"),
-            label: 'Lost And Found',
+            label: langaugeSetFunc('Lost And Found'),
             labelStyle: TextStyle(fontWeight: FontWeight.w500),
             labelBackgroundColor: Colors.deepOrangeAccent,
           ),
@@ -449,7 +450,7 @@ class LoginScreenState extends State<LoginScreen> {
               color: Colors.blue,
               margin: EdgeInsets.only(right: 10),
               padding: EdgeInsets.all(6),
-              child: Text('Bring us your ideas '),
+              child: Text(langaugeSetFunc('Bring us your ideas')),
             ),
           ),
           SpeedDialChild(
@@ -458,7 +459,7 @@ class LoginScreenState extends State<LoginScreen> {
             onTap: (){
               Navigator.push(context, MaterialPageRoute(builder: (context) => track()));
             },
-            label: 'Track',
+            label: langaugeSetFunc('Track'),
             labelStyle: TextStyle(fontWeight: FontWeight.w500),
             labelBackgroundColor: Colors.teal,
           ),

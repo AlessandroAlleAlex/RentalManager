@@ -11,6 +11,7 @@ import 'package:flutter/services.dart';
 import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
 import 'package:rental_manager/data.dart';
+import 'package:rental_manager/language.dart';
 import 'package:rental_manager/reservations/reservationCell.dart';
 import 'package:rental_manager/tabs/locations.dart';
 
@@ -376,7 +377,7 @@ class _CureentReservationState extends State<CureentReservation> {
         iconTheme: IconThemeData(
           color: textcolor(), //change your color here
         ),
-        title: Text('Orders', style: TextStyle(color: textcolor())),
+        title: Text(langaugeSetFunc('Orders'), style: TextStyle(color: textcolor())),
         centerTitle: true,
         backgroundColor: backgroundcolor(),
         actions: <Widget>[
@@ -749,7 +750,7 @@ class _TicketState extends State<Ticket> {
         ),
         backgroundColor: backgroundcolor(),
         automaticallyImplyLeading: true,
-        title: Text('Details', style: TextStyle(color: textcolor()),),
+        title: Text(langaugeSetFunc('Details'), style: TextStyle(color: textcolor()),),
         centerTitle: true,
         actions: <Widget>[
           IconButton(

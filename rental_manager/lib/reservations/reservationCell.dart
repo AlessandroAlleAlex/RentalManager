@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:rental_manager/language.dart';
 import 'package:rental_manager/tabs/locations.dart';
 
 import '../globals.dart' as globals;
@@ -132,7 +133,7 @@ class _reservationCell extends State<reservationCell> {
           color: textcolor(), //change your color here
         ),
         backgroundColor: backgroundcolor(),
-        title: Text('Reservation Details', style: TextStyle(color: textcolor()),),
+        title: Text(langaugeSetFunc('Reservation Details'), style: TextStyle(color: textcolor()),),
       ),
       body: Container(
         padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
@@ -144,7 +145,7 @@ class _reservationCell extends State<reservationCell> {
               TextSpan(
                 children: <TextSpan>[
                   TextSpan(
-                      text: '- item name: ',
+                      text: '- ' + langaugeSetFunc('item name:')+ ' ',
                       style: TextStyle(
                           fontStyle: FontStyle.italic, fontSize: 16.0)),
                   TextSpan(
@@ -161,7 +162,7 @@ class _reservationCell extends State<reservationCell> {
               TextSpan(
                 children: <TextSpan>[
                   TextSpan(
-                      text: '- start time: ',
+                      text: '- ' + langaugeSetFunc('start time:')+ ' ',
                       style: TextStyle(
                           fontStyle: FontStyle.italic, fontSize: 16.0)),
                   TextSpan(
@@ -178,7 +179,7 @@ class _reservationCell extends State<reservationCell> {
               TextSpan(
                 children: <TextSpan>[
                   TextSpan(
-                      text: '- end time: ',
+                      text: '- ' + langaugeSetFunc('end time:')+ ' ',
                       style: TextStyle(
                           fontStyle: FontStyle.italic, fontSize: 16.0)),
                   TextSpan(
@@ -195,7 +196,7 @@ class _reservationCell extends State<reservationCell> {
               TextSpan(
                 children: <TextSpan>[
                   TextSpan(
-                      text: '- quantity: ',
+                      text: '- ' + langaugeSetFunc('quantity:')+ ' ',
                       style: TextStyle(
                           fontStyle: FontStyle.italic, fontSize: 16.0)),
                   TextSpan(
@@ -212,11 +213,11 @@ class _reservationCell extends State<reservationCell> {
               TextSpan(
                 children: <TextSpan>[
                   TextSpan(
-                      text: '- item status: ',
+                      text: '- ' + langaugeSetFunc('item status:')+ ' ',
                       style: TextStyle(
                           fontStyle: FontStyle.italic, fontSize: 16.0)),
                   TextSpan(
-                      text: widget.passedFirestoreData['status'],
+                      text: langaugeSetFunc(widget.passedFirestoreData['status']),
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontSize: 18,
@@ -226,7 +227,7 @@ class _reservationCell extends State<reservationCell> {
             ),
             SizedBox(height: 50),
             Text(
-              '  Time Left To Pick Up: ',
+              langaugeSetFunc('Time Left To Pick Up:'),
               style: TextStyle(
                 color: Colors.teal,
                 fontFamily: 'Source Sans Pro',
@@ -234,7 +235,7 @@ class _reservationCell extends State<reservationCell> {
               ),
             ),
             Text(
-              '$displayRemainingTime Minutes',
+              '$displayRemainingTime ' + langaugeSetFunc('Minutes'),
               style: TextStyle(
                 color: Colors.teal,
                 fontFamily: 'Source Sans Pro',
@@ -260,7 +261,7 @@ class _reservationCell extends State<reservationCell> {
                 },
                 icon: Icon(Icons.insert_emoticon, size: 30.0),
                 label: Text(
-                  'Pick Up',
+                  langaugeSetFunc('Pick Up'),
                   style: TextStyle(fontSize: 20.0),
                 ),
               ),

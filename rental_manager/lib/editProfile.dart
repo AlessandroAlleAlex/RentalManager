@@ -7,6 +7,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:rental_manager/PlatformWidget/platform_alert_dialog.dart';
+import 'package:rental_manager/language.dart';
 import 'package:rental_manager/tabs/locations.dart';
 import 'globals.dart' as globals;
 import 'package:firebase_auth/firebase_auth.dart';
@@ -122,7 +123,7 @@ class EditProfile extends StatelessWidget {
           color: textcolor(), //change your color here
         ),
         title: new Text(
-          "Details",
+         langaugeSetFunc("Details"),
         ),
         centerTitle: true,
         backgroundColor: backgroundcolor(),
@@ -297,7 +298,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
                           // Username
                           new Container(
                             child: new Text(
-                              'Username',
+                              langaugeSetFunc('Username'),
                               style: new TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14.0,
@@ -335,7 +336,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
 
                           new Container(
                             child: new Text(
-                              'Student ID',
+                              langaugeSetFunc('Employer ID'),
                               style: new TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14.0,
@@ -377,7 +378,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
 
                           new Container(
                             child: new Text(
-                              'Phone',
+                              langaugeSetFunc('Phone'),
                               style: new TextStyle(
                                   fontWeight: FontWeight.bold,
                                   fontSize: 14.0,
@@ -471,7 +472,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
                                 RaisedButton(
                                     textColor: Colors.white,
                                     color: Colors.teal,
-                                    child: Text('Confirm'),
+                                    child: Text(langaugeSetFunc('Confirm')),
                                     onPressed: () async {
                                       _onSubmit();
 

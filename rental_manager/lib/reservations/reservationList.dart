@@ -1,5 +1,9 @@
 
 import 'dart:async';
+import 'package:devicelocale/devicelocale.dart';
+import 'package:flutter/services.dart';
+import 'package:rental_manager/language.dart';
+
 import '../CurrentReservation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -40,12 +44,15 @@ class _ReservationListPage extends State<ReservationListPage> {
 
   @override
   Widget build(BuildContext context) {
+
+
+
     return FutureBuilder(
       future: getFirestoreData(),
       builder: (_, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Center(
-            child: Text('Loading...'),
+            child: Text(langaugeSetFunc('Loading...')),
           );
         } else {
           return ListView.builder(
@@ -65,7 +72,9 @@ class _ReservationListPage extends State<ReservationListPage> {
                 child: ListTile(
                   leading: Icon(Icons.timer, size: 35.0),
                   trailing: Icon(Icons.arrow_forward, size: 28.0),
-                  onTap: () {
+                  onTap: () async{
+                    print(123);
+
                     navigateToDetail(snapshot.data[index]);
                   },
                   title: Text(
