@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rental_manager/chatview/login.dart';
+import 'package:rental_manager/language.dart';
+import 'package:rental_manager/tabs/locations.dart';
 import '../globals.dart' as globals;
 import 'package:intl/intl.dart';
 import 'package:rental_manager/PlatformWidget/platform_alert_dialog.dart';
@@ -38,6 +40,20 @@ class _DetailPage extends State<DetailPage> {
     );
   }
 
+  // Container reserveButton() {
+  //   return Container(
+  //     alignment: Alignment.center,
+  //     child: RaisedButton(
+  //       onPressed: () {
+  //         print('button pressed! (reserve)');
+  //         testingReservations(widget.itemSelected.documentID);
+  //       },
+  //       child: Text('Reserve Now', style: TextStyle(color: Colors.white)),
+  //       color: Colors.teal,
+  //     ),
+  //   );
+  // }
+
   Container reserveButton() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 16.0),
@@ -47,7 +63,7 @@ class _DetailPage extends State<DetailPage> {
           print('button pressed! (reserve)');
           testingReservations(widget.itemSelected.documentID);
         },
-        child: Text('Reserve Now', style: TextStyle(color: Colors.white)),
+        child: Text(langaugeSetFunc('Reserve Now'), style: TextStyle(color: Colors.white)),
         color: Colors.teal,
       ),
     );
@@ -84,7 +100,7 @@ class _DetailPage extends State<DetailPage> {
               .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) return const Text('loading...');
-            return Text('Remaining Amount: ${snapshot.data['# of items']}',
+            return Text( langaugeSetFunc('Remaining Amount:')+ ' ${snapshot.data['# of items']}',
                 style: TextStyle(
                     fontSize: 14.0,
                     color: Colors.redAccent,
@@ -115,8 +131,11 @@ class _DetailPage extends State<DetailPage> {
     // TODO: implement build
     return Scaffold(
         appBar: AppBar(
-          title: Text('Details of: ${widget.itemSelected.data['name']}'),
-          backgroundColor: Colors.teal,
+          iconTheme: IconThemeData(
+            color: textcolor(), //change your color here
+          ),
+          title: Text( langaugeSetFunc('Details of:') + ' ${widget.itemSelected.data['name']}', style: TextStyle(color: textcolor()),),
+          backgroundColor: backgroundcolor(),
         ),
         backgroundColor: Colors.blueGrey,
         // body: Image.network(
@@ -176,10 +195,7 @@ class _DetailPage extends State<DetailPage> {
         print(e);
       }
     });
-    sendEmail(
-        "Order Confirmed",
-        "Your order item is $itemName\nNumber: 1\nTime you ordered is $time",
-        context);
+    sendEmail("Order Confirmed", "Your order item is $itemName\nNumber: 1\nTime you ordered is $time", context);
     print("Reservation pickup before time: " +
         DateFormat("yyyy-MM-dd HH:mm:ss").format(pickUpBefore));
     uploadData(itemID, globals.uid, time);
@@ -223,10 +239,7 @@ class _DetailPage extends State<DetailPage> {
       imageURL = "www.gooogle.com";
     }
 
-    await databaseReference
-        .collection(globals.collectionName)
-        .document()
-        .setData({
+    await databaseReference.collection(globals.collectionName).document().setData({
       'imageURL': imageURL,
       'name': itemName,
       'uid': uid,
@@ -235,8 +248,8 @@ class _DetailPage extends State<DetailPage> {
       'amount': "1",
       'startTime': dateTime,
       'status': "Reserved",
-      'reserved time': dateTime,
-      'picked Up time': 'NULL',
+      'reserved time' : dateTime,
+      'picked Up time' : 'NULL',
       'return time': 'NULL',
       'endTime': "TBD",
     });

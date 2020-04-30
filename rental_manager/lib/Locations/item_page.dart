@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rental_manager/globals.dart';
+import 'package:rental_manager/language.dart';
+import 'package:rental_manager/tabs/locations.dart';
 import 'detail_page.dart';
 import 'custom_gridcell.dart';
 
@@ -26,8 +29,11 @@ class _ItemPageState extends State<ItemPage> {
     return Scaffold(
 
       appBar: AppBar(
-        title: Text('Category Selected: ${widget.category}'),
-        backgroundColor: Colors.teal,
+        iconTheme: IconThemeData(
+          color: textcolor(), //change your color here
+        ),
+        title: Text( langaugeSetFunc('Category Selected: ')+' ${widget.category}', style: TextStyle(color: textcolor()),),
+        backgroundColor: backgroundcolor(),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),
@@ -48,7 +54,7 @@ class _ItemPageState extends State<ItemPage> {
               .where('category', isEqualTo: widget.category)
               .snapshots(),
           builder: (context, snapshot) {
-            if (!snapshot.hasData) return const Text('loading...');
+            if (!snapshot.hasData) return Text(langaugeSetFunc('loading...'));
             // print(snapshot.data.documents.length);
             return ListView.builder(
               itemCount: snapshot.data.documents.length,
@@ -56,7 +62,7 @@ class _ItemPageState extends State<ItemPage> {
                 title: Text(
                     snapshot.data.documents[index].data['name'].toString()),
                 subtitle: Text(
-                    'Total amount: ${snapshot.data.documents[index].data['# of items'].toString()}'),
+                    langaugeSetFunc('Total amount:') + ' ${snapshot.data.documents[index].data['# of items'].toString()}'),
                 onTap: () {
                   navigateToDetail(snapshot.data.documents[index]);
                   // testingReservations(
@@ -153,7 +159,7 @@ class CustomSearchDelegate extends SearchDelegate {
             .where('category', isEqualTo: category)
             .snapshots(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData) return const Text('loading...');
+          if (!snapshot.hasData) return Text(langaugeSetFunc('loading...'));
           // print(snapshot.data.documents.length);
           final results = snapshot.data.documents.where(
             (DocumentSnapshot a) =>

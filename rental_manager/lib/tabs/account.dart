@@ -3,6 +3,8 @@ import 'package:rental_manager/HistoryReservation.dart';
 import 'package:rental_manager/QRCode/generate.dart';
 
 import 'package:rental_manager/data.dart';
+import 'package:rental_manager/language.dart';
+import 'package:rental_manager/languageSet.dart';
 import 'package:rental_manager/main.dart';
 import 'package:rental_manager/tabs/locations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -109,19 +111,7 @@ class FourthTab extends StatelessWidget {
                   ),
                 ],
               ),
-              Row(
-                children: <Widget>[
-                  Text(
-                    'Your Score: xxx',
-                    style: TextStyle(
-                      fontFamily: 'Source Sans Pro',
-                      color: textcolor(),
-                      fontSize: 20,
-                      letterSpacing: 1.5,
-                    ),
-                  ),
-                ],
-              ),
+
               Row(
                 children: <Widget>[
                   SizedBox(
@@ -158,7 +148,7 @@ class FourthTab extends StatelessWidget {
                             color: textcolor(),
                           ),
                           Text(
-                              'Orders',
+                              langaugeSetFunc('Orders'),
                               style: TextStyle(
                                 fontSize: 20,
                                 color: textcolor(),
@@ -215,7 +205,7 @@ class FourthTab extends StatelessWidget {
                             color: textcolor(),
                           ),
                           Text(
-                              'History',
+                              langaugeSetFunc('History'),
                               style: TextStyle(
                                 fontSize: 20,
                                 color: textcolor(),
@@ -268,7 +258,7 @@ class FourthTab extends StatelessWidget {
                             color: textcolor(),
                           ),
                           Text(
-                            'Details & Password',
+                            langaugeSetFunc('Details & Password'),
                             style: TextStyle(
                               fontSize: 20,
                               color: textcolor(),
@@ -319,7 +309,58 @@ class FourthTab extends StatelessWidget {
                             color: textcolor(),
                           ),
                           Text(
-                            'Theme Color',
+                            langaugeSetFunc('Theme Color'),
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: textcolor(),
+                              fontFamily: 'Source Sans Pro',
+                            ),
+                          ),
+                          Text(
+                            '>>',
+                            style: TextStyle(
+                              fontSize: 20,
+                              color: textcolor(),
+                              fontFamily: 'Source Sans Pro',
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Row(
+                children: <Widget>[
+                  SizedBox(
+                    height: 1,
+                    width: screenwidth,
+                    child: Divider(
+                      color: backgroundcolor(),
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                padding: EdgeInsets.all(0.6),
+                margin: EdgeInsets.only(),
+                color: accountBackgroundColor(),
+                child: FlatButton(
+                  onPressed: (){
+
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => languageSetting()));
+                  },
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Icon(
+                            Icons.wb_sunny,
+                            color: textcolor(),
+                          ),
+                          Text(
+                            langaugeSetFunc('Language Setting'),
                             style: TextStyle(
                               fontSize: 20,
                               color: textcolor(),
@@ -379,7 +420,7 @@ class FourthTab extends StatelessWidget {
                             color: textcolor(),
                           ),
                           Text(
-                              'Sign Out',
+                             langaugeSetFunc('Log Out'),
                               style: TextStyle(
                                 fontSize: 20,
                                 color: textcolor(),
@@ -429,7 +470,7 @@ class FourthTab extends StatelessWidget {
                             color: textcolor(),
                           ),
                           Text(
-                              'QR Code',
+                              langaugeSetFunc('QR Code'),
                               style: TextStyle(
                                 fontSize: 20,
                                 color: textcolor(),

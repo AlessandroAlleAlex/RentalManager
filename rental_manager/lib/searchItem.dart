@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rental_manager/language.dart';
 import 'package:rental_manager/tabs/locations.dart';
 import 'package:wc_flutter_share/wc_flutter_share.dart';
 import 'package:path_provider/path_provider.dart';
@@ -81,7 +82,7 @@ class _theItemSearchState extends State<theItemSearch> {
           color: textcolor(), //change your color here
         ),
         backgroundColor: backgroundcolor(),
-        title: new Text("Usage Statistics: $itemname", style: TextStyle(color: textcolor()),),
+        title: new Text( langaugeSetFunc('Usage Statistics:') + " $itemname", style: TextStyle(color: textcolor()),),
         centerTitle: true,
         actions: <Widget>[
           IconButton(
@@ -135,7 +136,7 @@ class _theItemSearchState extends State<theItemSearch> {
                 children: <Widget>[
 
                   Center(
-                    child: Text("Morning Usage",
+                    child: Text(langaugeSetFunc("Morning Usage"),
                       style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),),
                   ),
                   Padding(
@@ -158,7 +159,7 @@ class _theItemSearchState extends State<theItemSearch> {
                     ),
                   ),
                   Center(
-                    child: Text("Afternoon Usage",
+                    child: Text(langaugeSetFunc("Afternoon Usage"),
                       style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),),
                   ),
                   Padding(
@@ -181,7 +182,7 @@ class _theItemSearchState extends State<theItemSearch> {
                     ),
                   ),
                   Center(
-                    child: Text("Evening Usage",
+                    child: Text(langaugeSetFunc("Evening Usage"),
                       style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0),),
                   ),
                   Padding(
@@ -211,7 +212,7 @@ class _theItemSearchState extends State<theItemSearch> {
                           width: 140.0,
                           lineHeight: 14.0,
                           percent: 0.7,
-                          leading: Text("Feedback"),
+                          leading: Text(langaugeSetFunc("Feedback")),
                           center: Text(
                             "70.0%",
                             style: new TextStyle(fontSize: 12.0),
@@ -244,7 +245,7 @@ class _theItemSearchState extends State<theItemSearch> {
                   lineWidth: 10.0,
                   percent: value / 6,
                   header: new Text(
-                    "Average Hour",
+                    langaugeSetFunc("Average Hour"),
                     style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 15.0),
                   ),
                   center: new Text(
@@ -262,7 +263,7 @@ class _theItemSearchState extends State<theItemSearch> {
                   animationDuration: 2000,
                   percent: percentReserved,
                   header: new Text(
-                    "Preference",
+                    langaugeSetFunc("Preference"),
                     style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 15.0),
                   ),
                   center: new Text(

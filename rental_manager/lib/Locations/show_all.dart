@@ -2,6 +2,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rental_manager/tabs/locations.dart';
 import 'detail_page.dart';
 import 'custom_gridcell.dart';
 
@@ -23,9 +24,13 @@ class _showAllState extends State<showAll> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomPadding: false,
       appBar: AppBar(
-        title: Text('All Items'),
-        backgroundColor: Colors.teal,
+        iconTheme: IconThemeData(
+          color: textcolor(), //change your color here
+        ),
+        title: Text('All Items', style: TextStyle(color: textcolor()),),
+        backgroundColor: backgroundcolor(),
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),
@@ -53,6 +58,7 @@ class _showAllState extends State<showAll> {
             // final names = snapshot.data.documents.data;
             // return displayGrids(names);
             return ListView.builder(
+              reverse: true,
               itemCount: snapshot.data.documents.length,
               itemBuilder: (BuildContext context, int index) => ListTile(
                 title: Text(

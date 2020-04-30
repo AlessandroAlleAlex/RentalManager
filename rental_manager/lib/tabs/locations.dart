@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rental_manager/language.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import '../Locations/list_page.dart';
 import 'package:rental_manager/globals.dart' as globals;
@@ -45,7 +46,7 @@ class _LocationPageState extends State<LocationPage> {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title, style: TextStyle(color: textcolor()),),
+        title: Text(langaugeSetFunc('Select a Location'), style: TextStyle(color: textcolor()),),
         backgroundColor: backgroundcolor(),
 
       ),

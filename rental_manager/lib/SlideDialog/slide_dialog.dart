@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rental_manager/language.dart';
 import 'package:rental_manager/tabs/reservations.dart';
 import '../globals.dart' as globals;
 import 'pill_gesture.dart';
@@ -83,7 +84,7 @@ class _SlideDialogState extends State<SlideDialog> {
                             children: <Widget>[
                               Center(
                                 child: Text(
-                                  "Dismiss",
+                                  langaugeSetFunc('Dismiss'),
                                   style: TextStyle(
                                     fontSize: 15,
                                     // backgroundColor:  Colors.teal[50],

@@ -23,7 +23,8 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:rental_manager/qrcodelogin.dart';
 import 'qrcodelogin.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
-
+import 'dart:ui' as ui;
+import 'package:devicelocale/devicelocale.dart';
 void getData() async{
   Firestore.instance
       .collection('usersByFullName')
@@ -220,8 +221,15 @@ class _MyHomePageState extends State<MyHomePage> {
     }
    try{
      var isDark = prefs.getBool('isDark'), userSelectTheme = prefs.getInt('userSelectTheme');
+     if(isDark == null || userSelectTheme == null){
+       final Brightness brightnessValue = MediaQuery.of(context).platformBrightness;
+       bool Dark = brightnessValue == Brightness.dark;
+       globals.dark = Dark;
+       globals.userSelectTheme = -1;
+     }
      globals.dark = isDark;
-     globals.userSelectTheme = userSelectTheme;
+     globals.userSelectTheme = -1;
+
      print('isDark:' + isDark.toString());
      print('userSelectTheme: ' + userSelectTheme.toString());
    }catch(e){
@@ -231,6 +239,20 @@ class _MyHomePageState extends State<MyHomePage> {
     for(int i = 0; i < list.length; i++){
       print(list[i]);
     }
+
+    var language =  prefs.getString('mylanguage');
+    print(language);
+    if(language != null){
+      if(language == 'English' || language == 'SimplifiedChinese') {
+        globals.langaugeSet = language;
+      }else{
+        globals.langaugeSet = "English";
+      }
+    }else{
+      globals.langaugeSet = "English";
+    }
+
+
 
   }
 
@@ -254,6 +276,11 @@ class _MyHomePageState extends State<MyHomePage> {
     );
     //testfunc();
     testfunc();
+
+
+
+
+
     return MaterialApp(
 
       home: Scaffold(
@@ -799,6 +826,8 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
       ),
+
+
 
       //home: MyHomePage(title: 'Flutter Demo Home Page'),
     );

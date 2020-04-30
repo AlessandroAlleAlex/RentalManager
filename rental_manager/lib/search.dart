@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rental_manager/PlatformWidget/platform_alert_dialog.dart';
 import 'package:rental_manager/PlatformWidget/strings.dart';
+import 'package:rental_manager/language.dart';
 import 'package:rental_manager/searchItem.dart';
 import 'package:rental_manager/tabs/locations.dart';
 import 'globals.dart' as globals;
+import 'tabs/locations.dart';
 class Post {
   final String title;
   final String description;
@@ -56,7 +58,10 @@ class _trackState extends State<track> {
       backgroundColor: backgroundcolor(),
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
-        title: Text('Track you favor', style: TextStyle(color: textcolor()),),
+        iconTheme: IconThemeData(
+          color: textcolor(), //change your color here
+        ),
+        title: Text(langaugeSetFunc('Track you favor'), style: TextStyle(color: textcolor()),),
         backgroundColor: backgroundcolor(),
 
       ),

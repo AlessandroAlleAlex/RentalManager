@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:rental_manager/language.dart';
 import 'package:rental_manager/tabs/locations.dart';
 import '../reservations/reservationList.dart';
 class SecondTab extends StatelessWidget {
@@ -26,7 +27,7 @@ class _reservationPageState extends State<reservationPage> {
     // TODO: implement build
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title, style: TextStyle(color: textcolor()),),
+        title: Text(langaugeSetFunc(widget.title), style: TextStyle(color: textcolor()),),
         backgroundColor: backgroundcolor(),
         ),
       body: ReservationListPage(),

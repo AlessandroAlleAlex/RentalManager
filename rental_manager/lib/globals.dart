@@ -16,6 +16,8 @@ BuildContext mycontext;
 String CancelledItemDocID = "";
 String  collectionName = 'JingReservation';
 List<DocumentSnapshot> myds;
+String langaugeSet = "SimplifiedChinese";
+
 bool dark= false;
 int userSelectTheme = -1;
 class Item{

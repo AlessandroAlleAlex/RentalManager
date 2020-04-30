@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rental_manager/globals.dart';
+import 'package:rental_manager/language.dart';
+import 'package:rental_manager/tabs/locations.dart';
 import 'custom_gridcell.dart';
 import 'item_page.dart';
 import 'show_all.dart';
@@ -18,11 +21,9 @@ class CategoryPage extends StatefulWidget {
 class _CategoryPageState extends State<CategoryPage> {
   navigateToItem(String categorySelected) {
     Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => ItemPage(category: categorySelected),
-      ),
-    );
+        context,
+        MaterialPageRoute(
+            builder: (context) => ItemPage(category: categorySelected)));
   }
 
   displayGrids(data) {
@@ -69,8 +70,11 @@ class _CategoryPageState extends State<CategoryPage> {
     // print(widget.passedFirestoreData.data['categories']);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Category'),
-        backgroundColor: Colors.teal,
+        iconTheme: IconThemeData(
+          color: textcolor(), //change your color here
+        ),
+        title: Text(langaugeSetFunc("Category"), style: TextStyle(color: textcolor()),),
+        backgroundColor: backgroundcolor(),
         // automaticallyImplyLeading: false,
         actions: <Widget>[
           Padding(
@@ -81,8 +85,8 @@ class _CategoryPageState extends State<CategoryPage> {
                 // displayGrids(fetchAll());
               },
               child: Text(
-                'show all',
-                style: TextStyle(color: Colors.white),
+                langaugeSetFunc('show all'),
+                style: TextStyle(color: textcolor()),
               ),
             ),
           )
