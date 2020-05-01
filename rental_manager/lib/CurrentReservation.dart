@@ -46,13 +46,11 @@ class ItemInfo {
       this.start, this.Return, this.timeNow, this.uid, this.documentID);
 }
 
-
-String parseTime(String time_str){
-  final reservationStartTime = DateFormat.yMd().add_jm().format(DateTime.parse(time_str));
-  print(reservationStartTime.toString());
+String parseTime(String time_str) {
+  final reservationStartTime =
+      DateFormat.yMd().add_jm().format(DateTime.parse(time_str));
   return reservationStartTime.toString();
 }
-
 
 List<globals.ReservationItem> globalitemList = [];
 
@@ -179,7 +177,10 @@ class _CureentReservationState extends State<CureentReservation> {
       String test = "test";
       var url =
           'https://firebasestorage.googleapis.com/v0/b/rentalmanager-f94f1.appspot.com/o/item_images%2FRock%20Wall%20ATC-Carabiner.jpg?alt=media&token=f0e605fa-ed3e-40c1-b0d9-186ce01e3ab4';
-      await Firestore.instance.collection(globals.collectionName).document().setData({
+      await Firestore.instance
+          .collection(globals.collectionName)
+          .document()
+          .setData({
         'imageURL': url,
         'name': test,
         'item': 'FmkqMr7ta72O4eeDjal7',
@@ -195,8 +196,9 @@ class _CureentReservationState extends State<CureentReservation> {
     }
 
     void deleteTestMode() async {
-      var result =
-          await Firestore.instance.collection(globals.collectionName).getDocuments();
+      var result = await Firestore.instance
+          .collection(globals.collectionName)
+          .getDocuments();
       final List<DocumentSnapshot> documents = result.documents;
       for (int i = 0; i < documents.length; i++) {
         if (documents[i]["name"] == "test") {
@@ -222,7 +224,7 @@ class _CureentReservationState extends State<CureentReservation> {
     Widget a(int i) {
       if (i == 0) {
         return MaterialButton(
-          child: Text('Cancel',style: TextStyle(color: textcolor())),
+          child: Text('Cancel', style: TextStyle(color: textcolor())),
           onPressed: () {
             setState(() {});
           },
@@ -238,7 +240,6 @@ class _CureentReservationState extends State<CureentReservation> {
           onPressed: () {
             List<int> returningList = [];
             titles.forEach((key, value) {
-
               if (value == true) {
                 int i = index_map[key];
                 returningList.add(i);
@@ -247,26 +248,27 @@ class _CureentReservationState extends State<CureentReservation> {
 
             int itemNum = returningList.length;
             String itemName = "";
-            for(int i = 0; i < returningList.length; i++){
+            for (int i = 0; i < returningList.length; i++) {
               String name = mylist[returningList[i]].name;
-              if(i == 0){
+              if (i == 0) {
                 itemName += name;
-              }else{
+              } else {
                 itemName += '\n';
                 itemName += name;
               }
             }
 
-            if(returningList.length == 0) {
+            if (returningList.length == 0) {
               PlatformAlertDialog(
                 title: "Warning",
                 content: "You did not select any items",
                 defaultActionText: Strings.ok,
               ).show(context);
-            }else{
+            } else {
               globals.returnDOCIDList.clear();
-              for(int i = 0; i < returningList.length; i++){
-                globals.returnDOCIDList.add(mylist[returningList[i]].documentID);
+              for (int i = 0; i < returningList.length; i++) {
+                globals.returnDOCIDList
+                    .add(mylist[returningList[i]].documentID);
               }
               globals.ContextInOrder = context;
               PlatformAlertDialog(
@@ -275,14 +277,8 @@ class _CureentReservationState extends State<CureentReservation> {
                 defaultActionText: "Confirm",
                 cancelActionText: "Cancel",
               ).show(context);
-              setState(() {
-
-              });
+              setState(() {});
             }
-
-
-
-
 
 //            titles.forEach((key, value) {
 //
@@ -295,7 +291,6 @@ class _CureentReservationState extends State<CureentReservation> {
 //                setState(() {});
 //              }
 //            });
-
           },
           child: new Text("Confirm", style: TextStyle(color: textcolor())),
         );
@@ -306,8 +301,9 @@ class _CureentReservationState extends State<CureentReservation> {
 
     Future<List<globals.ReservationItem>> getList() async {
       List<globals.ReservationItem> itemList = new List();
-      var result =
-          await Firestore.instance.collection(globals.collectionName).getDocuments();
+      var result = await Firestore.instance
+          .collection(globals.collectionName)
+          .getDocuments();
       final List<DocumentSnapshot> documents = result.documents;
 
       for (int i = 0; i < documents.length; i++) {
@@ -338,18 +334,16 @@ class _CureentReservationState extends State<CureentReservation> {
 
       List<globals.ReservationItem> copy_itemList = [];
 
-      for(int i = 0 ; i < itemList.length; i++){
+      for (int i = 0; i < itemList.length; i++) {
         copy_itemList.add(itemList[i]);
       }
 
       itemList.clear();
 
-
       for (int i = 0; i < copy_itemList.length; i++) {
         if (copy_itemList[i].uid == globals.uid &&
             copy_itemList[i].status == "Picked Up" &&
-            copy_itemList[i].startTime != null ) {
-
+            copy_itemList[i].startTime != null) {
           itemList.add(copy_itemList[i]);
         }
       }
@@ -377,7 +371,8 @@ class _CureentReservationState extends State<CureentReservation> {
         iconTheme: IconThemeData(
           color: textcolor(), //change your color here
         ),
-        title: Text(langaugeSetFunc('Orders'), style: TextStyle(color: textcolor())),
+        title: Text(langaugeSetFunc('Orders'),
+            style: TextStyle(color: textcolor())),
         centerTitle: true,
         backgroundColor: backgroundcolor(),
         actions: <Widget>[
@@ -387,7 +382,6 @@ class _CureentReservationState extends State<CureentReservation> {
               color: textcolor(),
             ),
             onPressed: () async {
-             
               isMultipleSeclect = !isMultipleSeclect;
 
               String test = "test";
@@ -412,7 +406,6 @@ class _CureentReservationState extends State<CureentReservation> {
               var list = await getList();
               mylist = list;
 
-
               for (int i = 0; i < mylist.length; i++) {
                 titles[mylist[i].name] = false;
                 subtitles[mylist[i].name] = mylist[i].startTime;
@@ -426,7 +419,8 @@ class _CureentReservationState extends State<CureentReservation> {
       ),
       backgroundColor: backgroundcolor(),
       body: StreamBuilder(
-          stream: Firestore.instance.collection(globals.collectionName).snapshots(),
+          stream:
+              Firestore.instance.collection(globals.collectionName).snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) return const Text('loading...');
 
@@ -452,9 +446,14 @@ class _CureentReservationState extends State<CureentReservation> {
                           data: ThemeData(unselectedWidgetColor: textcolor()),
                           child: CheckboxListTile(
                             activeColor: Colors.transparent,
-
-                            title: new Text(key, style: TextStyle(color: textcolor()),),
-                            subtitle: new Text(parseTime(subtitles[key]), style: TextStyle(color: textcolor()),),
+                            title: new Text(
+                              key,
+                              style: TextStyle(color: textcolor()),
+                            ),
+                            subtitle: new Text(
+                              parseTime(subtitles[key]),
+                              style: TextStyle(color: textcolor()),
+                            ),
                             secondary: CircleAvatar(
                               backgroundImage: NetworkImage(urls[key]),
                             ),
@@ -504,26 +503,21 @@ class _CureentReservationState extends State<CureentReservation> {
                 }
               }
 
-
               List<globals.ReservationItem> copy_itemList = [];
 
-              for(int i = 0 ; i < itemList.length; i++){
+              for (int i = 0; i < itemList.length; i++) {
                 copy_itemList.add(itemList[i]);
               }
 
               itemList.clear();
 
-
               for (int i = 0; i < copy_itemList.length; i++) {
                 if (copy_itemList[i].uid == globals.uid &&
                     copy_itemList[i].status == "Picked Up" &&
-                    copy_itemList[i].startTime != null ) {
-
-                    itemList.add(copy_itemList[i]);
+                    copy_itemList[i].startTime != null) {
+                  itemList.add(copy_itemList[i]);
                 }
               }
-
-
 
               for (int i = 0; i < itemList.length - 1; i++) {
                 for (int j = 0; j < itemList.length - i - 1; j++) {
@@ -561,9 +555,14 @@ class _CureentReservationState extends State<CureentReservation> {
                               backgroundImage:
                                   NetworkImage(itemList[i].imageURL),
                             ),
-                            trailing: new Icon(Icons.chevron_right, color: textcolor(),),
-                            title: new Text(itemList[i].name, style: TextStyle(color: textcolor()) ),
-                            subtitle: new Text(parseTime(itemList[i].startTime), style: TextStyle(color: textcolor())),
+                            trailing: new Icon(
+                              Icons.chevron_right,
+                              color: textcolor(),
+                            ),
+                            title: new Text(itemList[i].name,
+                                style: TextStyle(color: textcolor())),
+                            subtitle: new Text(parseTime(itemList[i].startTime),
+                                style: TextStyle(color: textcolor())),
                             onTap: () {
                               var list = itemList;
                               var url = itemList[i].imageURL;
@@ -750,7 +749,10 @@ class _TicketState extends State<Ticket> {
         ),
         backgroundColor: backgroundcolor(),
         automaticallyImplyLeading: true,
-        title: Text(langaugeSetFunc('Details'), style: TextStyle(color: textcolor()),),
+        title: Text(
+          langaugeSetFunc('Details'),
+          style: TextStyle(color: textcolor()),
+        ),
         centerTitle: true,
         actions: <Widget>[
           IconButton(
