@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:rental_manager/globals.dart' as globals;
 
 Map<String, String> EnglishToSimplifiedChinese = {
+  "Cancel Reservation": "取消预订",
   "Select a Location": "选择地点",
   "Category": "类别",
   "Category Selected: ": "选择类别为",
