@@ -33,6 +33,12 @@ class _reservationCell extends State<reservationCell> {
             (error) => print(error));
   }
 
+  Future timeExpired() async {
+    await firestore
+        .document(widget.passedFirestoreData.documentID.toString())
+        .updateData({'status': 'Returned'}).catchError((error) => print(error));
+  }
+
   Future cancelReservation() async {
     await firestore
         .document(widget.passedFirestoreData.documentID.toString())
@@ -40,12 +46,28 @@ class _reservationCell extends State<reservationCell> {
         .catchError((error) => print(error));
   }
 
+  void _showDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Time Expired!'),
+            content: Text(
+                'this reservation\'s record is being saved in your history\'s list.'),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () => Navigator.pop(context), child: Text('Close'))
+            ],
+          );
+        });
+  }
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     startTimer();
-    if (displayRemainingTime > 0) {
+    if (displayRemainingTime >= -1) {
       _timer = Timer.periodic(Duration(seconds: 60), (Timer t) => startTimer());
     }
   }
@@ -58,29 +80,22 @@ class _reservationCell extends State<reservationCell> {
   }
 
   void startTimer() {
-    // final startTime = DateFormat.yMd()
-    //     .add_jm()
-    //     .parse(widget.passedFirestoreData['startTime']);
     final startTime = DateTime.parse(widget.passedFirestoreData['startTime']);
     final endTime = startTime.add(new Duration(minutes: 10));
 
-    print(startTime);
-    print(endTime);
-
-    // final endTime =
-    //     DateFormat.yMd().add_jm().parse(widget.passedFirestoreData['endTime']);
-
     final remainingTime = endTime.difference(DateTime.now()).inMinutes;
-    // final remainingTime = 123;
-    print(remainingTime);
-    print('=================================');
     displayRemainingTime = remainingTime;
-    if (remainingTime > 0) {
+    if (remainingTime >= -1) {
       setState(() {
         displayRemainingTime = remainingTime;
       });
     } else {
-      print('time expired!!!');
+      timeExpired().whenComplete(
+        () {
+          _showDialog();
+          Navigator.pop(context);
+        },
+      );
     }
   }
 

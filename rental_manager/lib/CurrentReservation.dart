@@ -49,6 +49,7 @@ class ItemInfo {
 String parseTime(String time_str) {
   final reservationStartTime =
       DateFormat.yMd().add_jm().format(DateTime.parse(time_str));
+  print(reservationStartTime.toString());
   return reservationStartTime.toString();
 }
 
@@ -138,22 +139,6 @@ class _CureentReservationState extends State<CureentReservation> {
                           context,
                           MaterialPageRoute(
                               builder: (context) => Ticket(theitem)));
-
-//                AwesomeDialog(
-//                  context: context,
-//                  animType: AnimType.SCALE,
-//                  customHeader: CircleAvatar(
-//                    radius: 50,
-//                    backgroundImage: NetworkImage(url),
-//                  ),
-//
-//                  tittle: 'Item Information ',
-//                  desc: itemInfo(list[i]),
-//                  btnOk: _buildFancyButtonOk(context),
-//                  //this is ignored
-//                  btnOkOnPress: () {},
-//                ).show();
-//              },
                     }),
                 Divider(
                   height: 2.0,
@@ -390,19 +375,21 @@ class _CureentReservationState extends State<CureentReservation> {
               await Firestore.instance
                   .collection(globals.collectionName)
                   .document()
-                  .setData({
-                'imageURL': url,
-                'name': test,
-                'item': 'FmkqMr7ta72O4eeDjal7',
-                'uid': 'AppSignInUserjagaoabc@gmail.com',
-                'amount': "1",
-                'startTime': '2020-04-17 11:27:05',
-                'status': "Reserved",
-                'reserved time': '2020-04-17 11:27:05',
-                'picked Up time': '2020-04-18 19:07:01',
-                'return time': '2020-04-18 19:07:06',
-                'endTime': "TBD",
-              });
+                  .setData(
+                {
+                  'imageURL': url,
+                  'name': test,
+                  'item': 'FmkqMr7ta72O4eeDjal7',
+                  'uid': 'AppSignInUserjagaoabc@gmail.com',
+                  'amount': "1",
+                  'startTime': '2020-04-17 11:27:05',
+                  'status': "Reserved",
+                  'reserved time': '2020-04-17 11:27:05',
+                  'picked Up time': '2020-04-18 19:07:01',
+                  'return time': '2020-04-18 19:07:06',
+                  'endTime': "TBD",
+                },
+              );
               var list = await getList();
               mylist = list;
 

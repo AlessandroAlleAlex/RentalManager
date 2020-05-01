@@ -65,6 +65,8 @@ Map<String, String> EnglishToSimplifiedChinese = {
   "Language Setting": "语言设置",
   "By system Defaulting Setting": "根据系统设置",
   "Account": "我的",
+  "Return Items": "退换",
+  "Please Confirm": "请确认",
 };
 
 Map<String, String> EnglishToTranditionalChinese = {

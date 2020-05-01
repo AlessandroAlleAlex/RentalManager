@@ -1,15 +1,8 @@
-import 'dart:async';
-import 'package:devicelocale/devicelocale.dart';
-import 'package:flutter/services.dart';
 import 'package:rental_manager/language.dart';
-
 import '../CurrentReservation.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import '../reservations/reservationCell.dart';
-import 'package:liquid_pull_to_refresh/liquid_pull_to_refresh.dart';
 import '../globals.dart' as globals;
 
 class ReservationListPage extends StatefulWidget {
@@ -21,17 +14,6 @@ class ReservationListPage extends StatefulWidget {
 }
 
 class _ReservationListPage extends State<ReservationListPage> {
-  // Future getFirestoreData() async {
-  //   final userID = globals.uid;
-  //   final firestore = Firestore.instance;
-  //   QuerySnapshot itemListDOC = await firestore
-  //       .collection(globals.collectionName)
-  //       .where('uid', isEqualTo: userID)
-  //       .where('status', isEqualTo: 'Reserved')
-  //       .getDocuments();
-  //   return itemListDOC.documents;
-  // }
-
   navigateToDetail(DocumentSnapshot indexedData) {
     Navigator.push(
         context,
