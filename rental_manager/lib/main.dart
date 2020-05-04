@@ -25,7 +25,8 @@ import 'qrcodelogin.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'dart:ui' as ui;
 import 'package:devicelocale/devicelocale.dart';
-void getData() async{
+
+void getData() async {
   Firestore.instance
       .collection('usersByFullName')
       .document(globals.uid)
@@ -36,8 +37,9 @@ void getData() async{
     globals.studentID = doc["StudentID"];
     globals.username = doc["name"];
     globals.UserImageUrl = doc["imageURL"];
-    if(globals.UserImageUrl == null){
-      globals.UserImageUrl = "https://images.unsplash.com/photo-1581660545544-83b8812f9516?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80";
+    if (globals.UserImageUrl == null) {
+      globals.UserImageUrl =
+          "https://images.unsplash.com/photo-1581660545544-83b8812f9516?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80";
     }
     globals.phoneNumber = doc["PhoneNumber"];
   });
@@ -49,36 +51,34 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
       home: MyHomePage(title: 'Flutter Demo Home Page'),
       routes: {
         '/LoginScreen': (context) => MyApp(),
         '/MainViewScreen': (context) => MyHome1(),
-        '/SecondTab':(context) => SecondTab(),
+        '/SecondTab': (context) => SecondTab(),
         '/CR View': (context) => CureentReservation(),
       },
       initialRoute: 'LoginScreen',
     );
   }
+
   @override
-  Widget know (BuildContext context) {
+  Widget know(BuildContext context) {
     return new StreamBuilder(
-        stream: Firestore.instance.collection('CollectionA').document('DOc1').snapshots(),
+        stream: Firestore.instance
+            .collection('CollectionA')
+            .document('DOc1')
+            .snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) {
-            print('1');
             return new Text("Loading");
           }
           var userDocument = snapshot.data;
-          print('2');
           return new Text(userDocument["a"]);
-        }
-    );
+        });
   }
-
 }
-
 
 class MyHomePage extends StatefulWidget {
   MyHomePage({Key key, this.title}) : super(key: key);
@@ -86,6 +86,7 @@ class MyHomePage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
 }
+
 // var isLoggedIn = await googleSignIn.isSignedIn();
 final FirebaseAuth auth = FirebaseAuth.instance;
 
@@ -100,45 +101,41 @@ final FirebaseAuth auth = FirebaseAuth.instance;
 //  ).show(context);
 //}
 
-
-
-
 // setState(() => sessionID = info['session_id']);
 
-void uploadData(usernameFirst, usernameLast,email,uid) async{
-
+void uploadData(
+    usernameFirst, usernameLast, email, uid, String organization) async {
   String fullName = usernameFirst + ' ' + usernameLast;
   final databaseReference = Firestore.instance;
   String doc = "AppSignInUser" + email;
-  await databaseReference.collection("usersByFullName")
-      .document(doc)
-      .setData({
+  await databaseReference.collection("usersByFullName").document(doc).setData({
     'name': fullName,
-    'imageURL': "https://images.unsplash.com/photo-1581660545544-83b8812f9516?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
+    'imageURL':
+        "https://images.unsplash.com/photo-1581660545544-83b8812f9516?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
     'PhoneNumber': '',
     'Sex': '',
     'StudentID': '',
     'email': email,
+    'organization': organization,
   });
 }
 
-void updateData(String collectionName) async{
+void updateData(String collectionName) async {
   final QuerySnapshot result =
-  await Firestore.instance.collection(collectionName).getDocuments();
+      await Firestore.instance.collection(collectionName).getDocuments();
   final List<DocumentSnapshot> documents = result.documents;
   List<String> userNameList = [];
   documents.forEach((data) => userNameList.add(data.documentID));
 
-  for(var i = 0; i < userNameList.length; i++){
-
-    await Firestore.instance.collection(collectionName)
+  for (var i = 0; i < userNameList.length; i++) {
+    await Firestore.instance
+        .collection(collectionName)
         .document(userNameList[i])
         .updateData({
       'Rentable': true,
     });
   }
 }
-
 
 class _MyHomePageState extends State<MyHomePage> {
   String username;
@@ -169,18 +166,17 @@ class _MyHomePageState extends State<MyHomePage> {
   FirebaseUser _user;
 
   Future<FirebaseUser> _myGoogleSignIn() async {
-
     GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     GoogleSignInAuthentication googleAuth = await googleUser.authentication;
     final AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-    final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
+    final FirebaseUser user =
+        (await _auth.signInWithCredential(credential)).user;
 
     print("signed in " + user.displayName);
     print("signed in " + user.email);
-
 
     return user;
   }
@@ -206,10 +202,10 @@ class _MyHomePageState extends State<MyHomePage> {
    var prefs = await SharedPreferences.getInstance();
    await prefs.setStringList("user", userinfor);
   * */
-  void testfunc() async{
+  void testfunc() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var list = prefs.getStringList("user");
-    if(list != null && list.length > 0){
+    if (list != null && list.length > 0) {
       globals.uid = list[0];
       globals.studentID = list[1];
       globals.username = list[2];
@@ -219,41 +215,40 @@ class _MyHomePageState extends State<MyHomePage> {
       globals.sex = list[6];
       Navigator.of(context).pushReplacementNamed('/MainViewScreen');
     }
-   try{
-     var isDark = prefs.getBool('isDark'), userSelectTheme = prefs.getInt('userSelectTheme');
-     if(isDark == null || userSelectTheme == null){
-       final Brightness brightnessValue = MediaQuery.of(context).platformBrightness;
-       bool Dark = brightnessValue == Brightness.dark;
-       globals.dark = Dark;
-       globals.userSelectTheme = -1;
-     }
-     globals.dark = isDark;
-     globals.userSelectTheme = -1;
+    try {
+      var isDark = prefs.getBool('isDark'),
+          userSelectTheme = prefs.getInt('userSelectTheme');
+      if (isDark == null || userSelectTheme == null) {
+        final Brightness brightnessValue =
+            MediaQuery.of(context).platformBrightness;
+        bool Dark = brightnessValue == Brightness.dark;
+        globals.dark = Dark;
+        globals.userSelectTheme = -1;
+      }
+      globals.dark = isDark;
+      globals.userSelectTheme = -1;
 
-     print('isDark:' + isDark.toString());
-     print('userSelectTheme: ' + userSelectTheme.toString());
-   }catch(e){
+      print('isDark:' + isDark.toString());
+      print('userSelectTheme: ' + userSelectTheme.toString());
+    } catch (e) {
       print(e);
-   }
+    }
 
-    for(int i = 0; i < list.length; i++){
+    for (int i = 0; i < list.length; i++) {
       print(list[i]);
     }
 
-    var language =  prefs.getString('mylanguage');
+    var language = prefs.getString('mylanguage');
     print(language);
-    if(language != null){
-      if(language == 'English' || language == 'SimplifiedChinese') {
+    if (language != null) {
+      if (language == 'English' || language == 'SimplifiedChinese') {
         globals.langaugeSet = language;
-      }else{
+      } else {
         globals.langaugeSet = "English";
       }
-    }else{
+    } else {
       globals.langaugeSet = "English";
     }
-
-
-
   }
 
   @override
@@ -264,7 +259,7 @@ class _MyHomePageState extends State<MyHomePage> {
     var screenWidth = MediaQuery.of(context).size.width;
     bool userExist = false;
     ProgressDialog prLOGIN;
-    prLOGIN = new ProgressDialog(context,type: ProgressDialogType.Normal);
+    prLOGIN = new ProgressDialog(context, type: ProgressDialogType.Normal);
     prLOGIN.style(message: 'Showing some progress...');
     prLOGIN.update(
       message: 'Successfully Login...',
@@ -277,12 +272,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //testfunc();
     testfunc();
 
-
-
-
-
     return MaterialApp(
-
       home: Scaffold(
         backgroundColor: Colors.white,
         body: SafeArea(
@@ -334,18 +324,16 @@ class _MyHomePageState extends State<MyHomePage> {
                         color: Colors.teal.shade900,
                       ),
                     ),
-                    SizedBox(
-                        height: 10, width: 150
-                    ),
-
+                    SizedBox(height: 10, width: 150),
                     TextField(
-                      onChanged:(text){
+                      onChanged: (text) {
                         username = text;
                         print("First text field: $text");
                       },
                       // controller: _username,
                       cursorColor: Colors.teal.shade900,
-                      scrollPadding:  const EdgeInsets.symmetric(vertical: 10.0,horizontal: 30),
+                      scrollPadding: const EdgeInsets.symmetric(
+                          vertical: 10.0, horizontal: 30),
                       decoration: InputDecoration(
                         border: new OutlineInputBorder(
                           borderRadius: const BorderRadius.all(
@@ -357,29 +345,26 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ),
                         labelText: 'Enter your Email Address',
-                        prefixIcon: const Icon(Icons.person, color: Colors.black),
+                        prefixIcon:
+                            const Icon(Icons.person, color: Colors.black),
                         // labelStyle:
                         // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
-                        contentPadding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 30),
-
+                        contentPadding: const EdgeInsets.symmetric(
+                            vertical: 10.0, horizontal: 30),
                       ),
-
                     ),
-                    SizedBox(
-                        height: 20,width: 150
-                    ),
+                    SizedBox(height: 20, width: 150),
                     TextField(
-
-                      onChanged:(text){
+                      onChanged: (text) {
                         password = text;
 
                         //print("First text field: $text");
                       },
-
                       obscureText: true,
                       cursorColor: Colors.teal.shade900,
                       decoration: InputDecoration(
-                        contentPadding: new EdgeInsets.fromLTRB(20.0, 10.0, 100.0, 10.0),
+                        contentPadding:
+                            new EdgeInsets.fromLTRB(20.0, 10.0, 100.0, 10.0),
                         border: new OutlineInputBorder(
                           borderRadius: const BorderRadius.all(
                             const Radius.circular(8.0),
@@ -396,9 +381,6 @@ class _MyHomePageState extends State<MyHomePage> {
                         // contentPadding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 50),
                       ),
                     ),
-
-
-
                     SizedBox(
                       height: 15,
                     ),
@@ -413,7 +395,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             highlightColor: Colors.green,
                             elevation: 0.0,
                             color: Colors.green,
-                            shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(30.0)),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
@@ -428,12 +411,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                     ),
                                   ),
                                 ),
-
                               ],
                             ),
-                            onPressed: () async{
-
-                              if(username == null || password == null){
+                            onPressed: () async {
+                              if (username == null || password == null) {
 //                          AwesomeDialog(
 //                              context: context,
 //                              dialogType: DialogType.ERROR,
@@ -450,70 +431,70 @@ class _MyHomePageState extends State<MyHomePage> {
                                 showDialog(
                                     context: context,
                                     builder: (_) => NetworkGiffyDialog(
-                                      key: keys[1],
-                                      image: Image.network(
-                                        "https://i.pinimg.com/originals/2c/dd/d1/2cddd1796354e90f4aab7fb1e48eafb4.gif",
-                                        fit: BoxFit.cover,
-                                      ),
-                                      entryAnimation: EntryAnimation.TOP_RIGHT,
-                                      title: Text(
-                                        'Warning',
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                            fontSize: 22.0, fontWeight: FontWeight.w600),
-                                      ),
-                                      description: Text(
-                                        'Email Adress and Password Cannot be empty',
-                                        textAlign: TextAlign.center,
-
-                                      ),
-                                      onlyCancelButton: true,
-                                      buttonCancelColor: Colors.teal,
-                                      buttonCancelText: Text('Try Again!'),
-                                    ));
-
-
-
-                              }else{
-                                var e = await authHandler.signIn(username, password);
-                                if(e == "false"){
+                                          key: keys[1],
+                                          image: Image.network(
+                                            "https://i.pinimg.com/originals/2c/dd/d1/2cddd1796354e90f4aab7fb1e48eafb4.gif",
+                                            fit: BoxFit.cover,
+                                          ),
+                                          entryAnimation:
+                                              EntryAnimation.TOP_RIGHT,
+                                          title: Text(
+                                            'Warning',
+                                            textAlign: TextAlign.center,
+                                            style: TextStyle(
+                                                fontSize: 22.0,
+                                                fontWeight: FontWeight.w600),
+                                          ),
+                                          description: Text(
+                                            'Email Adress and Password Cannot be empty',
+                                            textAlign: TextAlign.center,
+                                          ),
+                                          onlyCancelButton: true,
+                                          buttonCancelColor: Colors.teal,
+                                          buttonCancelText: Text('Try Again!'),
+                                        ));
+                              } else {
+                                var e = await authHandler.signIn(
+                                    username, password);
+                                if (e == "false") {
                                   AwesomeDialog(
-                                      context: context,
-                                      dialogType: DialogType.ERROR,
-                                      animType: AnimType.RIGHSLIDE,
-                                      headerAnimationLoop: false,
-                                      tittle: 'ERROR Email NEED VERFIED',
-                                      desc:
-                                      'Verify Your Email Please',
-                                      btnOkOnPress: () {},
-                                      btnOkColor: Colors.red)
+                                          context: context,
+                                          dialogType: DialogType.ERROR,
+                                          animType: AnimType.RIGHSLIDE,
+                                          headerAnimationLoop: false,
+                                          tittle: 'ERROR Email NEED VERFIED',
+                                          desc: 'Verify Your Email Please',
+                                          btnOkOnPress: () {},
+                                          btnOkColor: Colors.red)
                                       .show();
-                                }else if(ErrorDetect(e)){
+                                } else if (ErrorDetect(e)) {
                                   AwesomeDialog(
-                                      context: context,
-                                      dialogType: DialogType.ERROR,
-                                      animType: AnimType.RIGHSLIDE,
-                                      headerAnimationLoop: false,
-                                      tittle: errorDetect(e, pos: 0),
-                                      desc:errorDetect(e, pos: 1),
-                                      btnOkOnPress: () {},
-                                      btnOkColor: Colors.red)
+                                          context: context,
+                                          dialogType: DialogType.ERROR,
+                                          animType: AnimType.RIGHSLIDE,
+                                          headerAnimationLoop: false,
+                                          tittle: errorDetect(e, pos: 0),
+                                          desc: errorDetect(e, pos: 1),
+                                          btnOkOnPress: () {},
+                                          btnOkColor: Colors.red)
                                       .show();
-
-                                }else{
+                                } else {
                                   prLOGIN.update(
                                     message: 'Successfully Login...',
                                     progressWidget: CircularProgressIndicator(),
                                     progressTextStyle: TextStyle(
-                                        color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+                                        color: Colors.black,
+                                        fontSize: 13.0,
+                                        fontWeight: FontWeight.w400),
                                     messageTextStyle: TextStyle(
-                                        color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600),
+                                        color: Colors.black,
+                                        fontSize: 19.0,
+                                        fontWeight: FontWeight.w600),
                                   );
                                   await prLOGIN.show();
                                   username = username.trim();
                                   var email = username;
                                   globals.uid = 'AppSignInUser' + email;
-
 
                                   Firestore.instance
                                       .collection('usersByFullName')
@@ -528,38 +509,32 @@ class _MyHomePageState extends State<MyHomePage> {
                                     globals.phoneNumber = doc["PhoneNumber"];
                                     globals.email = doc["email"];
                                   });
-                                  List<String>userinfor = [];
+                                  List<String> userinfor = [];
                                   userinfor.add(globals.uid);
                                   userinfor.add(globals.studentID);
-                                  userinfor.add(globals.username );
+                                  userinfor.add(globals.username);
                                   userinfor.add(globals.UserImageUrl);
                                   userinfor.add(globals.phoneNumber);
-                                  userinfor.add(globals.email );
-                                  userinfor.add(globals.sex );
-                                  var prefs = await SharedPreferences.getInstance();
+                                  userinfor.add(globals.email);
+                                  userinfor.add(globals.sex);
+                                  var prefs =
+                                      await SharedPreferences.getInstance();
                                   await prefs.setStringList("user", userinfor);
                                   await prefs.setBool('isDark', false);
                                   await prefs.setInt('userSelectTheme', -1);
 
-
-
                                   prLOGIN.hide();
-                                  Navigator.of(context).pushReplacementNamed('/MainViewScreen');
+                                  Navigator.of(context)
+                                      .pushReplacementNamed('/MainViewScreen');
                                 }
                               }
-
-
-
                             },
                             padding: EdgeInsets.all(7.0),
                             //color: Colors.teal.shade900,
                             disabledColor: Colors.black,
                             disabledTextColor: Colors.black,
-
                           ),
                         ),
-
-
                       ],
                     ),
                     Row(
@@ -573,11 +548,16 @@ class _MyHomePageState extends State<MyHomePage> {
                             highlightColor: Colors.green,
                             elevation: 0.0,
                             color: Colors.green,
-                            shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(30.0)),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                Image(image: NetworkImage('https://pluspng.com/img-png/google-logo-png-open-2000.png'), height: 30,),
+                                Image(
+                                  image: NetworkImage(
+                                      'https://pluspng.com/img-png/google-logo-png-open-2000.png'),
+                                  height: 30,
+                                ),
                                 SizedBox(width: 20.0),
                                 Center(
                                   child: Text(
@@ -590,48 +570,57 @@ class _MyHomePageState extends State<MyHomePage> {
                                     ),
                                   ),
                                 ),
-
                               ],
                             ),
-                            onPressed: () async{
+                            onPressed: () async {
                               //_handleSignIn();
 
-                              try{
-                                FirebaseUser googleuser = await _myGoogleSignIn();
+                              try {
+                                FirebaseUser googleuser =
+                                    await _myGoogleSignIn();
 
-                                if(googleuser != null){
+                                if (googleuser != null) {
                                   globals.mygoogleuser = googleuser;
 
                                   globals.username = googleuser.displayName;
                                   globals.email = googleuser.email;
-                                  globals.uid = 'GoogleSignInUser' + globals.email;
+                                  globals.uid =
+                                      'GoogleSignInUser' + globals.email;
                                   prLOGIN.update(
                                     message: 'Successfully Login...',
                                     progressWidget: CircularProgressIndicator(),
                                     progressTextStyle: TextStyle(
-                                        color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+                                        color: Colors.black,
+                                        fontSize: 13.0,
+                                        fontWeight: FontWeight.w400),
                                     messageTextStyle: TextStyle(
-                                        color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600),
+                                        color: Colors.black,
+                                        fontSize: 19.0,
+                                        fontWeight: FontWeight.w600),
                                   );
                                   await prLOGIN.show();
                                   prLOGIN.hide();
                                   String fullName = globals.username;
                                   final databaseReference = Firestore.instance;
 
-                                  final QuerySnapshot result =
-                                  await Firestore.instance.collection('usersByFullName').getDocuments();
-                                  final List<DocumentSnapshot> documents = result.documents;
+                                  final QuerySnapshot result = await Firestore
+                                      .instance
+                                      .collection('usersByFullName')
+                                      .getDocuments();
+                                  final List<DocumentSnapshot> documents =
+                                      result.documents;
 
-                                  for(var i = 0; i < documents.length; i++){
-                                    if(documents[i].documentID == globals.uid ){
+                                  for (var i = 0; i < documents.length; i++) {
+                                    if (documents[i].documentID ==
+                                        globals.uid) {
                                       userExist = true;
                                       break;
                                     }
                                   }
                                   print(userExist == true);
-                                  if(userExist){
+                                  if (userExist) {
                                     print("UserExists\n");
-                                    try{
+                                    try {
                                       await Firestore.instance
                                           .collection('usersByFullName')
                                           .document(globals.uid)
@@ -641,72 +630,71 @@ class _MyHomePageState extends State<MyHomePage> {
                                         var doc = ds.data;
                                         globals.UserImageUrl = doc["imageURL"];
                                         globals.studentID = doc["StudentID"];
-                                        globals.phoneNumber = doc["PhoneNumber"];
+                                        globals.phoneNumber =
+                                            doc["PhoneNumber"];
                                         globals.sex = doc["Sex"];
-                                        if(globals.UserImageUrl == null){
-                                          globals.UserImageUrl = "https://images.unsplash.com/photo-1581660545544-83b8812f9516?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80";
+                                        if (globals.UserImageUrl == null) {
+                                          globals.UserImageUrl =
+                                              "https://images.unsplash.com/photo-1581660545544-83b8812f9516?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80";
                                         }
-                                        if( globals.studentID == null){
+                                        if (globals.studentID == null) {
                                           globals.studentID = "";
                                         }
-                                        if(globals.phoneNumber == null){
+                                        if (globals.phoneNumber == null) {
                                           globals.phoneNumber = "";
                                         }
-                                        if(globals.sex == null){
+                                        if (globals.sex == null) {
                                           globals.sex = "";
                                         }
                                       });
-
-
-                                    }catch(e){
+                                    } catch (e) {
                                       print(e);
                                     }
-                                  }else{
-
-                                    await databaseReference.collection("usersByFullName")
+                                  } else {
+                                    await databaseReference
+                                        .collection("usersByFullName")
                                         .document(globals.uid)
                                         .setData({
                                       'name': fullName,
                                       'email': globals.email,
-                                      'imageURL':  globals.UserImageUrl,
+                                      'imageURL': globals.UserImageUrl,
                                     });
-                                    globals.UserImageUrl = "https://images.unsplash.com/photo-1581660545544-83b8812f9516?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80";
+                                    globals.UserImageUrl =
+                                        "https://images.unsplash.com/photo-1581660545544-83b8812f9516?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80";
                                   }
 
-                                  List<String>userinfor = [];
+                                  List<String> userinfor = [];
                                   userinfor.add(globals.uid);
                                   userinfor.add(globals.studentID);
-                                  userinfor.add(globals.username );
+                                  userinfor.add(globals.username);
                                   userinfor.add(globals.UserImageUrl);
                                   userinfor.add(globals.phoneNumber);
-                                  userinfor.add(globals.email );
-                                  userinfor.add(globals.sex );
-                                  var prefs = await SharedPreferences.getInstance();
+                                  userinfor.add(globals.email);
+                                  userinfor.add(globals.sex);
+                                  var prefs =
+                                      await SharedPreferences.getInstance();
                                   await prefs.setStringList("user", userinfor);
                                   await prefs.setBool('isDark', false);
                                   await prefs.setInt('userSelectTheme', -1);
 
-                                  Navigator.of(context).pushReplacementNamed('/MainViewScreen');
+                                  Navigator.of(context)
+                                      .pushReplacementNamed('/MainViewScreen');
                                   getData();
                                 }
-                              }catch(e){
-                                print("Erro Line 515 Main.dart:" + e.toString());
+                              } catch (e) {
+                                print(
+                                    "Erro Line 515 Main.dart:" + e.toString());
                               }
 
                               //rewriteData();
                               //Navigator.of(context).pushReplacementNamed('/MainViewScreen');
-
-
                             },
                             padding: EdgeInsets.all(7.0),
                             //color: Colors.teal.shade900,
                             disabledColor: Colors.black,
                             disabledTextColor: Colors.black,
-
                           ),
                         ),
-
-
                       ],
                     ),
                     SizedBox(
@@ -723,11 +711,11 @@ class _MyHomePageState extends State<MyHomePage> {
                             highlightColor: Colors.green,
                             elevation: 0.0,
                             color: Colors.green,
-                            shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: new BorderRadius.circular(30.0)),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-
                                 SizedBox(width: 20.0),
                                 Center(
                                   child: Text(
@@ -740,35 +728,29 @@ class _MyHomePageState extends State<MyHomePage> {
                                     ),
                                   ),
                                 ),
-
                               ],
                             ),
-                            onPressed: () async{
+                            onPressed: () async {
                               //_handleSignIn();
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => GenerateScreen()));
-
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => GenerateScreen()));
 
                               //rewriteData();
                               //Navigator.of(context).pushReplacementNamed('/MainViewScreen');
-
-
                             },
                             padding: EdgeInsets.all(7.0),
                             //color: Colors.teal.shade900,
                             disabledColor: Colors.black,
                             disabledTextColor: Colors.black,
-
                           ),
                         ),
-
-
                       ],
                     ),
                     SizedBox(
                       height: 15,
                     ),
-
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -779,7 +761,10 @@ class _MyHomePageState extends State<MyHomePage> {
                         SizedBox(width: 5.0),
                         InkWell(
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => SignUpPage()));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SignUpPage()));
                           },
                           child: Text(
                             'Register',
@@ -797,12 +782,14 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                     Center(
                       child: Container(
-
                         //alignment: Alignment(1.0, 0.0),
                         //padding: EdgeInsets.only(top: 15.0, left: 20.0),
                         child: InkWell(
                           onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => resetPassword()));
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => resetPassword()));
                           },
                           child: Text(
                             'Forgot Password',
@@ -816,8 +803,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                     Row(
-                      children: <Widget>[
-                      ],
+                      children: <Widget>[],
                     ),
                   ],
                 ),
@@ -827,14 +813,11 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
 
-
-
       //home: MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
-
-
 }
+
 class SignUpPage extends StatefulWidget {
   @override
   _State createState() => _State();
@@ -844,11 +827,26 @@ class _State extends State<SignUpPage> {
   @override
   String email, usernameFirst, usernameLast, password, confirmpw;
   var authHandler = new Auth();
+  var _organizations = [
+    'select an organization',
+  ];
+  var _organizationSelected = 'select an organization';
 
+  Future getOrganizations() async {
+    QuerySnapshot list =
+        await Firestore.instance.collection('organizations').getDocuments();
+    list.documents.forEach((doc) => _organizations.add(doc.data['name']));
+  }
+
+  @override
+  void initState() {
+    getOrganizations().whenComplete(() => setState(() {}));
+    super.initState();
+  }
 
   Widget build(BuildContext context) {
     ProgressDialog prSIGNUP;
-    prSIGNUP = new ProgressDialog(context,type: ProgressDialogType.Normal);
+    prSIGNUP = new ProgressDialog(context, type: ProgressDialogType.Normal);
     prSIGNUP.style(message: 'Successfully Sign Up...');
     prSIGNUP.update(
       message: 'Successfully Sign Up...',
@@ -875,22 +873,22 @@ class _State extends State<SignUpPage> {
           FocusScope.of(context).requestFocus(new FocusNode());
         },
         child: ListView(
-          children:[
+          children: [
             Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   SizedBox(
-                    height: 50
-                    ,
+                    height: 50,
                   ),
                   TextField(
-                    onChanged:(text){
+                    onChanged: (text) {
                       email = text;
                       //print("First text field: $text");
                     },
                     cursorColor: Colors.teal.shade900,
-                    scrollPadding:  const EdgeInsets.symmetric(vertical: 20.0,horizontal: 50),
+                    scrollPadding: const EdgeInsets.symmetric(
+                        vertical: 20.0, horizontal: 50),
                     decoration: InputDecoration(
                       border: new OutlineInputBorder(
                         borderRadius: const BorderRadius.all(
@@ -905,14 +903,15 @@ class _State extends State<SignUpPage> {
                       prefixIcon: const Icon(Icons.email, color: Colors.black),
                       // labelStyle:
                       // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
-                      contentPadding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 50),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 20.0, horizontal: 50),
                     ),
                   ),
                   SizedBox(
                     height: 20,
                   ),
                   TextField(
-                    onChanged:(text){
+                    onChanged: (text) {
                       usernameFirst = text;
                       //print("username: $text");
                     },
@@ -933,14 +932,15 @@ class _State extends State<SignUpPage> {
                       prefixIcon: const Icon(Icons.person, color: Colors.black),
                       // labelStyle:
                       // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
-                      contentPadding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 50),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 20.0, horizontal: 50),
                     ),
                   ),
                   SizedBox(
                     height: 20,
                   ),
                   TextField(
-                    onChanged:(text){
+                    onChanged: (text) {
                       usernameLast = text;
                       //print("username: $text");
                     },
@@ -961,20 +961,22 @@ class _State extends State<SignUpPage> {
                       prefixIcon: const Icon(Icons.person, color: Colors.black),
                       // labelStyle:
                       // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
-                      contentPadding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 50),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 20.0, horizontal: 50),
                     ),
                   ),
                   SizedBox(
                     height: 20,
                   ),
                   TextField(
-                    onChanged:(text){
+                    onChanged: (text) {
                       password = text;
                       //print("First password field: $text");
                     },
                     obscureText: true,
                     cursorColor: Colors.teal.shade900,
-                    scrollPadding:  const EdgeInsets.symmetric(vertical: 20.0,horizontal: 50),
+                    scrollPadding: const EdgeInsets.symmetric(
+                        vertical: 20.0, horizontal: 50),
                     decoration: InputDecoration(
                       border: new OutlineInputBorder(
                         borderRadius: const BorderRadius.all(
@@ -989,18 +991,18 @@ class _State extends State<SignUpPage> {
                       prefixIcon: const Icon(Icons.lock, color: Colors.black),
                       // labelStyle:
                       // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
-                      contentPadding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 50),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 20.0, horizontal: 50),
                     ),
                   ),
                   SizedBox(
                     height: 20,
                   ),
                   TextField(
-                    onChanged:(text){
+                    onChanged: (text) {
                       confirmpw = text;
                       //print("Second password field: $text");
                     },
-
                     obscureText: true,
                     cursorColor: Colors.teal.shade900,
                     decoration: InputDecoration(
@@ -1018,8 +1020,35 @@ class _State extends State<SignUpPage> {
                       prefixIcon: const Icon(Icons.lock, color: Colors.black),
                       // labelStyle:
                       // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
-                      contentPadding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 50),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 20.0, horizontal: 50),
                     ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  DropdownButton<String>(
+                    dropdownColor: Colors.black,
+                    iconSize: 28.0,
+                    style: TextStyle(
+                        color: Colors.blue,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20.0),
+                    icon: Icon(Icons.home, color: Colors.teal),
+                    items: _organizations.map(
+                      (String organization) {
+                        return DropdownMenuItem<String>(
+                            child: Text(organization), value: organization);
+                      },
+                    ).toList(),
+                    onChanged: (String selected) {
+                      setState(
+                        () {
+                          this._organizationSelected = selected;
+                        },
+                      );
+                    },
+                    value: _organizationSelected,
                   ),
                   SizedBox(
                     height: 20,
@@ -1029,8 +1058,7 @@ class _State extends State<SignUpPage> {
                     textColor: Colors.white,
                     color: Colors.teal.shade900,
                     child: Text('SIGN UP'),
-
-                    onPressed: () async{
+                    onPressed: () async {
 //                final QuerySnapshot result =
 //                await Firestore.instance.collection('users').getDocuments();
 //                final List<DocumentSnapshot> documents = result.documents;
@@ -1038,32 +1066,35 @@ class _State extends State<SignUpPage> {
 //                documents.forEach((data) => userNameList.add(data.documentID));
 
                       bool localCheck = true;
-                      if(email == null || password == null ||  usernameFirst == null || usernameLast == null|| confirmpw == null){
+                      if (email == null ||
+                          password == null ||
+                          usernameFirst == null ||
+                          usernameLast == null ||
+                          confirmpw == null ||
+                          _organizationSelected == 'select an organization') {
                         localCheck = false;
 
                         AwesomeDialog(
-                            context: context,
-                            dialogType: DialogType.ERROR,
-                            animType: AnimType.RIGHSLIDE,
-                            headerAnimationLoop: false,
-                            tittle: 'Warning',
-                            desc:
-                            'Each Field should be filled in',
-                            btnOkOnPress: () {},
-                            btnOkColor: Colors.red)
+                                context: context,
+                                dialogType: DialogType.ERROR,
+                                animType: AnimType.RIGHSLIDE,
+                                headerAnimationLoop: false,
+                                tittle: 'Warning',
+                                desc: 'Each Field should be filled in',
+                                btnOkOnPress: () {},
+                                btnOkColor: Colors.red)
                             .show();
-                      }else if(password != confirmpw){
+                      } else if (password != confirmpw) {
                         localCheck = false;
                         AwesomeDialog(
-                            context: context,
-                            dialogType: DialogType.ERROR,
-                            animType: AnimType.RIGHSLIDE,
-                            headerAnimationLoop: false,
-                            tittle: 'Warning',
-                            desc:
-                            'Your Password should be matched',
-                            btnOkOnPress: () {},
-                            btnOkColor: Colors.red)
+                                context: context,
+                                dialogType: DialogType.ERROR,
+                                animType: AnimType.RIGHSLIDE,
+                                headerAnimationLoop: false,
+                                tittle: 'Warning',
+                                desc: 'Your Password should be matched',
+                                btnOkOnPress: () {},
+                                btnOkColor: Colors.red)
                             .show();
                       }
 //                else if(FindSameName(userNameList, username)){
@@ -1075,48 +1106,49 @@ class _State extends State<SignUpPage> {
 //                  ).show(context);
 //                }
 
-
-                      if(localCheck){
+                      if (localCheck) {
                         var e = await authHandler.signUp(email, password);
 
-
-                        if(ErrorDetect(e)) {
+                        if (ErrorDetect(e)) {
                           AwesomeDialog(
-                              context: context,
-                              dialogType: DialogType.ERROR,
-                              animType: AnimType.RIGHSLIDE,
-                              headerAnimationLoop: false,
-                              tittle: errorDetect(e, pos: 0),
-                              desc:
-                              errorDetect(e, pos: 1),
-                              btnOkOnPress: () {},
-                              btnOkColor: Colors.red)
+                                  context: context,
+                                  dialogType: DialogType.ERROR,
+                                  animType: AnimType.RIGHSLIDE,
+                                  headerAnimationLoop: false,
+                                  tittle: errorDetect(e, pos: 0),
+                                  desc: errorDetect(e, pos: 1),
+                                  btnOkOnPress: () {},
+                                  btnOkColor: Colors.red)
                               .show();
-                        }else {
+                        } else {
                           prSIGNUP.update(
                             message: 'Successfully Sign Up...',
                             progressWidget: CircularProgressIndicator(),
                             progressTextStyle: TextStyle(
-                                color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+                                color: Colors.black,
+                                fontSize: 13.0,
+                                fontWeight: FontWeight.w400),
                             messageTextStyle: TextStyle(
-                                color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600),
+                                color: Colors.black,
+                                fontSize: 19.0,
+                                fontWeight: FontWeight.w600),
                           );
                           await prSIGNUP.show();
-                          uploadData(usernameFirst, usernameLast, email,  errorDetect(e));
-                          print(errorDetect(e));
-                          Future.delayed(Duration(seconds: 2)).then((onValue){
-                          });
+                          uploadData(usernameFirst, usernameLast, email,
+                              errorDetect(e), _organizationSelected);
+                          // print(errorDetect(e));
+                          Future.delayed(Duration(seconds: 2))
+                              .then((onValue) {});
                           prSIGNUP.hide();
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
+                          Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => MyApp()));
                         }
                       }
                     },
                     padding: EdgeInsets.all(10.0),
                     disabledColor: Colors.black,
                     disabledTextColor: Colors.black,
-
                   ),
-
                 ],
               ),
             ),
@@ -1133,18 +1165,11 @@ class resetPassword extends StatefulWidget {
 }
 
 class _resetPasswordState extends State<resetPassword> {
-
-
-
-
   @override
   Widget build(BuildContext context) {
     var authHandler = new Auth();
     var screenWidth = MediaQuery.of(context).size.width;
     var email;
-
-
-
 
     return MaterialApp(
       home: Scaffold(
@@ -1159,9 +1184,7 @@ class _resetPasswordState extends State<resetPassword> {
         backgroundColor: Colors.white,
         body: SafeArea(
           child: Column(
-
             children: <Widget>[
-
               SizedBox(height: 10, width: 150),
               Text(
                 'Rental Manager',
@@ -1179,7 +1202,6 @@ class _resetPasswordState extends State<resetPassword> {
                   fontFamily: 'Source Sans Pro',
                   color: Colors.teal.shade900,
                   fontSize: 20,
-
                 ),
               ),
               SizedBox(
@@ -1189,17 +1211,16 @@ class _resetPasswordState extends State<resetPassword> {
                   color: Colors.teal.shade900,
                 ),
               ),
-              SizedBox(
-                  height: 10, width: 150
-              ),
+              SizedBox(height: 10, width: 150),
 
               TextField(
-                onChanged:(text){
+                onChanged: (text) {
                   email = text;
                 },
                 // controller: _username,
                 cursorColor: Colors.teal.shade900,
-                scrollPadding:  const EdgeInsets.symmetric(vertical: 10.0,horizontal: 30),
+                scrollPadding:
+                    const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30),
                 decoration: InputDecoration(
                   border: new OutlineInputBorder(
                     borderRadius: const BorderRadius.all(
@@ -1214,14 +1235,11 @@ class _resetPasswordState extends State<resetPassword> {
                   prefixIcon: const Icon(Icons.email, color: Colors.black),
                   // labelStyle:
                   // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
-                  contentPadding: const EdgeInsets.symmetric(vertical: 10.0,horizontal: 30),
-
+                  contentPadding: const EdgeInsets.symmetric(
+                      vertical: 10.0, horizontal: 30),
                 ),
-
               ),
-              SizedBox(
-                  height: 20,width: 150
-              ),
+              SizedBox(height: 20, width: 150),
 
               SizedBox(
                 height: 5,
@@ -1237,7 +1255,8 @@ class _resetPasswordState extends State<resetPassword> {
                       highlightColor: Colors.green,
                       elevation: 0.0,
                       color: Colors.green,
-                      shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: new BorderRadius.circular(30.0)),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
@@ -1252,109 +1271,102 @@ class _resetPasswordState extends State<resetPassword> {
                               ),
                             ),
                           ),
-
                         ],
                       ),
-                      onPressed: () async{
-
+                      onPressed: () async {
                         bool isEmpty = false;
-                        if(email == null){
+                        if (email == null) {
                           isEmpty = true;
                           AwesomeDialog(
-                              context: context,
-                              dialogType: DialogType.ERROR,
-                              animType: AnimType.RIGHSLIDE,
-                              headerAnimationLoop: false,
-                              tittle: 'Warning',
-                              desc:
-                              'Email Adress Cannot be empty',
-                              btnOkOnPress: () {},
-                              btnOkColor: Colors.red)
+                                  context: context,
+                                  dialogType: DialogType.ERROR,
+                                  animType: AnimType.RIGHSLIDE,
+                                  headerAnimationLoop: false,
+                                  tittle: 'Warning',
+                                  desc: 'Email Adress Cannot be empty',
+                                  btnOkOnPress: () {},
+                                  btnOkColor: Colors.red)
                               .show();
                         }
 
-                        for(int i = 0; i < 100000; i++) {
+                        for (int i = 0; i < 100000; i++) {
                           email = email.trim();
                         }
 
-                        final QuerySnapshot result =
-                        await Firestore.instance.collection('usersByFullName').getDocuments();
-                        final List<DocumentSnapshot> documents = result.documents;
+                        final QuerySnapshot result = await Firestore.instance
+                            .collection('usersByFullName')
+                            .getDocuments();
+                        final List<DocumentSnapshot> documents =
+                            result.documents;
                         List<String> userNameList = [];
-                        documents.forEach((data) => userNameList.add(data.documentID));
+                        documents.forEach(
+                            (data) => userNameList.add(data.documentID));
                         bool found = false;
-                        for(var i = 0; i < userNameList.length; i++){
-                          if(email == userNameList[i]){
+                        for (var i = 0; i < userNameList.length; i++) {
+                          if (email == userNameList[i]) {
                             found = true;
                             break;
                           }
                         }
 
-                        if(found){
+                        if (found) {
                           ProgressDialog prForgetPassword;
-                          prForgetPassword= new ProgressDialog(context,type: ProgressDialogType.Normal);
+                          prForgetPassword = new ProgressDialog(context,
+                              type: ProgressDialogType.Normal);
                           prForgetPassword.update(
                             message: 'Sending Email...',
                             progressWidget: CircularProgressIndicator(),
                             progressTextStyle: TextStyle(
-                                color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+                                color: Colors.black,
+                                fontSize: 13.0,
+                                fontWeight: FontWeight.w400),
                             messageTextStyle: TextStyle(
-                                color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600),
+                                color: Colors.black,
+                                fontSize: 19.0,
+                                fontWeight: FontWeight.w600),
                           );
                           await prForgetPassword.show();
-                          Future.delayed(Duration(seconds: 2)).then((onValue){
+                          Future.delayed(Duration(seconds: 2)).then((onValue) {
                             prForgetPassword.update(
-
                               message: "Email Sent",
                               progressWidget: Container(
-                                  padding: EdgeInsets.all(8.0), child: CircularProgressIndicator()),
-
+                                  padding: EdgeInsets.all(8.0),
+                                  child: CircularProgressIndicator()),
                               progressTextStyle: TextStyle(
-                                  color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+                                  color: Colors.black,
+                                  fontSize: 13.0,
+                                  fontWeight: FontWeight.w400),
                               messageTextStyle: TextStyle(
-                                  color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600),
+                                  color: Colors.black,
+                                  fontSize: 19.0,
+                                  fontWeight: FontWeight.w600),
                             );
-                            Future.delayed(Duration(seconds: 2)).then((value){
+                            Future.delayed(Duration(seconds: 2)).then((value) {
                               authHandler.resetPassword(email);
                               prForgetPassword.hide();
                             });
-
-
                           });
 
-
                           print('Founding');
-
-
-
-                        }else{
+                        } else {
                           AwesomeDialog(
-                              context: context,
-                              dialogType: DialogType.ERROR,
-                              animType: AnimType.RIGHSLIDE,
-                              headerAnimationLoop: false,
-                              tittle: 'Warning',
-                              desc:
-                              'Email Adress Not Found in Records',
-                              btnOkOnPress: () {},
-                              btnOkColor: Colors.red)
+                                  context: context,
+                                  dialogType: DialogType.ERROR,
+                                  animType: AnimType.RIGHSLIDE,
+                                  headerAnimationLoop: false,
+                                  tittle: 'Warning',
+                                  desc: 'Email Adress Not Found in Records',
+                                  btnOkOnPress: () {},
+                                  btnOkColor: Colors.red)
                               .show();
                         }
-
-
-
-
                       },
                       padding: EdgeInsets.all(7.0),
                       //color: Colors.teal.shade900,
                       disabledColor: Colors.black,
                       disabledTextColor: Colors.black,
-
                     ),
                   ),
-
-
-
                 ],
               ),
               SizedBox(
@@ -1413,84 +1425,343 @@ class _resetPasswordState extends State<resetPassword> {
   }
 }
 
-
-
-bool ErrorDetect(String e){
-  if(e.contains('PlatformException')){
+bool ErrorDetect(String e) {
+  if (e.contains('PlatformException')) {
     return true;
-  }else{
+  } else {
     return false;
   }
 }
 
-String errorDetect(String e, {int pos = 1}){
-  if(e.contains('PlatformException')){
+String errorDetect(String e, {int pos = 1}) {
+  if (e.contains('PlatformException')) {
     List<String> strList = e.split(",");
     String _retstr = strList[pos];
 
-
-    if(pos == 0){
+    if (pos == 0) {
       strList.clear();
       strList = _retstr.split("(");
       _retstr = strList[1];
-      try{
+      try {
         _retstr = _retstr.replaceAll("_", " ");
-      }catch (e){
+      } catch (e) {
         print(e);
       }
     }
 
-
     return _retstr;
-  }else{
+  } else {
     return e;
   }
 }
 
-void resetData(String collectionName) async{
-  await Firestore.instance.collection(collectionName).document('Badminton Racquet').setData({'name': 'Badminton Racquet', 'num': 30,});
-  await Firestore.instance.collection(collectionName).document('Badminton Birdie').setData({'name': 'Badminton Birdie/Shuttle Cock-White', 'num': 30,});
-  await Firestore.instance.collection(collectionName).document('Band-Resistance (Orange) "').setData({'name': 'Band-Resistance (Orange) 1/2"', 'num': 3,});
-  await Firestore.instance.collection(collectionName).document('Band-Resistance (Green)  "').setData({'name': 'Band-Resistance (Green) 3/4"', 'num': 3,});
-  await Firestore.instance.collection(collectionName).document('Band-Resistance (Red)"').setData({'name': 'Band-Resistance (Red) 1"', 'num': 3,});
-  await Firestore.instance.collection(collectionName).document('Band-Resistance (Blue)"').setData({'name': 'Band-Resistance (Blue) 1-3/4"', 'num': 3,});
-  await Firestore.instance.collection(collectionName).document('Band-Resistance (Purple)"').setData({'name': 'Band-Resistance (Purple) 2-1/2"', 'num': 3,});
-  await Firestore.instance.collection(collectionName).document('Band-Tube: Very Light (Yellow)').setData({'name': 'Band-Tube: Very Light (Yellow)', 'num': 3,});
-  await Firestore.instance.collection(collectionName).document('Band-Tube: Light (Green)').setData({'name': 'Band-Tube: Light (Green)', 'num': 3,});
-  await Firestore.instance.collection(collectionName).document('Band-Tube: Medium (Red)').setData({'name': 'Band-Tube: Medium (Red)', 'num': 3,});
-  await Firestore.instance.collection(collectionName).document('Band-Tube: Heavy (Blue)').setData({'name': 'Band-Tube: Heavy (Blue)', 'num': 3,});
-  await Firestore.instance.collection(collectionName).document('Band-Tube: Ultra Heavy (Purple)').setData({'name': 'Band-Tube: Ultra Heavy (Purple)', 'num': 3,});
-  await Firestore.instance.collection(collectionName).document('Barbell Pad-Blue').setData({'name': 'Barbell Pad-Blue', 'num': 10,});
-  await Firestore.instance.collection(collectionName).document('Basketball (Men\'s)').setData({'name': 'Basketball (Men\'s)', 'num': 10,});
-  await Firestore.instance.collection(collectionName).document('Basketball (Men\'s)').setData({'name': 'Basketball (Men\'s)', 'num': 10,});
-  await Firestore.instance.collection(collectionName).document('Basketball (Women\'s)').setData({'name': 'Basketball (Women\'s)', 'num': 5,});
-  await Firestore.instance.collection(collectionName).document('Belt-Chain').setData({'name': 'Belt-Chain', 'num': 3,});
-  await Firestore.instance.collection(collectionName).document('Belt-Weight (Small)').setData({'name': 'Belt-Weight (Small)', 'num': 2,});
-  await Firestore.instance.collection(collectionName).document('Belt-Weight (Medium)').setData({'name': 'Belt-Weight (Medium)', 'num': 2,});
-  await Firestore.instance.collection(collectionName).document('Belt-Weight (Large)').setData({'name': 'Belt-Weight (Large)', 'num': 2,});
-  await Firestore.instance.collection(collectionName).document('Belt-Weight (X-Large)').setData({'name': 'Belt-Weight (X-Large)', 'num': 2,});
-  await Firestore.instance.collection(collectionName).document('Belt-Weight (XX-Large)').setData({'name': 'Belt-Weight (XX-Large)', 'num': 2,});
-  await Firestore.instance.collection(collectionName).document('Dumbbells (1 lbs.)').setData({'name': 'Dumbbells (1 lbs.)', 'num': 3,});
-  await Firestore.instance.collection(collectionName).document('Dumbbells (2 lbs.)').setData({'name': 'Dumbbells (2 lbs.)', 'num': 3,});
-  await Firestore.instance.collection(collectionName).document('Dumbbells (3 lbs.)').setData({'name': 'Dumbbells (3 lbs.)', 'num': 3,});
-  await Firestore.instance.collection(collectionName).document('Foam Rollers').setData({'name': 'Foam Rollers', 'num': 20,});
-  await Firestore.instance.collection(collectionName).document('Goggles').setData({'name': 'Goggles', 'num': 50,});
-  await Firestore.instance.collection(collectionName).document('Indoor Soccer Ball').setData({'name': 'Indoor Soccer Ball', 'num': 5,});
-  await Firestore.instance.collection(collectionName).document('Jump Rope (7 foot)').setData({'name': 'Jump Rope (7 foot)', 'num': 2,});
-  await Firestore.instance.collection(collectionName).document('Jump Rope (8 foot)').setData({'name': 'Jump Rope (8 foot)', 'num': 2,});
-  await Firestore.instance.collection(collectionName).document('Jump Rope (9 foot)').setData({'name': 'Jump Rope (9 foot)', 'num': 2,});
-  await Firestore.instance.collection(collectionName).document('Racquetball Racquet').setData({'name': 'Racquetball Racquet', 'num': 30,});
-  await Firestore.instance.collection(collectionName).document('Racquetball Ball').setData({'name': 'Racquetball Ball', 'num': 20,});
-  await Firestore.instance.collection(collectionName).document('Rock Wall ATC').setData({'name': 'Rock Wall ATC', 'num': 20,});
-  await Firestore.instance.collection(collectionName).document('Rock Wall Carabiner').setData({'name': 'Rock Wall Carabiner', 'num': 20,});
-  await Firestore.instance.collection(collectionName).document('Rock Wall Harnesses').setData({'name': 'Rock Wall Harnesses', 'num': 20,});
-  await Firestore.instance.collection(collectionName).document('Rock Wall Shoes (Rock Wall Staff)').setData({'name': 'Rock Wall Shoes (Rock Wall Staff)', 'num': 50,});
-  await Firestore.instance.collection(collectionName).document('squash Racquet').setData({'name': 'squash Racquet', 'num': 8,});
-  await Firestore.instance.collection(collectionName).document('squash Ball-Single Dot').setData({'name': 'squash Ball-Single Dot', 'num': 5,});
-  await Firestore.instance.collection(collectionName).document('squash Ball-Double Dot').setData({'name': 'squash Ball-Double Dot', 'num': 5,});
-  await Firestore.instance.collection(collectionName).document('Table Tennis Paddle').setData({'name': 'Table Tennis Paddle', 'num': 20,});
-  await Firestore.instance.collection(collectionName).document('Table Tennis Ball').setData({'name': 'Table Tennis Ball', 'num': 30,});
-  await Firestore.instance.collection(collectionName).document('Volleyball').setData({'name': 'Volleyball', 'num': 8,});
-  await Firestore.instance.collection(collectionName).document('Walleyball').setData({'name': 'Walleyball', 'num': 2,});
+void resetData(String collectionName) async {
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Badminton Racquet')
+      .setData({
+    'name': 'Badminton Racquet',
+    'num': 30,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Badminton Birdie')
+      .setData({
+    'name': 'Badminton Birdie/Shuttle Cock-White',
+    'num': 30,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Band-Resistance (Orange) "')
+      .setData({
+    'name': 'Band-Resistance (Orange) 1/2"',
+    'num': 3,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Band-Resistance (Green)  "')
+      .setData({
+    'name': 'Band-Resistance (Green) 3/4"',
+    'num': 3,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Band-Resistance (Red)"')
+      .setData({
+    'name': 'Band-Resistance (Red) 1"',
+    'num': 3,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Band-Resistance (Blue)"')
+      .setData({
+    'name': 'Band-Resistance (Blue) 1-3/4"',
+    'num': 3,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Band-Resistance (Purple)"')
+      .setData({
+    'name': 'Band-Resistance (Purple) 2-1/2"',
+    'num': 3,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Band-Tube: Very Light (Yellow)')
+      .setData({
+    'name': 'Band-Tube: Very Light (Yellow)',
+    'num': 3,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Band-Tube: Light (Green)')
+      .setData({
+    'name': 'Band-Tube: Light (Green)',
+    'num': 3,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Band-Tube: Medium (Red)')
+      .setData({
+    'name': 'Band-Tube: Medium (Red)',
+    'num': 3,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Band-Tube: Heavy (Blue)')
+      .setData({
+    'name': 'Band-Tube: Heavy (Blue)',
+    'num': 3,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Band-Tube: Ultra Heavy (Purple)')
+      .setData({
+    'name': 'Band-Tube: Ultra Heavy (Purple)',
+    'num': 3,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Barbell Pad-Blue')
+      .setData({
+    'name': 'Barbell Pad-Blue',
+    'num': 10,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Basketball (Men\'s)')
+      .setData({
+    'name': 'Basketball (Men\'s)',
+    'num': 10,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Basketball (Men\'s)')
+      .setData({
+    'name': 'Basketball (Men\'s)',
+    'num': 10,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Basketball (Women\'s)')
+      .setData({
+    'name': 'Basketball (Women\'s)',
+    'num': 5,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Belt-Chain')
+      .setData({
+    'name': 'Belt-Chain',
+    'num': 3,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Belt-Weight (Small)')
+      .setData({
+    'name': 'Belt-Weight (Small)',
+    'num': 2,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Belt-Weight (Medium)')
+      .setData({
+    'name': 'Belt-Weight (Medium)',
+    'num': 2,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Belt-Weight (Large)')
+      .setData({
+    'name': 'Belt-Weight (Large)',
+    'num': 2,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Belt-Weight (X-Large)')
+      .setData({
+    'name': 'Belt-Weight (X-Large)',
+    'num': 2,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Belt-Weight (XX-Large)')
+      .setData({
+    'name': 'Belt-Weight (XX-Large)',
+    'num': 2,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Dumbbells (1 lbs.)')
+      .setData({
+    'name': 'Dumbbells (1 lbs.)',
+    'num': 3,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Dumbbells (2 lbs.)')
+      .setData({
+    'name': 'Dumbbells (2 lbs.)',
+    'num': 3,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Dumbbells (3 lbs.)')
+      .setData({
+    'name': 'Dumbbells (3 lbs.)',
+    'num': 3,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Foam Rollers')
+      .setData({
+    'name': 'Foam Rollers',
+    'num': 20,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Goggles')
+      .setData({
+    'name': 'Goggles',
+    'num': 50,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Indoor Soccer Ball')
+      .setData({
+    'name': 'Indoor Soccer Ball',
+    'num': 5,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Jump Rope (7 foot)')
+      .setData({
+    'name': 'Jump Rope (7 foot)',
+    'num': 2,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Jump Rope (8 foot)')
+      .setData({
+    'name': 'Jump Rope (8 foot)',
+    'num': 2,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Jump Rope (9 foot)')
+      .setData({
+    'name': 'Jump Rope (9 foot)',
+    'num': 2,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Racquetball Racquet')
+      .setData({
+    'name': 'Racquetball Racquet',
+    'num': 30,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Racquetball Ball')
+      .setData({
+    'name': 'Racquetball Ball',
+    'num': 20,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Rock Wall ATC')
+      .setData({
+    'name': 'Rock Wall ATC',
+    'num': 20,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Rock Wall Carabiner')
+      .setData({
+    'name': 'Rock Wall Carabiner',
+    'num': 20,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Rock Wall Harnesses')
+      .setData({
+    'name': 'Rock Wall Harnesses',
+    'num': 20,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Rock Wall Shoes (Rock Wall Staff)')
+      .setData({
+    'name': 'Rock Wall Shoes (Rock Wall Staff)',
+    'num': 50,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('squash Racquet')
+      .setData({
+    'name': 'squash Racquet',
+    'num': 8,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('squash Ball-Single Dot')
+      .setData({
+    'name': 'squash Ball-Single Dot',
+    'num': 5,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('squash Ball-Double Dot')
+      .setData({
+    'name': 'squash Ball-Double Dot',
+    'num': 5,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Table Tennis Paddle')
+      .setData({
+    'name': 'Table Tennis Paddle',
+    'num': 20,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Table Tennis Ball')
+      .setData({
+    'name': 'Table Tennis Ball',
+    'num': 30,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Volleyball')
+      .setData({
+    'name': 'Volleyball',
+    'num': 8,
+  });
+  await Firestore.instance
+      .collection(collectionName)
+      .document('Walleyball')
+      .setData({
+    'name': 'Walleyball',
+    'num': 2,
+  });
 }
-
