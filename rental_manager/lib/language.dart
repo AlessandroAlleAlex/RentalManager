@@ -18,12 +18,12 @@ Map<String, String> EnglishToSimplifiedChinese = {
   "Reservations": "预订",
   "Reservation Details": "预订明细",
   "item name:": "物品名称: ",
-  "start time:": "开始时间: ",
-  "end time:": "结束时间: ",
+  "start time:" : "开始时间: ",
+  "end time:" : "结束时间: ",
   "quantity:": "数量: ",
   "Reserved": "已预订",
-  "item status:": "物品状态: ",
-  "Time Left To Pick Up:": "剩余领取时间: ",
+  "item status:" : "物品状态: ",
+  "Time Left To Pick Up:" : "剩余领取时间: ",
   "Minutes": "分钟",
   "Pick Up": "点击领取",
   "Cancel": "取消",
@@ -34,7 +34,7 @@ Map<String, String> EnglishToSimplifiedChinese = {
   "Track": "查看用量",
   "Bring us your ideas": "提供意见",
   "Lost And Found": "丢失物品",
-  "Email": "邮件",
+  "Email" : "邮件",
   "Subject": "主题",
   "Text": "文本",
   "Please fill in the blank": "请完成填写所有空白处",
@@ -43,8 +43,8 @@ Map<String, String> EnglishToSimplifiedChinese = {
   "Dismiss": "隐藏",
   "Write down your ideas": "欢迎您提供任何您宝贵的意见",
   "Track you favor": "物品使用数据查询",
-  "Usage Statistics:": "使用统计:",
-  "Morning Usage": "早上使用情况",
+  "Usage Statistics:" : "使用统计:",
+  "Morning Usage" : "早上使用情况",
   "Afternoon Usage": "下午使用情况",
   "Evening Usage": "晚上使用情况",
   "Feedback": "用户使用反馈",
@@ -61,36 +61,45 @@ Map<String, String> EnglishToSimplifiedChinese = {
   "Username": "用户名",
   "Employer ID": "工作证件号码",
   "Phone": "手机号码",
-  "Confirm": "确认",
+  "Confirm" : "确认",
   "Language Setting": "语言设置",
   "By system Defaulting Setting": "根据系统设置",
   "Account": "我的",
-  "Return Items": "退换",
+  'Manager View' : "管理者视角",
+  "Manage" : "管理",
+  'Click Image to Change': '点击图片进行更改',
+  'Use Image URL Instead': '使用图片超链接',
+  'Item Name': '物品名称',
+  'Item Amount': '物品数量',
+  "Return Items": "归还",
   "Please Confirm": "请确认",
+
 };
+
 
 Map<String, String> EnglishToTranditionalChinese = {
   "Select a Location": "选择地点",
 };
-Map<String, String> EnglishToSpanish = {};
+Map <String, String> EnglishToSpanish = {};
 
-String langaugeSetFunc(String text) {
-  if (globals.langaugeSet == "English") {
+String langaugeSetFunc(String text){
+
+  if(globals.langaugeSet == "English"){
     return text;
-  } else if (globals.langaugeSet == "SimplifiedChinese") {
-    if (EnglishToSimplifiedChinese[text] == null) {
+  }else if(globals.langaugeSet == "SimplifiedChinese"){
+    if(EnglishToSimplifiedChinese[text] == null){
       print("Fail to translate the word: " + text);
       return text;
     }
 
     return EnglishToSimplifiedChinese[text];
-  } else if (globals.langaugeSet == "TranditionalChinese") {
-    if (EnglishToTranditionalChinese[text] == null) {
+  }else if(globals.langaugeSet == "TranditionalChinese"){
+    if(EnglishToTranditionalChinese[text] == null){
       return text;
     }
     return EnglishToTranditionalChinese[text];
-  } else if (globals.langaugeSet == "Spanish") {
-    if (EnglishToSpanish[text] == null) {
+  }else if(globals.langaugeSet == "Spanish"){
+    if(EnglishToSpanish[text] == null){
       return text;
     }
 

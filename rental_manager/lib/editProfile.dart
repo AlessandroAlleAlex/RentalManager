@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
+import 'package:rental_manager/Locations/show_all.dart';
 import 'package:rental_manager/PlatformWidget/platform_alert_dialog.dart';
 import 'package:rental_manager/language.dart';
 import 'package:rental_manager/tabs/locations.dart';
@@ -26,7 +27,7 @@ enum AppState {
 void getData() async{
   try{
     Firestore.instance
-        .collection('usersByFullName')
+        .collection(returnUserCollection())
         .document(globals.uid)
         .get()
         .then((DocumentSnapshot ds) {
@@ -35,6 +36,10 @@ void getData() async{
       globals.studentID = doc["StudentID"];
       globals.username = doc["name"];
       globals.UserImageUrl = doc["imageURL"];
+
+      if(doc["imageURL"] == null || doc["imageURL"].length == 0){
+        globals.UserImageUrl = "https://images.unsplash.com/photo-1588250003650-4dbcb25eaba8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=933&q=80";
+      }
       globals.phoneNumber = doc["PhoneNumber"];
     });
   }catch(e){
@@ -48,6 +53,7 @@ class EditProfile extends StatelessWidget {
   File imageFile;
   String sex;
   Future<String> uploadImage(File image) async {
+
     StorageReference reference =
     FirebaseStorage.instance.ref().child(image.path.toString());
     StorageUploadTask uploadTask = reference.putFile(image);
@@ -55,6 +61,12 @@ class EditProfile extends StatelessWidget {
     StorageTaskSnapshot downloadUrl = (await uploadTask.onComplete);
 
     String url = (await downloadUrl.ref.getDownloadURL());
+    globals.UserImageUrl = url;
+    var databaseReference = Firestore.instance;
+    await databaseReference.collection(returnUserCollection())
+        .document(globals.uid).updateData({
+      'imageURL': globals.UserImageUrl,
+    });
 
     return url;
   }
@@ -112,9 +124,8 @@ class EditProfile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     getData();
-    //globals.UserImageUrl = "https://lh3.googleusercontent.com/Funbu7KwNO219DUD5fTJ069iEMPm9FKPXkBm23rZiiTCDGyshe6pPmqXj4rkNnrI8SEmvGNxCPZa_iHHEmCzWDTOiYyZOH_Rabao9S0S-MPFK4wk0EwcNEaaSmsOB4P3LVBlnxNJluLwEMC85Z2aJ-5N0AmioISzzukoKDAFut8XMLq3GslXwV4GnIPEZdlYPIhGozL9i0I5Fbg76qvAMDs79XO5rMjM-45RxanT3WQLUF3asdxSJZYQGFFbB_HU3innvKTvHJbuLJqx8pMu6Hw6-LWcYN1GmXIcxPz5P0Ghpxq2mGXlGNbIOBWKiAZz6OqrFMLsJ9lwy4FhwEuJ9iNuz-POM5YrjwaAkA4u4VZva4YvZYKbPTo9LIQhi3Da9LgxMe_B4NJ880zJSeAzitV67CRyeE5mJ1zxm6ck_e49gov785xzp62pQac0BAOChcC1k-MnqRbKawuNVUDqtVQ2Kb16OQQVz-CdAPTB8YL0lcfkZKUC0CT1I_Pa3XILO979tHOKiLqwBveA1sMd2nONF2cMgIC_T-0TnkuFmloLBQZ7ZQM_0UvakZPqPwPlhMBW_l7xC5ywsZm8UycDLjmdr8icU596myLqYRVu_f1ftb7XkPlDh3-jJirrz28Bln98VL4XH6fi1s17d76vOyexS74XECd6Na1QJG-H1eVTHcW-GEAJGG3mazsM=s1024-no";
     if(globals.UserImageUrl == null){
-      globals.UserImageUrl = "https://lh3.googleusercontent.com/Funbu7KwNO219DUD5fTJ069iEMPm9FKPXkBm23rZiiTCDGyshe6pPmqXj4rkNnrI8SEmvGNxCPZa_iHHEmCzWDTOiYyZOH_Rabao9S0S-MPFK4wk0EwcNEaaSmsOB4P3LVBlnxNJluLwEMC85Z2aJ-5N0AmioISzzukoKDAFut8XMLq3GslXwV4GnIPEZdlYPIhGozL9i0I5Fbg76qvAMDs79XO5rMjM-45RxanT3WQLUF3asdxSJZYQGFFbB_HU3innvKTvHJbuLJqx8pMu6Hw6-LWcYN1GmXIcxPz5P0Ghpxq2mGXlGNbIOBWKiAZz6OqrFMLsJ9lwy4FhwEuJ9iNuz-POM5YrjwaAkA4u4VZva4YvZYKbPTo9LIQhi3Da9LgxMe_B4NJ880zJSeAzitV67CRyeE5mJ1zxm6ck_e49gov785xzp62pQac0BAOChcC1k-MnqRbKawuNVUDqtVQ2Kb16OQQVz-CdAPTB8YL0lcfkZKUC0CT1I_Pa3XILO979tHOKiLqwBveA1sMd2nONF2cMgIC_T-0TnkuFmloLBQZ7ZQM_0UvakZPqPwPlhMBW_l7xC5ywsZm8UycDLjmdr8icU596myLqYRVu_f1ftb7XkPlDh3-jJirrz28Bln98VL4XH6fi1s17d76vOyexS74XECd6Na1QJG-H1eVTHcW-GEAJGG3mazsM=s1024-no";
+      globals.UserImageUrl = "https://images.unsplash.com/photo-1588250003650-4dbcb25eaba8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=933&q=80";
     }
 
     return new Scaffold(
@@ -225,7 +236,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
         if(globals.UserImageUrl == null){
           globals.UserImageUrl = "https://images.unsplash.com/photo-1581660545544-83b8812f9516?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80";
         }
-        await databaseReference.collection("usersByFullName")
+        await databaseReference.collection(returnUserCollection())
             .document(globals.uid)
             .setData({
           'name': fullName,

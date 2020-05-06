@@ -1,6 +1,7 @@
 import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rental_manager/Locations/show_all.dart';
 import 'package:rental_manager/PlatformWidget/platform_alert_dialog.dart';
 import 'package:rental_manager/PlatformWidget/strings.dart';
 import 'package:rental_manager/language.dart';
@@ -134,7 +135,7 @@ class _trackState extends State<track> {
                       strDecide = "Yes?";
                     }
                     final QuerySnapshot result =
-                    await Firestore.instance.collection(globals.collectionName).getDocuments();
+                    await Firestore.instance.collection(returnReservationCollection()).getDocuments();
                     List<DocumentSnapshot> documents = result.documents;
                     Navigator.push(context, MaterialPageRoute(builder: (context) => theItemSearch(post.title, documents)));
 //                    PlatformAlertDialog(
@@ -158,7 +159,7 @@ Future<List<itemList>> searchBydocID(String pattern) async {
   final databaseReference = Firestore.instance;
 
   final QuerySnapshot result =
-      await Firestore.instance.collection('ARC_items').getDocuments();
+      await Firestore.instance.collection(returnItemCollection()).getDocuments();
   final List<DocumentSnapshot> documents = result.documents;
 
   itemFound = false;
@@ -173,7 +174,7 @@ Future<List<itemList>> searchBydocID(String pattern) async {
       String name = ds["name"];
       int num = ds["# of items"];
       String imageUrl = ds["imageURL"];
-      print("Belt-Weight".contains("Be"));
+
       if (name.toLowerCase().contains(pattern.toLowerCase()) == true) {
         var a = new itemList(name, num, imageUrl);
 
