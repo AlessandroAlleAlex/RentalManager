@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:rental_manager/Locations/show_all.dart';
 import 'package:rental_manager/data.dart';
 import 'package:rental_manager/globals.dart' as globals;
 import 'package:rental_manager/PlatformWidget/platform_widget.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:rental_manager/language.dart';
 import 'package:rental_manager/tabs/reservations.dart';
 import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -93,7 +95,7 @@ class PlatformAlertDialog extends PlatformWidget {
 
             print(globals.CancelledItemDocID);
             String itemName;
-            await Firestore.instance.collection(globals.collectionName).document(globals.CancelledItemDocID).get().then((snapshot){
+            await Firestore.instance.collection(returnReservationCollection()).document(globals.CancelledItemDocID).get().then((snapshot){
               itemName = snapshot.data['name'];
               print(snapshot.data['name']);
 
@@ -101,11 +103,11 @@ class PlatformAlertDialog extends PlatformWidget {
 
 
 
-            await Firestore.instance.collection("reservation").document(globals.CancelledItemDocID).delete();
+            await Firestore.instance.collection(returnReservationCollection()).document(globals.CancelledItemDocID).delete();
 
             final firestore = Firestore.instance;
             QuerySnapshot itemListDOC =
-            await firestore.collection('reservation').getDocuments();
+            await firestore.collection(returnReservationCollection()).getDocuments();
             print(itemListDOC.documents);
             globals.myds = itemListDOC.documents;
 
@@ -135,7 +137,7 @@ class PlatformAlertDialog extends PlatformWidget {
 
              for(int i = 0 ; i < globals.returnDOCIDList.length; i++){
                String time =  DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
-               await Firestore.instance.collection(globals.collectionName).document(globals.returnDOCIDList[i])
+               await Firestore.instance.collection(returnReservationCollection()).document(globals.returnDOCIDList[i])
                    .updateData({
                  'return time': time,
                   'status' : 'Returned',
@@ -188,7 +190,7 @@ class PlatformAlertDialog extends PlatformWidget {
                             children: <Widget>[
                               Center(
                                 child: Text(
-                                  "Submit",
+                                  langaugeSetFunc("Submit"),
                                   style: TextStyle(
                                     fontSize: 15,
                                     // backgroundColor:  Colors.teal[50],
@@ -203,7 +205,7 @@ class PlatformAlertDialog extends PlatformWidget {
                           onPressed: () async{
                             print('submit here\n');
                             for(int i = 0; i < globals.returnDOCIDList.length; i++){
-                              await Firestore.instance.collection(globals.collectionName).document(globals.returnDOCIDList[i])
+                              await Firestore.instance.collection(returnReservationCollection()).document(globals.returnDOCIDList[i])
                                   .updateData({
                                 'Review': rate / 5,
 

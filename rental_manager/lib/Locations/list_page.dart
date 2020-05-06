@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rental_manager/Locations/show_all.dart';
+import 'package:rental_manager/language.dart';
 import '../globals.dart' as globals;
 import 'package:firebase_storage/firebase_storage.dart';
 import '../Locations/category_page.dart';
@@ -14,12 +16,11 @@ class ListPage extends StatefulWidget {
 
 class _ListPageState extends State<ListPage> {
   Future getFirestoreData() async {
+
     final firestore = Firestore.instance;
     print('${globals.organization} ---------------------------');
     QuerySnapshot arrayOfLocationDocuments = await firestore
-        .collection(globals.organization == 'UCDavis'
-            ? 'locations'
-            : '${globals.organization}_locations')
+        .collection(returnLocationsCollection())
         .getDocuments();
     return arrayOfLocationDocuments.documents;
   }
@@ -41,7 +42,7 @@ class _ListPageState extends State<ListPage> {
         builder: (_, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
-              child: Text('Loading...'),
+              child: Text(langaugeSetFunc('Loading...')),
             );
           } else {
             return ListView.builder(

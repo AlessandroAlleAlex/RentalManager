@@ -1,4 +1,6 @@
 import 'dart:async';
+import 'package:rental_manager/Locations/show_all.dart';
+import 'package:rental_manager/displayall.dart';
 import 'package:rental_manager/language.dart';
 import 'package:rental_manager/search.dart';
 import 'package:rental_manager/uploadCSV.dart';
@@ -162,12 +164,13 @@ class LoginScreenState extends State<LoginScreen> {
 
     if (firebaseUser != null) {
       // Check is already sign up
+
       final QuerySnapshot result =
-      await Firestore.instance.collection('users').where('id', isEqualTo: firebaseUser.uid).getDocuments();
+      await Firestore.instance.collection(returnUserCollection()).where('id', isEqualTo: firebaseUser.uid).getDocuments();
       final List<DocumentSnapshot> documents = result.documents;
       if (documents.length == 0) {
         // Update data to server if new user
-        Firestore.instance.collection('users').document(firebaseUser.uid).setData({
+        Firestore.instance.collection(returnUserCollection()).document(firebaseUser.uid).setData({
           'nickname': firebaseUser.displayName,
           'photoUrl': firebaseUser.photoUrl,
           'id': firebaseUser.uid,
@@ -425,7 +428,7 @@ class LoginScreenState extends State<LoginScreen> {
       double height = MediaQuery.of(context).size.height;
       return SpeedDial(
         marginRight: 10,
-        marginBottom: height/2,
+        marginBottom: height/3,
         animatedIcon: AnimatedIcons.menu_close,
         animatedIconTheme: IconThemeData(size: 22.0),
         // child: Icon(Icons.add),
@@ -467,10 +470,11 @@ class LoginScreenState extends State<LoginScreen> {
             child: Icon(Icons.receipt, color: Colors.white),
             backgroundColor: Colors.green,
             onTap: (){
-               pickUpFile(context);
+              Navigator.push(context, MaterialPageRoute(builder: (context) => Manager()));
+               //pickUpFile(context);
                print(contents);
             },
-            label: 'Upload file',
+            label: langaugeSetFunc('Manager View'),
             labelStyle: TextStyle(fontWeight: FontWeight.w500),
             labelBackgroundColor: Colors.green,
           ),

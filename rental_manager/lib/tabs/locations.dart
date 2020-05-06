@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rental_manager/language.dart';
+import 'package:rental_manager/main.dart';
 // import 'package:cloud_firestore/cloud_firestore.dart';
 import '../Locations/list_page.dart';
 import 'package:rental_manager/globals.dart' as globals;
@@ -51,6 +52,7 @@ class _LocationPageState extends State<LocationPage> {
 
       ),
       body: ListPage(),
+
     );
   }
 }

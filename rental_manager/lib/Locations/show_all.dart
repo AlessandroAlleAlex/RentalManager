@@ -5,7 +5,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:rental_manager/tabs/locations.dart';
 import 'detail_page.dart';
 import 'custom_gridcell.dart';
-
+import 'package:rental_manager/globals.dart' as globals;
 class showAll extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
@@ -13,6 +13,26 @@ class showAll extends StatefulWidget {
     return _showAllState();
   }
 }
+
+String returnItemCollection(){
+
+  return '${globals.organization}_items';
+}
+
+String returnReservationCollection(){
+
+  return '${globals.organization}_reservations';
+}
+
+String returnUserCollection(){
+  return '${globals.organization}_users';
+}
+
+String returnLocationsCollection(){
+  return '${globals.organization}_locations';
+}
+
+
 
 class _showAllState extends State<showAll> {
   navigateToDetail(DocumentSnapshot indexedData, context) {
@@ -22,7 +42,10 @@ class _showAllState extends State<showAll> {
             builder: (context) => DetailPage(itemSelected: indexedData)));
   }
 
+
+
   Widget build(BuildContext context) {
+
     return Scaffold(
       resizeToAvoidBottomPadding: false,
       appBar: AppBar(
@@ -44,7 +67,7 @@ class _showAllState extends State<showAll> {
         ],
       ),
       body: StreamBuilder(
-          stream: Firestore.instance.collection('ARC_items').snapshots(),
+          stream: Firestore.instance.collection(returnItemCollection()).snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) return const Text('loading...');
             // print(snapshot.data.documents.length);
@@ -151,7 +174,7 @@ class CustomSearchDelegate extends SearchDelegate {
   Widget buildSuggestions(BuildContext context) {
     // If you want to add search suggestions as the user enters their search term, this is the place to do that.
     return StreamBuilder(
-        stream: Firestore.instance.collection('ARC_items').snapshots(),
+        stream: Firestore.instance.collection(returnReservationCollection()).snapshots(),
         builder: (context, snapshot) {
           if (!snapshot.hasData) return const Text('loading...');
           // print(snapshot.data.documents.length);

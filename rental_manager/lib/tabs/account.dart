@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:rental_manager/HistoryReservation.dart';
+import 'package:rental_manager/Locations/show_all.dart';
 import 'package:rental_manager/QRCode/generate.dart';
 
 import 'package:rental_manager/data.dart';
@@ -22,7 +23,7 @@ Future<List<globals.ReservationItem>> setData() async{
   List<globals.ReservationItem> itemList = new List();
 
   final QuerySnapshot result =
-  await Firestore.instance.collection(globals.collectionName).getDocuments();
+  await Firestore.instance.collection(returnReservationCollection()).getDocuments();
   final List<DocumentSnapshot> documents = result.documents;
   List<globals.ReservationItem> reservationList = new List();
   int count = 0;

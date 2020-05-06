@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rental_manager/Locations/show_all.dart';
 import 'package:rental_manager/globals.dart';
 import 'package:rental_manager/language.dart';
 import 'package:rental_manager/tabs/locations.dart';
@@ -50,7 +51,7 @@ class _ItemPageState extends State<ItemPage> {
       body: StreamBuilder(
 
           stream: Firestore.instance
-              .collection('ARC_items')
+              .collection(returnItemCollection())
               .where('category', isEqualTo: widget.category)
               .snapshots(),
           builder: (context, snapshot) {

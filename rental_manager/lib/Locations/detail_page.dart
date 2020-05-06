@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:rental_manager/Locations/show_all.dart';
 import 'package:rental_manager/chatview/login.dart';
 import 'package:rental_manager/language.dart';
 import 'package:rental_manager/tabs/locations.dart';
@@ -95,12 +96,13 @@ class _DetailPage extends State<DetailPage> {
         alignment: Alignment.centerRight,
         child: StreamBuilder(
           stream: Firestore.instance
-              .collection('ARC_items')
+              .collection(returnItemCollection())
               .document(widget.itemSelected.documentID)
               .snapshots(),
           builder: (context, snapshot) {
+
             if (!snapshot.hasData) return const Text('loading...');
-            return Text( langaugeSetFunc('Remaining Amount:')+ ' ${snapshot.data['# of items']}',
+            return Text( langaugeSetFunc('Remaining Amount:')+ '',
                 style: TextStyle(
                     fontSize: 14.0,
                     color: Colors.redAccent,
@@ -184,13 +186,13 @@ class _DetailPage extends State<DetailPage> {
     String itemName, imageURL;
     final databaseReference = Firestore.instance;
     await Firestore.instance
-        .collection('ARC_items')
+        .collection(returnItemCollection())
         .document(itemID)
         .get()
         .then((DocumentSnapshot ds) {
       try {
         itemName = ds["name"];
-        print("Found in ARC_items");
+        print("Found in ${returnItemCollection()}");
       } catch (e) {
         print(e);
       }
@@ -205,26 +207,26 @@ class _DetailPage extends State<DetailPage> {
     String itemName, imageURL;
     final databaseReference = Firestore.instance;
     await Firestore.instance
-        .collection('ARC_items')
+        .collection(returnItemCollection())
         .document(itemID)
         .get()
         .then((DocumentSnapshot ds) {
       try {
         itemName = ds["name"];
-        print("Found in ARC_items");
+        print("Found in ${returnItemCollection()}");
       } catch (e) {
         print(e);
       }
     });
 
     await Firestore.instance
-        .collection('ARC_items')
+        .collection(returnItemCollection())
         .document(itemID)
         .get()
         .then((DocumentSnapshot ds) {
       try {
         imageURL = ds["imageURL"];
-        print("Found in ARC_items");
+        print("Found in ${returnItemCollection()}");
       } catch (e) {
         print(e);
       }
@@ -239,7 +241,7 @@ class _DetailPage extends State<DetailPage> {
       imageURL = "www.gooogle.com";
     }
 
-    await databaseReference.collection(globals.collectionName).document().setData({
+    await databaseReference.collection(returnReservationCollection()).document().setData({
       'imageURL': imageURL,
       'name': itemName,
       'uid': uid,
@@ -252,7 +254,13 @@ class _DetailPage extends State<DetailPage> {
       'picked Up time' : 'NULL',
       'return time': 'NULL',
       'endTime': "TBD",
+      'UserName': globals.username,
     });
+    await databaseReference.collection(returnUserCollection()).document(globals.uid).updateData({
+      'LatestReservation': dateTime,
+    });
+
+
     PlatformAlertDialog(
       title: 'Your item has placed',
       content:
