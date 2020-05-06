@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:rental_manager/chatview/login.dart';
 import 'package:rental_manager/tabs/reservations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -39,7 +40,7 @@ Future getData() async {
     globals.UserImageUrl = doc["imageURL"];
     if (globals.UserImageUrl == null) {
       globals.UserImageUrl =
-          "https://images.unsplash.com/photo-1581660545544-83b8812f9516?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80";
+      "https://images.unsplash.com/photo-1581660545544-83b8812f9516?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80";
     }
     globals.phoneNumber = doc["PhoneNumber"];
     globals.organization = doc['organization'];
@@ -109,10 +110,12 @@ void uploadData(
   String fullName = usernameFirst + ' ' + usernameLast;
   final databaseReference = Firestore.instance;
   String doc = "AppSignInUser" + email;
-  await databaseReference.collection("usersByFullName").document(doc).setData({
+  String thiscollectionName = '${organization}_users';
+
+  await databaseReference.collection(thiscollectionName).document(doc).setData({
     'name': fullName,
     'imageURL':
-        "https://images.unsplash.com/photo-1581660545544-83b8812f9516?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
+    "https://images.unsplash.com/photo-1581660545544-83b8812f9516?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
     'PhoneNumber': '',
     'Sex': '',
     'StudentID': '',
@@ -123,7 +126,7 @@ void uploadData(
 
 void updateData(String collectionName) async {
   final QuerySnapshot result =
-      await Firestore.instance.collection(collectionName).getDocuments();
+  await Firestore.instance.collection(collectionName).getDocuments();
   final List<DocumentSnapshot> documents = result.documents;
   List<String> userNameList = [];
   documents.forEach((data) => userNameList.add(data.documentID));
@@ -133,7 +136,7 @@ void updateData(String collectionName) async {
         .collection(collectionName)
         .document(userNameList[i])
         .updateData({
-      'Rentable': true,
+      'organization': true,
     });
   }
 }
@@ -241,18 +244,27 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       globals.langaugeSet = "English";
     }
-    if (list != null && list.length > 0) {
-      globals.uid = list[0];
-      globals.studentID = list[1];
-      globals.username = list[2];
-      globals.UserImageUrl = list[3];
-      globals.phoneNumber = list[4];
-      globals.email = list[5];
-      globals.sex = list[6];
-      if (list.length > 7) {
-        globals.organization = list[7];
+    if(list == null){
+      return;
+    }
+
+    try{
+      if (list != null && list.length > 0) {
+        globals.uid = list[0];
+        globals.studentID = list[1];
+        globals.username = list[2];
+        print("List2: " + list[2]);
+        globals.UserImageUrl = list[3];
+        globals.phoneNumber = list[4];
+        globals.email = list[5];
+        globals.sex = list[6];
+        if (list.length > 7) {
+          globals.organization = list[7];
+        }
+        Navigator.of(context).pushReplacementNamed('/MainViewScreen');
       }
-      Navigator.of(context).pushReplacementNamed('/MainViewScreen');
+    }catch(e){
+      print(e.toString());
     }
   }
 
@@ -332,6 +344,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     SizedBox(height: 10, width: 150),
                     TextField(
                       onChanged: (text) {
+
                         username = text;
                         print("First text field: $text");
                       },
@@ -351,7 +364,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                         labelText: 'Enter your Email Address',
                         prefixIcon:
-                            const Icon(Icons.person, color: Colors.black),
+                        const Icon(Icons.person, color: Colors.black),
                         // labelStyle:
                         // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
                         contentPadding: const EdgeInsets.symmetric(
@@ -369,7 +382,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       cursorColor: Colors.teal.shade900,
                       decoration: InputDecoration(
                         contentPadding:
-                            new EdgeInsets.fromLTRB(20.0, 10.0, 100.0, 10.0),
+                        new EdgeInsets.fromLTRB(20.0, 10.0, 100.0, 10.0),
                         border: new OutlineInputBorder(
                           borderRadius: const BorderRadius.all(
                             const Radius.circular(8.0),
@@ -436,52 +449,52 @@ class _MyHomePageState extends State<MyHomePage> {
                                 showDialog(
                                     context: context,
                                     builder: (_) => NetworkGiffyDialog(
-                                          key: keys[1],
-                                          image: Image.network(
-                                            "https://i.pinimg.com/originals/2c/dd/d1/2cddd1796354e90f4aab7fb1e48eafb4.gif",
-                                            fit: BoxFit.cover,
-                                          ),
-                                          entryAnimation:
-                                              EntryAnimation.TOP_RIGHT,
-                                          title: Text(
-                                            'Warning',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontSize: 22.0,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                          description: Text(
-                                            'Email Adress and Password Cannot be empty',
-                                            textAlign: TextAlign.center,
-                                          ),
-                                          onlyCancelButton: true,
-                                          buttonCancelColor: Colors.teal,
-                                          buttonCancelText: Text('Try Again!'),
-                                        ));
+                                      key: keys[1],
+                                      image: Image.network(
+                                        "https://i.pinimg.com/originals/2c/dd/d1/2cddd1796354e90f4aab7fb1e48eafb4.gif",
+                                        fit: BoxFit.cover,
+                                      ),
+                                      entryAnimation:
+                                      EntryAnimation.TOP_RIGHT,
+                                      title: Text(
+                                        'Warning',
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 22.0,
+                                            fontWeight: FontWeight.w600),
+                                      ),
+                                      description: Text(
+                                        'Email Adress and Password Cannot be empty',
+                                        textAlign: TextAlign.center,
+                                      ),
+                                      onlyCancelButton: true,
+                                      buttonCancelColor: Colors.teal,
+                                      buttonCancelText: Text('Try Again!'),
+                                    ));
                               } else {
                                 var e = await authHandler.signIn(
                                     username, password);
                                 if (e == "false") {
                                   AwesomeDialog(
-                                          context: context,
-                                          dialogType: DialogType.ERROR,
-                                          animType: AnimType.RIGHSLIDE,
-                                          headerAnimationLoop: false,
-                                          tittle: 'ERROR Email NEED VERFIED',
-                                          desc: 'Verify Your Email Please',
-                                          btnOkOnPress: () {},
-                                          btnOkColor: Colors.red)
+                                      context: context,
+                                      dialogType: DialogType.ERROR,
+                                      animType: AnimType.RIGHSLIDE,
+                                      headerAnimationLoop: false,
+                                      tittle: 'ERROR Email NEED VERFIED',
+                                      desc: 'Verify Your Email Please',
+                                      btnOkOnPress: () {},
+                                      btnOkColor: Colors.red)
                                       .show();
                                 } else if (ErrorDetect(e)) {
                                   AwesomeDialog(
-                                          context: context,
-                                          dialogType: DialogType.ERROR,
-                                          animType: AnimType.RIGHSLIDE,
-                                          headerAnimationLoop: false,
-                                          tittle: errorDetect(e, pos: 0),
-                                          desc: errorDetect(e, pos: 1),
-                                          btnOkOnPress: () {},
-                                          btnOkColor: Colors.red)
+                                      context: context,
+                                      dialogType: DialogType.ERROR,
+                                      animType: AnimType.RIGHSLIDE,
+                                      headerAnimationLoop: false,
+                                      tittle: errorDetect(e, pos: 0),
+                                      desc: errorDetect(e, pos: 1),
+                                      btnOkOnPress: () {},
+                                      btnOkColor: Colors.red)
                                       .show();
                                 } else {
                                   prLOGIN.update(
@@ -501,7 +514,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   var email = username;
                                   globals.uid = 'AppSignInUser' + email;
 
-                                  Firestore.instance
+                                  await Firestore.instance
                                       .collection('usersByFullName')
                                       .document(globals.uid)
                                       .get()
@@ -522,11 +535,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                   userinfor.add(globals.username);
                                   userinfor.add(globals.UserImageUrl);
                                   userinfor.add(globals.phoneNumber);
-                                  userinfor.add(globals.email);
+                                  userinfor.add(username);
                                   userinfor.add(globals.sex);
                                   userinfor.add(globals.organization);
                                   var prefs =
-                                      await SharedPreferences.getInstance();
+                                  await SharedPreferences.getInstance();
                                   await prefs.setStringList("user", userinfor);
                                   await prefs.setBool('isDark', false);
                                   await prefs.setInt('userSelectTheme', -1);
@@ -585,7 +598,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                               try {
                                 FirebaseUser googleuser =
-                                    await _myGoogleSignIn();
+                                await _myGoogleSignIn();
 
                                 if (googleuser != null) {
                                   globals.mygoogleuser = googleuser;
@@ -640,11 +653,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                         globals.UserImageUrl = doc["imageURL"];
                                         globals.studentID = doc["StudentID"];
                                         globals.phoneNumber =
-                                            doc["PhoneNumber"];
+                                        doc["PhoneNumber"];
                                         globals.sex = doc["Sex"];
                                         if (globals.UserImageUrl == null) {
                                           globals.UserImageUrl =
-                                              "https://images.unsplash.com/photo-1581660545544-83b8812f9516?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80";
+                                          "https://images.unsplash.com/photo-1581660545544-83b8812f9516?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80";
                                         }
                                         if (globals.studentID == null) {
                                           globals.studentID = "";
@@ -669,7 +682,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                       'imageURL': globals.UserImageUrl,
                                     });
                                     globals.UserImageUrl =
-                                        "https://images.unsplash.com/photo-1581660545544-83b8812f9516?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80";
+                                    "https://images.unsplash.com/photo-1581660545544-83b8812f9516?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80";
                                   }
 
                                   List<String> userinfor = [];
@@ -681,12 +694,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                   userinfor.add(globals.email);
                                   userinfor.add(globals.sex);
                                   var prefs =
-                                      await SharedPreferences.getInstance();
+                                  await SharedPreferences.getInstance();
                                   await prefs.setStringList("user", userinfor);
                                   await prefs.setBool('isDark', false);
                                   await prefs.setInt('userSelectTheme', -1);
                                   getData().whenComplete(() => Navigator.of(
-                                          context)
+                                      context)
                                       .pushReplacementNamed('/MainViewScreen'));
                                 }
                               } catch (e) {
@@ -842,7 +855,7 @@ class _State extends State<SignUpPage> {
 
   Future getOrganizations() async {
     QuerySnapshot list =
-        await Firestore.instance.collection('organizations').getDocuments();
+    await Firestore.instance.collection('organizations').getDocuments();
     list.documents.forEach((doc) => _organizations.add(doc.data['name']));
   }
 
@@ -1044,14 +1057,14 @@ class _State extends State<SignUpPage> {
                         fontSize: 20.0),
                     icon: Icon(Icons.home, color: Colors.teal),
                     items: _organizations.map(
-                      (String organization) {
+                          (String organization) {
                         return DropdownMenuItem<String>(
                             child: Text(organization), value: organization);
                       },
                     ).toList(),
                     onChanged: (String selected) {
                       setState(
-                        () {
+                            () {
                           this._organizationSelected = selected;
                         },
                       );
@@ -1083,26 +1096,26 @@ class _State extends State<SignUpPage> {
                         localCheck = false;
 
                         AwesomeDialog(
-                                context: context,
-                                dialogType: DialogType.ERROR,
-                                animType: AnimType.RIGHSLIDE,
-                                headerAnimationLoop: false,
-                                tittle: 'Warning',
-                                desc: 'Each Field should be filled in',
-                                btnOkOnPress: () {},
-                                btnOkColor: Colors.red)
+                            context: context,
+                            dialogType: DialogType.ERROR,
+                            animType: AnimType.RIGHSLIDE,
+                            headerAnimationLoop: false,
+                            tittle: 'Warning',
+                            desc: 'Each Field should be filled in',
+                            btnOkOnPress: () {},
+                            btnOkColor: Colors.red)
                             .show();
                       } else if (password != confirmpw) {
                         localCheck = false;
                         AwesomeDialog(
-                                context: context,
-                                dialogType: DialogType.ERROR,
-                                animType: AnimType.RIGHSLIDE,
-                                headerAnimationLoop: false,
-                                tittle: 'Warning',
-                                desc: 'Your Password should be matched',
-                                btnOkOnPress: () {},
-                                btnOkColor: Colors.red)
+                            context: context,
+                            dialogType: DialogType.ERROR,
+                            animType: AnimType.RIGHSLIDE,
+                            headerAnimationLoop: false,
+                            tittle: 'Warning',
+                            desc: 'Your Password should be matched',
+                            btnOkOnPress: () {},
+                            btnOkColor: Colors.red)
                             .show();
                       }
 //                else if(FindSameName(userNameList, username)){
@@ -1119,14 +1132,14 @@ class _State extends State<SignUpPage> {
 
                         if (ErrorDetect(e)) {
                           AwesomeDialog(
-                                  context: context,
-                                  dialogType: DialogType.ERROR,
-                                  animType: AnimType.RIGHSLIDE,
-                                  headerAnimationLoop: false,
-                                  tittle: errorDetect(e, pos: 0),
-                                  desc: errorDetect(e, pos: 1),
-                                  btnOkOnPress: () {},
-                                  btnOkColor: Colors.red)
+                              context: context,
+                              dialogType: DialogType.ERROR,
+                              animType: AnimType.RIGHSLIDE,
+                              headerAnimationLoop: false,
+                              tittle: errorDetect(e, pos: 0),
+                              desc: errorDetect(e, pos: 1),
+                              btnOkOnPress: () {},
+                              btnOkColor: Colors.red)
                               .show();
                         } else {
                           prSIGNUP.update(
@@ -1142,7 +1155,7 @@ class _State extends State<SignUpPage> {
                                 fontWeight: FontWeight.w600),
                           );
                           await prSIGNUP.show();
-                          uploadData(usernameFirst, usernameLast, email,
+                          await uploadData(usernameFirst, usernameLast, email,
                               errorDetect(e), _organizationSelected);
                           // print(errorDetect(e));
                           Future.delayed(Duration(seconds: 2))
@@ -1228,7 +1241,7 @@ class _resetPasswordState extends State<resetPassword> {
                 // controller: _username,
                 cursorColor: Colors.teal.shade900,
                 scrollPadding:
-                    const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30),
+                const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30),
                 decoration: InputDecoration(
                   border: new OutlineInputBorder(
                     borderRadius: const BorderRadius.all(
@@ -1286,14 +1299,14 @@ class _resetPasswordState extends State<resetPassword> {
                         if (email == null) {
                           isEmpty = true;
                           AwesomeDialog(
-                                  context: context,
-                                  dialogType: DialogType.ERROR,
-                                  animType: AnimType.RIGHSLIDE,
-                                  headerAnimationLoop: false,
-                                  tittle: 'Warning',
-                                  desc: 'Email Adress Cannot be empty',
-                                  btnOkOnPress: () {},
-                                  btnOkColor: Colors.red)
+                              context: context,
+                              dialogType: DialogType.ERROR,
+                              animType: AnimType.RIGHSLIDE,
+                              headerAnimationLoop: false,
+                              tittle: 'Warning',
+                              desc: 'Email Adress Cannot be empty',
+                              btnOkOnPress: () {},
+                              btnOkColor: Colors.red)
                               .show();
                         }
 
@@ -1308,7 +1321,7 @@ class _resetPasswordState extends State<resetPassword> {
                             result.documents;
                         List<String> userNameList = [];
                         documents.forEach(
-                            (data) => userNameList.add(data.documentID));
+                                (data) => userNameList.add(data.documentID));
                         bool found = false;
                         for (var i = 0; i < userNameList.length; i++) {
                           if (email == userNameList[i]) {
@@ -1358,14 +1371,14 @@ class _resetPasswordState extends State<resetPassword> {
                           print('Founding');
                         } else {
                           AwesomeDialog(
-                                  context: context,
-                                  dialogType: DialogType.ERROR,
-                                  animType: AnimType.RIGHSLIDE,
-                                  headerAnimationLoop: false,
-                                  tittle: 'Warning',
-                                  desc: 'Email Adress Not Found in Records',
-                                  btnOkOnPress: () {},
-                                  btnOkColor: Colors.red)
+                              context: context,
+                              dialogType: DialogType.ERROR,
+                              animType: AnimType.RIGHSLIDE,
+                              headerAnimationLoop: false,
+                              tittle: 'Warning',
+                              desc: 'Email Adress Not Found in Records',
+                              btnOkOnPress: () {},
+                              btnOkColor: Colors.red)
                               .show();
                         }
                       },
