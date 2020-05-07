@@ -73,6 +73,8 @@ Map<String, String> EnglishToSimplifiedChinese = {
   'Item Amount': '物品数量',
   "Return Items": "归还",
   "Please Confirm": "请确认",
+  'Manage': '管理',
+  'Manage your Database': '编辑数据库',
 
 };
 
