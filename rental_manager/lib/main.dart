@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:rental_manager/Locations/show_all.dart';
 import 'package:rental_manager/chatview/login.dart';
 import 'package:rental_manager/tabs/reservations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -122,6 +123,18 @@ void uploadData(
     'email': email,
     'organization': organization,
   });
+  thiscollectionName = 'RentalManagerUsers';
+  await databaseReference.collection(thiscollectionName).document(doc).setData({
+    'name': fullName,
+    'imageURL':
+    "https://images.unsplash.com/photo-1581660545544-83b8812f9516?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
+    'PhoneNumber': '',
+    'Sex': '',
+    'StudentID': '',
+    'email': email,
+    'organization': organization,
+  });
+
 }
 
 void updateData(String collectionName) async {
@@ -278,14 +291,7 @@ class _MyHomePageState extends State<MyHomePage> {
     ProgressDialog prLOGIN;
     prLOGIN = new ProgressDialog(context, type: ProgressDialogType.Normal);
     prLOGIN.style(message: 'Showing some progress...');
-    prLOGIN.update(
-      message: 'Successfully Login...',
-      progressWidget: CircularProgressIndicator(),
-      progressTextStyle: TextStyle(
-          color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
-      messageTextStyle: TextStyle(
-          color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600),
-    );
+
     //testfunc();
     testfunc();
 
@@ -497,38 +503,31 @@ class _MyHomePageState extends State<MyHomePage> {
                                       btnOkColor: Colors.red)
                                       .show();
                                 } else {
-                                  prLOGIN.update(
-                                    message: 'Successfully Login...',
-                                    progressWidget: CircularProgressIndicator(),
-                                    progressTextStyle: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 13.0,
-                                        fontWeight: FontWeight.w400),
-                                    messageTextStyle: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 19.0,
-                                        fontWeight: FontWeight.w600),
-                                  );
-                                  await prLOGIN.show();
+
+
                                   username = username.trim();
                                   var email = username;
                                   globals.uid = 'AppSignInUser' + email;
 
                                   await Firestore.instance
-                                      .collection('usersByFullName')
+                                      .collection('RentalManagerUsers')
                                       .document(globals.uid)
                                       .get()
                                       .then((DocumentSnapshot ds) {
                                     // use ds as a snapshot
                                     var doc = ds.data;
-                                    globals.studentID = doc["StudentID"];
-                                    globals.username = doc["name"];
-                                    globals.UserImageUrl = doc["imageURL"];
-                                    globals.phoneNumber = doc["PhoneNumber"];
-                                    globals.email = doc["email"];
-                                    globals.organization = doc['organization'];
+                                    try{
+                                      globals.studentID = doc["StudentID"];
+                                      globals.username = doc["name"];
+                                      globals.UserImageUrl = doc["imageURL"];
+                                      globals.phoneNumber = doc["PhoneNumber"];
+                                      globals.email = doc["email"];
+                                      globals.organization = doc['organization'];
+                                    }catch(e){
+                                      print(e);
+                                    }
                                   });
-
+                                  print("Here: " + globals.organization);
                                   List<String> userinfor = [];
                                   userinfor.add(globals.uid);
                                   userinfor.add(globals.studentID);
@@ -544,7 +543,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   await prefs.setBool('isDark', false);
                                   await prefs.setInt('userSelectTheme', -1);
 
-                                  prLOGIN.hide();
+
                                   Navigator.of(context)
                                       .pushReplacementNamed('/MainViewScreen');
                                 }
@@ -608,18 +607,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   globals.uid =
                                       'GoogleSignInUser' + globals.email;
 
-                                  prLOGIN.update(
-                                    message: 'Successfully Login...',
-                                    progressWidget: CircularProgressIndicator(),
-                                    progressTextStyle: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 13.0,
-                                        fontWeight: FontWeight.w400),
-                                    messageTextStyle: TextStyle(
-                                        color: Colors.black,
-                                        fontSize: 19.0,
-                                        fontWeight: FontWeight.w600),
-                                  );
+
                                   await prLOGIN.show();
                                   prLOGIN.hide();
                                   String fullName = globals.username;
@@ -869,14 +857,7 @@ class _State extends State<SignUpPage> {
     ProgressDialog prSIGNUP;
     prSIGNUP = new ProgressDialog(context, type: ProgressDialogType.Normal);
     prSIGNUP.style(message: 'Successfully Sign Up...');
-    prSIGNUP.update(
-      message: 'Successfully Sign Up...',
-      progressWidget: CircularProgressIndicator(),
-      progressTextStyle: TextStyle(
-          color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
-      messageTextStyle: TextStyle(
-          color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600),
-    );
+
 
     return Scaffold(
       //resizeToAvoidBottomInset: false,
@@ -1142,18 +1123,7 @@ class _State extends State<SignUpPage> {
                               btnOkColor: Colors.red)
                               .show();
                         } else {
-                          prSIGNUP.update(
-                            message: 'Successfully Sign Up...',
-                            progressWidget: CircularProgressIndicator(),
-                            progressTextStyle: TextStyle(
-                                color: Colors.black,
-                                fontSize: 13.0,
-                                fontWeight: FontWeight.w400),
-                            messageTextStyle: TextStyle(
-                                color: Colors.black,
-                                fontSize: 19.0,
-                                fontWeight: FontWeight.w600),
-                          );
+
                           await prSIGNUP.show();
                           await uploadData(usernameFirst, usernameLast, email,
                               errorDetect(e), _organizationSelected);
