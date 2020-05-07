@@ -115,12 +115,12 @@ class _booksTabState extends State<booksTab> {
   String returnDifferenceTime(
       String reservationTime, String pickUpTime, String returnTime) {
     if (returnTime != null && returnTime.isNotEmpty) {
-      if(returnTime != "NULL") {
+      if (returnTime != "NULL") {
         reservationTime = returnTime;
       }
     } else {
       if (pickUpTime != null && pickUpTime.isNotEmpty) {
-        if(pickUpTime != "NULL") {
+        if (pickUpTime != "NULL") {
           pickUpTime = reservationTime;
         }
       }
@@ -345,7 +345,6 @@ class _peopleTabState extends State<peopleTab> {
     if (latestTime != null && latestTime.length > 0) {
       return returnDifferenceTime(latestTime);
     }
-
     return "Non-Active";
   }
 
@@ -354,8 +353,7 @@ class _peopleTabState extends State<peopleTab> {
     return Scaffold(
       backgroundColor: backgroundcolor(),
       body: StreamBuilder(
-          stream:
-              Firestore.instance.collection(returnUserCollection()).snapshots(),
+          stream: Firestore.instance.collection('global_users').snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) return const Text('loading...');
             final List<DocumentSnapshot> documents = snapshot.data.documents;
@@ -564,24 +562,22 @@ class ItemInformation {
   ItemInformation(this.name, this.amount, this.imageURL, this.documentID);
 }
 
-Future<bool> urlCheck(String url) async{
-
-  try{
+Future<bool> urlCheck(String url) async {
+  try {
     final response = await http.head(url);
 
     if (response.statusCode != 200) {
       return true;
-    }else{
+    } else {
       return false;
     }
-  }catch(e){
+  } catch (e) {
     print(e.toString());
   }
   return false;
 }
 
 class _ManageDatabaseState extends State<ManageDatabase> {
-
   GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
 
   void _showDialog(ItemInformation item) {
@@ -589,27 +585,33 @@ class _ManageDatabaseState extends State<ManageDatabase> {
     String name = item.name,
         imageURL = item.imageURL,
         documentID = item.documentID;
-    String modifyName = name, modifyimageURL = item.imageURL, inputImageURL = item.imageURL;
+    String modifyName = name,
+        modifyimageURL = item.imageURL,
+        inputImageURL = item.imageURL;
     int modifyAmount = amount;
-    void submit() async{
+    void submit() async {
       final form = _formKey.currentState;
-      if(form.validate()){
+      if (form.validate()) {
         print(modifyName);
         print(modifyAmount);
         print(modifyimageURL);
       }
     }
+
     slideDialog.showSlideDialog(
       context: context,
       child: StreamBuilder(
-        stream: Firestore.instance.collection('imageTmp').document(globals.uid).snapshots(),
-          builder: (context, snapshot){
-
-            String theurl = "https://images.unsplash.com/photo-1588693273928-92fa26159c88?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=975&q=80";
-            try{
+          stream: Firestore.instance
+              .collection('imageTmp')
+              .document(globals.uid)
+              .snapshots(),
+          builder: (context, snapshot) {
+            String theurl =
+                "https://images.unsplash.com/photo-1588693273928-92fa26159c88?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=975&q=80";
+            try {
               var ds = snapshot.data;
               theurl = ds.data["imageURL"];
-            }catch(e){
+            } catch (e) {
               print(e.toString());
             }
             return Container(
@@ -617,43 +619,59 @@ class _ManageDatabaseState extends State<ManageDatabase> {
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
-                    Text(langaugeSetFunc('Click Image to Change') ),
+                    Text(langaugeSetFunc('Click Image to Change')),
                     InkWell(
-                      onTap: () async{
+                      onTap: () async {
                         ProgressDialog prUpdate;
-                        prUpdate = new ProgressDialog(context, type: ProgressDialogType.Normal);
+                        prUpdate = new ProgressDialog(context,
+                            type: ProgressDialogType.Normal);
                         prUpdate.style(message: 'Showing some progress...');
                         prUpdate.update(
                           message: 'Uploading...',
                           progressWidget: CircularProgressIndicator(),
                           progressTextStyle: TextStyle(
-                              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+                              color: Colors.black,
+                              fontSize: 13.0,
+                              fontWeight: FontWeight.w400),
                           messageTextStyle: TextStyle(
-                              color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600),
+                              color: Colors.black,
+                              fontSize: 19.0,
+                              fontWeight: FontWeight.w600),
                         );
 
                         File imageFile;
-                        imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+                        imageFile = await ImagePicker.pickImage(
+                            source: ImageSource.gallery);
 
-                        if(imageFile != null){
+                        if (imageFile != null) {
                           await prUpdate.show();
-                          StorageReference reference =
-                          FirebaseStorage.instance.ref().child(imageFile.path.toString());
-                          StorageUploadTask uploadTask = reference.putFile(imageFile);
+                          StorageReference reference = FirebaseStorage.instance
+                              .ref()
+                              .child(imageFile.path.toString());
+                          StorageUploadTask uploadTask =
+                              reference.putFile(imageFile);
 
-                          StorageTaskSnapshot downloadUrl = (await uploadTask.onComplete);
+                          StorageTaskSnapshot downloadUrl =
+                              (await uploadTask.onComplete);
 
                           String url = (await downloadUrl.ref.getDownloadURL());
                           prUpdate.update(
                             message: 'Complete',
                             progressWidget: CircularProgressIndicator(),
                             progressTextStyle: TextStyle(
-                                color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+                                color: Colors.black,
+                                fontSize: 13.0,
+                                fontWeight: FontWeight.w400),
                             messageTextStyle: TextStyle(
-                                color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600),
+                                color: Colors.black,
+                                fontSize: 19.0,
+                                fontWeight: FontWeight.w600),
                           );
-                          await Firestore.instance.collection('imageTmp').document(globals.uid).setData({
-                            'imageURL' : '$url',
+                          await Firestore.instance
+                              .collection('imageTmp')
+                              .document(globals.uid)
+                              .setData({
+                            'imageURL': '$url',
                           });
                           modifyimageURL = url;
                           print("URL:" + url);
@@ -670,12 +688,11 @@ class _ManageDatabaseState extends State<ManageDatabase> {
                         ),
                       ),
                     ),
-
                     SizedBox(
                       height: 20,
                     ),
                     new Container(
-                      alignment:Alignment(-1.0, 0.0),
+                      alignment: Alignment(-1.0, 0.0),
                       child: new Text(
                         langaugeSetFunc('Use Image URL Instead'),
                         style: new TextStyle(
@@ -683,31 +700,26 @@ class _ManageDatabaseState extends State<ManageDatabase> {
                           fontSize: 14.0,
                         ),
                       ),
-
                       margin: new EdgeInsets.only(left: 30.0, right: 30.0),
                     ),
                     new Container(
-
                       child: new TextFormField(
-                        onChanged: (text) {
-
-                        },
-                        validator: (String val){
+                        onChanged: (text) {},
+                        validator: (String val) {
                           print(val);
-                          if(val == null || val.isEmpty) {
+                          if (val == null || val.isEmpty) {
                             return null;
-                          }else{
-                            if(modifyimageURL != imageURL){
+                          } else {
+                            if (modifyimageURL != imageURL) {
                               return "Cannot use image URL after uploading a new image";
                             }
                             var match = isURL(val, requireTld: true);
                             print("Match: " + match.toString());
-                            if(match){
+                            if (match) {
                               return null;
-                            }else{
+                            } else {
                               return "InValid URL";
                             }
-
                           }
                         },
                         onSaved: (value) {
@@ -721,12 +733,11 @@ class _ManageDatabaseState extends State<ManageDatabase> {
                       ),
                       margin: new EdgeInsets.only(left: 30.0, right: 30.0),
                     ),
-
                     SizedBox(
                       height: 20,
                     ),
                     new Container(
-                      alignment:Alignment(-1.0, 0.0),
+                      alignment: Alignment(-1.0, 0.0),
                       child: new Text(
                         langaugeSetFunc('Item Name'),
                         style: new TextStyle(
@@ -734,7 +745,6 @@ class _ManageDatabaseState extends State<ManageDatabase> {
                           fontSize: 14.0,
                         ),
                       ),
-
                       margin: new EdgeInsets.only(left: 30.0, right: 30.0),
                     ),
                     new Container(
@@ -749,23 +759,19 @@ class _ManageDatabaseState extends State<ManageDatabase> {
                           }
                           return null;
                         },
-                        onSaved: (value) {
-
-                        },
+                        onSaved: (value) {},
                         decoration: new InputDecoration(
-
                             border: new UnderlineInputBorder(),
                             contentPadding: new EdgeInsets.all(5.0),
                             hintStyle: new TextStyle(color: Colors.grey)),
                       ),
                       margin: new EdgeInsets.only(left: 30.0, right: 30.0),
                     ),
-
                     SizedBox(
                       height: 20,
                     ),
                     new Container(
-                      alignment:Alignment(-1.0, 0.0),
+                      alignment: Alignment(-1.0, 0.0),
                       child: new Text(
                         langaugeSetFunc('Item Amount'),
                         style: new TextStyle(
@@ -773,7 +779,6 @@ class _ManageDatabaseState extends State<ManageDatabase> {
                           fontSize: 14.0,
                         ),
                       ),
-
                       margin: new EdgeInsets.only(left: 30.0, right: 30.0),
                     ),
                     new Container(
@@ -786,14 +791,12 @@ class _ManageDatabaseState extends State<ManageDatabase> {
                           int amount = int.parse(val);
                           if (val.isEmpty) {
                             return 'This Field Cannot Be Empty';
-                          }else if(amount == 0){
+                          } else if (amount == 0) {
                             return "Amount Cannot Be 0";
                           }
                           return null;
                         },
-                        onSaved: (value) {
-
-                        },
+                        onSaved: (value) {},
                         decoration: new InputDecoration(
                             hintText: amount.toString(),
                             border: new UnderlineInputBorder(),
@@ -803,22 +806,19 @@ class _ManageDatabaseState extends State<ManageDatabase> {
                       ),
                       margin: new EdgeInsets.only(left: 30.0, right: 30.0),
                     ),
-
-
                     SizedBox(
                       height: 20,
                     ),
-
                     SizedBox(
-                      width: MediaQuery.of(context).size.width/3*2,
+                      width: MediaQuery.of(context).size.width / 3 * 2,
                       child: RaisedButton(
-
                         highlightElevation: 0.0,
                         splashColor: Colors.greenAccent,
                         highlightColor: Colors.green,
                         elevation: 0.0,
                         color: Colors.green,
-                        shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(30.0)),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
@@ -833,30 +833,22 @@ class _ManageDatabaseState extends State<ManageDatabase> {
                                 ),
                               ),
                             ),
-
                           ],
                         ),
-                        onPressed: () async{
+                        onPressed: () async {
                           submit();
                         },
                         padding: EdgeInsets.all(7.0),
                         //color: Colors.teal.shade900,
                         disabledColor: Colors.black,
                         disabledTextColor: Colors.black,
-
                       ),
                     ),
-
-
-
-
                   ],
                 ),
               ),
             );
-          }
-
-      ),
+          }),
       textField: Container(
         child: Column(
           children: <Widget>[],
@@ -866,18 +858,19 @@ class _ManageDatabaseState extends State<ManageDatabase> {
     );
   }
 
-
-  void _showDialog2( ) {
-
+  void _showDialog2() {
     String modifyName = "", modifyimageURL = " ", inputImageURL = " ";
     int modifyAmount = 0;
-    void submit() async{
+    void submit() async {
       final form = _formKey.currentState;
-      if(form.validate()){
+      if (form.validate()) {
         print(modifyName);
         print(modifyAmount);
         print(modifyimageURL);
-        await Firestore.instance.collection(returnItemCollection()).document("123").setData({
+        await Firestore.instance
+            .collection(returnItemCollection())
+            .document("123")
+            .setData({
           '# of items': modifyAmount,
           'category': 'sport',
           'imageURL': modifyimageURL,
@@ -887,66 +880,85 @@ class _ManageDatabaseState extends State<ManageDatabase> {
       }
     }
 
-    NetworkImage Netimage(){
+    NetworkImage Netimage() {
       return NetworkImage(modifyimageURL);
     }
 
     slideDialog.showSlideDialog(
       context: context,
       child: StreamBuilder(
-        stream: Firestore.instance.collection('imageTmp').document(globals.uid).snapshots(),
-          builder: (context, snapshot){
-
-          String theurl = 'https://images.unsplash.com/photo-1588693273928-92fa26159c88?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=975&q=80';
-            try{
+          stream: Firestore.instance
+              .collection('imageTmp')
+              .document(globals.uid)
+              .snapshots(),
+          builder: (context, snapshot) {
+            String theurl =
+                'https://images.unsplash.com/photo-1588693273928-92fa26159c88?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=975&q=80';
+            try {
               var ds = snapshot.data;
               theurl = ds.data["imageURL"];
-            }catch(e){
+            } catch (e) {
               print(e.toString());
             }
             print(theurl);
-            return  Container(
+            return Container(
               child: Form(
                 key: _formKey,
                 child: Column(
                   children: <Widget>[
-                    Text(langaugeSetFunc('Click Image to Change') ),
+                    Text(langaugeSetFunc('Click Image to Change')),
                     InkWell(
-                      onTap: () async{
+                      onTap: () async {
                         ProgressDialog prUpdate;
-                        prUpdate = new ProgressDialog(context, type: ProgressDialogType.Normal);
+                        prUpdate = new ProgressDialog(context,
+                            type: ProgressDialogType.Normal);
                         prUpdate.style(message: 'Showing some progress...');
                         prUpdate.update(
                           message: 'Uploading...',
                           progressWidget: CircularProgressIndicator(),
                           progressTextStyle: TextStyle(
-                              color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+                              color: Colors.black,
+                              fontSize: 13.0,
+                              fontWeight: FontWeight.w400),
                           messageTextStyle: TextStyle(
-                              color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600),
+                              color: Colors.black,
+                              fontSize: 19.0,
+                              fontWeight: FontWeight.w600),
                         );
 
                         File imageFile;
-                        imageFile = await ImagePicker.pickImage(source: ImageSource.gallery);
+                        imageFile = await ImagePicker.pickImage(
+                            source: ImageSource.gallery);
 
-                        if(imageFile != null){
+                        if (imageFile != null) {
                           await prUpdate.show();
-                          StorageReference reference =
-                          FirebaseStorage.instance.ref().child(imageFile.path.toString());
-                          StorageUploadTask uploadTask = reference.putFile(imageFile);
+                          StorageReference reference = FirebaseStorage.instance
+                              .ref()
+                              .child(imageFile.path.toString());
+                          StorageUploadTask uploadTask =
+                              reference.putFile(imageFile);
 
-                          StorageTaskSnapshot downloadUrl = (await uploadTask.onComplete);
+                          StorageTaskSnapshot downloadUrl =
+                              (await uploadTask.onComplete);
 
                           String url = (await downloadUrl.ref.getDownloadURL());
                           prUpdate.update(
                             message: 'Complete',
                             progressWidget: CircularProgressIndicator(),
                             progressTextStyle: TextStyle(
-                                color: Colors.black, fontSize: 13.0, fontWeight: FontWeight.w400),
+                                color: Colors.black,
+                                fontSize: 13.0,
+                                fontWeight: FontWeight.w400),
                             messageTextStyle: TextStyle(
-                                color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600),
+                                color: Colors.black,
+                                fontSize: 19.0,
+                                fontWeight: FontWeight.w600),
                           );
-                          await Firestore.instance.collection('imageTmp').document(globals.uid).setData({
-                            'imageURL' : '$url',
+                          await Firestore.instance
+                              .collection('imageTmp')
+                              .document(globals.uid)
+                              .setData({
+                            'imageURL': '$url',
                           });
                           setState(() {
                             modifyimageURL = url;
@@ -966,12 +978,11 @@ class _ManageDatabaseState extends State<ManageDatabase> {
                         ),
                       ),
                     ),
-
                     SizedBox(
                       height: 20,
                     ),
                     new Container(
-                      alignment:Alignment(-1.0, 0.0),
+                      alignment: Alignment(-1.0, 0.0),
                       child: new Text(
                         langaugeSetFunc('Use Image URL Instead'),
                         style: new TextStyle(
@@ -979,31 +990,26 @@ class _ManageDatabaseState extends State<ManageDatabase> {
                           fontSize: 14.0,
                         ),
                       ),
-
                       margin: new EdgeInsets.only(left: 30.0, right: 30.0),
                     ),
                     new Container(
-
                       child: new TextFormField(
-                        onChanged: (text) {
-
-                        },
-                        validator: (String val){
+                        onChanged: (text) {},
+                        validator: (String val) {
                           print(val);
-                          if(val == null || val.isEmpty) {
+                          if (val == null || val.isEmpty) {
                             return null;
-                          }else{
-                            if(modifyimageURL != null){
+                          } else {
+                            if (modifyimageURL != null) {
                               return "Cannot use image URL after uploading a new image";
                             }
                             var match = isURL(val, requireTld: true);
                             print("Match: " + match.toString());
-                            if(match){
+                            if (match) {
                               return null;
-                            }else{
+                            } else {
                               return "InValid URL";
                             }
-
                           }
                         },
                         onSaved: (value) {
@@ -1017,12 +1023,11 @@ class _ManageDatabaseState extends State<ManageDatabase> {
                       ),
                       margin: new EdgeInsets.only(left: 30.0, right: 30.0),
                     ),
-
                     SizedBox(
                       height: 20,
                     ),
                     new Container(
-                      alignment:Alignment(-1.0, 0.0),
+                      alignment: Alignment(-1.0, 0.0),
                       child: new Text(
                         langaugeSetFunc('Item Name'),
                         style: new TextStyle(
@@ -1030,7 +1035,6 @@ class _ManageDatabaseState extends State<ManageDatabase> {
                           fontSize: 14.0,
                         ),
                       ),
-
                       margin: new EdgeInsets.only(left: 30.0, right: 30.0),
                     ),
                     new Container(
@@ -1045,23 +1049,19 @@ class _ManageDatabaseState extends State<ManageDatabase> {
                           }
                           return null;
                         },
-                        onSaved: (value) {
-
-                        },
+                        onSaved: (value) {},
                         decoration: new InputDecoration(
-
                             border: new UnderlineInputBorder(),
                             contentPadding: new EdgeInsets.all(5.0),
                             hintStyle: new TextStyle(color: Colors.grey)),
                       ),
                       margin: new EdgeInsets.only(left: 30.0, right: 30.0),
                     ),
-
                     SizedBox(
                       height: 20,
                     ),
                     new Container(
-                      alignment:Alignment(-1.0, 0.0),
+                      alignment: Alignment(-1.0, 0.0),
                       child: new Text(
                         langaugeSetFunc('Item Amount'),
                         style: new TextStyle(
@@ -1069,7 +1069,6 @@ class _ManageDatabaseState extends State<ManageDatabase> {
                           fontSize: 14.0,
                         ),
                       ),
-
                       margin: new EdgeInsets.only(left: 30.0, right: 30.0),
                     ),
                     new Container(
@@ -1081,18 +1080,16 @@ class _ManageDatabaseState extends State<ManageDatabase> {
                         validator: (String val) {
                           if (val.isEmpty) {
                             return 'This Field Cannot Be Empty';
-                          }else{
+                          } else {
                             var amount = int.parse(val);
 
-                            if(amount == 0){
+                            if (amount == 0) {
                               return "Amount Cannot Be 0";
                             }
                           }
                           return null;
                         },
-                        onSaved: (value) {
-
-                        },
+                        onSaved: (value) {},
                         decoration: new InputDecoration(
                             hintText: modifyAmount.toString(),
                             border: new UnderlineInputBorder(),
@@ -1102,22 +1099,19 @@ class _ManageDatabaseState extends State<ManageDatabase> {
                       ),
                       margin: new EdgeInsets.only(left: 30.0, right: 30.0),
                     ),
-
-
                     SizedBox(
                       height: 20,
                     ),
-
                     SizedBox(
-                      width: MediaQuery.of(context).size.width/3*2,
+                      width: MediaQuery.of(context).size.width / 3 * 2,
                       child: RaisedButton(
-
                         highlightElevation: 0.0,
                         splashColor: Colors.greenAccent,
                         highlightColor: Colors.green,
                         elevation: 0.0,
                         color: Colors.green,
-                        shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                        shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(30.0)),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
@@ -1132,30 +1126,22 @@ class _ManageDatabaseState extends State<ManageDatabase> {
                                 ),
                               ),
                             ),
-
                           ],
                         ),
-                        onPressed: () async{
+                        onPressed: () async {
                           submit();
                         },
                         padding: EdgeInsets.all(7.0),
                         //color: Colors.teal.shade900,
                         disabledColor: Colors.black,
                         disabledTextColor: Colors.black,
-
                       ),
                     ),
-
-
-
-
                   ],
                 ),
               ),
             );
-          }
-
-      ),
+          }),
       textField: Container(
         child: Column(
           children: <Widget>[],
@@ -1179,10 +1165,16 @@ class _ManageDatabaseState extends State<ManageDatabase> {
         backgroundColor: backgroundcolor(),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.add, color: textcolor(),),
-            onPressed: () async{
-              await Firestore.instance.collection('imageTmp').document(globals.uid).setData({
-                'imageURL' : '123',
+            icon: Icon(
+              Icons.add,
+              color: textcolor(),
+            ),
+            onPressed: () async {
+              await Firestore.instance
+                  .collection('imageTmp')
+                  .document(globals.uid)
+                  .setData({
+                'imageURL': '123',
               });
               _showDialog2();
             },
@@ -1238,10 +1230,13 @@ class _ManageDatabaseState extends State<ManageDatabase> {
                           subtitle: new Text(
                               'Amount:' + itemList[i].amount.toString(),
                               style: TextStyle(color: textcolor())),
-                          onTap: () async{
+                          onTap: () async {
                             String imageURL = itemList[i].imageURL;
-                            await Firestore.instance.collection('imageTmp').document(globals.uid).setData({
-                              'imageURL' : '$imageURL',
+                            await Firestore.instance
+                                .collection('imageTmp')
+                                .document(globals.uid)
+                                .setData({
+                              'imageURL': '$imageURL',
                             });
                             _showDialog(itemList[i]);
                           },
