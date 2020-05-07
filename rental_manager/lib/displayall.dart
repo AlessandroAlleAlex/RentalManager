@@ -114,11 +114,15 @@ class _booksTabState extends State<booksTab> {
   @override
   String returnDifferenceTime(
       String reservationTime, String pickUpTime, String returnTime) {
-    if (returnTime != null) {
-      reservationTime = returnTime;
+    if (returnTime != null && returnTime.isNotEmpty) {
+      if(returnTime != "NULL") {
+        reservationTime = returnTime;
+      }
     } else {
-      if (pickUpTime != null) {
-        pickUpTime = reservationTime;
+      if (pickUpTime != null && pickUpTime.isNotEmpty) {
+        if(pickUpTime != "NULL") {
+          pickUpTime = reservationTime;
+        }
       }
     }
 
@@ -1169,7 +1173,7 @@ class _ManageDatabaseState extends State<ManageDatabase> {
           color: textcolor(), //change your color here
         ),
         title: Text(
-          "Manage your Database",
+          langaugeSetFunc("Manage your Database"),
           style: TextStyle(color: textcolor()),
         ),
         backgroundColor: backgroundcolor(),
