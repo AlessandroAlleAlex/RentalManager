@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:rental_manager/Locations/custom_location_card.dart';
 import 'package:rental_manager/Locations/show_all.dart';
 import 'package:rental_manager/language.dart';
+import 'package:rental_manager/manager/manage_category.dart';
 
 class ManageLocations extends StatefulWidget {
   @override
@@ -30,9 +31,14 @@ class _ManageLocationsState extends State<ManageLocations> {
         });
   }
 
-  Widget managerLocationCard(var data, context) {
+  void navToMangerCategory(data, BuildContext context) {
+    Navigator.push(context,
+        MaterialPageRoute(builder: (context) => ManageCategory(data: data)));
+  }
+
+  Widget managerLocationCard(data, context) {
     return InkWell(
-      // onTap: () => navToMangerCategory(data, context),
+      onTap: () => navToMangerCategory(data, context),
       child: Container(
         // padding: const EdgeInsets.fromLTRB(0, 0, 0, 18),
         height: 100,
