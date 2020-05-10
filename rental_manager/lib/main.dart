@@ -107,7 +107,7 @@ final FirebaseAuth auth = FirebaseAuth.instance;
 
 // setState(() => sessionID = info['session_id']);
 
-void uploadData(
+Future uploadData(
     usernameFirst, usernameLast, email, uid, String organization) async {
   String fullName = usernameFirst + ' ' + usernameLast;
   final databaseReference = Firestore.instance;

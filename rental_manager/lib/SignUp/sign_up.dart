@@ -16,21 +16,11 @@ class _State extends State<SignUpPage> {
   @override
   String email, usernameFirst, usernameLast, password, confirmpw;
   var authHandler = new Auth();
-  var _organizations = [
-    'select an organization',
-  ];
-  var _organizationSelected = 'select an organization';
 
-  Future getOrganizations() async {
-    QuerySnapshot list =
-        await Firestore.instance.collection('organizations').getDocuments();
-    list.documents.forEach((doc) => _organizations.add(doc.data['name']));
-  }
 
   @override
   void initState() {
     print(widget.organization);
-    getOrganizations().whenComplete(() => setState(() {}));
     super.initState();
   }
 
@@ -209,32 +199,6 @@ class _State extends State<SignUpPage> {
                   SizedBox(
                     height: 20,
                   ),
-                  DropdownButton<String>(
-                    dropdownColor: Colors.black,
-                    iconSize: 28.0,
-                    style: TextStyle(
-                        color: Colors.blue,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20.0),
-                    icon: Icon(Icons.home, color: Colors.teal),
-                    items: _organizations.map(
-                      (String organization) {
-                        return DropdownMenuItem<String>(
-                            child: Text(organization), value: organization);
-                      },
-                    ).toList(),
-                    onChanged: (String selected) {
-                      setState(
-                        () {
-                          this._organizationSelected = selected;
-                        },
-                      );
-                    },
-                    value: _organizationSelected,
-                  ),
-                  SizedBox(
-                    height: 20,
-                  ),
                   Text('Click sign up after entering all of above'),
                   RaisedButton(
                     textColor: Colors.white,
@@ -252,8 +216,7 @@ class _State extends State<SignUpPage> {
                           password == null ||
                           usernameFirst == null ||
                           usernameLast == null ||
-                          confirmpw == null ||
-                          _organizationSelected == 'select an organization') {
+                          confirmpw == null) {
                         localCheck = false;
 
                         AwesomeDialog(
@@ -305,7 +268,7 @@ class _State extends State<SignUpPage> {
                         } else {
                           await prSIGNUP.show();
                           await uploadData(usernameFirst, usernameLast, email,
-                              errorDetect(e), _organizationSelected);
+                              errorDetect(e), widget.organization);
                           // print(errorDetect(e));
                           Future.delayed(Duration(seconds: 2))
                               .then((onValue) {});
