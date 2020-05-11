@@ -17,10 +17,8 @@ class _State extends State<SignUpPage> {
   String email, usernameFirst, usernameLast, password, confirmpw;
   var authHandler = new Auth();
 
-
   @override
   void initState() {
-    print(widget.organization);
     super.initState();
   }
 
@@ -32,7 +30,7 @@ class _State extends State<SignUpPage> {
     return Scaffold(
       //resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: Text('Sign Up Page'),
+        title: Text('Sign Up: ${widget.organization}'),
         backgroundColor: Colors.teal,
       ),
       body: GestureDetector(

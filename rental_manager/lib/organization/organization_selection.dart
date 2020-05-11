@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:rental_manager/SignUp/sign_up.dart';
+import 'package:rental_manager/organization/add_organization.dart';
 
 class OrganizationSelection extends StatefulWidget {
   @override
@@ -17,18 +18,42 @@ class _OrganizationSelectionState extends State<OrganizationSelection> {
     );
   }
 
+  Future inputDialog(BuildContext context) {
+    TextEditingController inputText = TextEditingController();
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text('Create New Organization'),
+            content: TextField(
+                decoration:
+                    InputDecoration(hintText: 'enter organization name'),
+                controller: inputText,
+                keyboardType: TextInputType.text),
+            actions: <Widget>[
+              MaterialButton(
+                color: Colors.blue,
+                onPressed: () {
+                  Navigator.of(context).pop(
+                    inputText.text.trim().replaceAll(' ', ''),
+                  );
+                },
+                child: Text('add'),
+                elevation: 0.0,
+              )
+            ],
+          );
+        });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Select an oganization'),
+        backgroundColor: Colors.teal,
         actions: <Widget>[
-          FlatButton.icon(
-            onPressed: () => print('add clicked'),
-            icon: Icon(Icons.add),
-            label: Text('Add'),
-          ),
-          FlatButton.icon(
+          IconButton(
             onPressed: () {
               showSearch(
                 context: context,
@@ -36,21 +61,37 @@ class _OrganizationSelectionState extends State<OrganizationSelection> {
               );
             },
             icon: Icon(Icons.search),
-            label: Text('Search'),
+          ),
+          IconButton(
+            onPressed: () {
+              inputDialog(context).then((newOrganization) async {
+                if (newOrganization != null || newOrganization != '') {
+                  await addOrganization(newOrganization.toString());
+                  navigateToSignUp(newOrganization.toString(), context);
+                }
+              });
+            },
+            icon: Icon(Icons.add),
           ),
         ],
       ),
       body: StreamBuilder(
           stream: Firestore.instance.collection('organizations').snapshots(),
           builder: (context, snapshot) {
-            if (!snapshot.hasData) return Center(child: Text('Loading...'));
+            if (!snapshot.hasData)
+              return Center(
+                child: Text('Loading...'),
+              );
 
             return ListView.builder(
               itemCount: snapshot.data.documents.length,
               itemBuilder: (context, index) => ListTile(
                 // title: Text(results.length.toString()),
-                title: Text(
-                  snapshot.data.documents[index].data['name'].toString(),
+                title: Center(
+                  child: Text(
+                    snapshot.data.documents[index].data['name'].toString(),
+                    style: TextStyle(fontSize: 20, color: Colors.teal),
+                  ),
                 ),
                 onTap: () {
                   navigateToSignUp(
@@ -121,7 +162,12 @@ class CustomSearchDelegate extends SearchDelegate {
             itemCount: results.length,
             itemBuilder: (context, index) => ListTile(
               // title: Text(results.length.toString()),
-              title: Text(results[index]['name'].toString()),
+              title: Center(
+                child: Text(
+                  results[index]['name'].toString(),
+                  style: TextStyle(fontSize: 20, color: Colors.blue),
+                ),
+              ),
               onTap: () =>
                   navigateToSignUp(results[index]['name'].toString(), context),
             ),
