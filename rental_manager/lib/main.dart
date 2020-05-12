@@ -123,6 +123,7 @@ Future uploadData(
     'StudentID': '',
     'email': email,
     'organization': organization,
+    'Admin': false,
   });
 }
 
@@ -268,6 +269,23 @@ class _MyHomePageState extends State<MyHomePage> {
     } catch (e) {
       print(e.toString());
     }
+  }
+
+  Future getExistingOrganizations() async {
+    await Firestore.instance
+        .collection('organizations')
+        .getDocuments()
+        .then((organization) {
+      organization.documents
+          .forEach((org) => globals.existingOrganizations.add(org['name']));
+    });
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getExistingOrganizations();
   }
 
   @override
@@ -499,9 +517,22 @@ class _MyHomePageState extends State<MyHomePage> {
                                       .collection('global_users')
                                       .document(globals.uid)
                                       .get()
-                                      .then((DocumentSnapshot ds) {
+                                      .then((DocumentSnapshot ds) async {
                                     // use ds as a snapshot
                                     var doc = ds.data;
+                                    if (!globals.existingOrganizations
+                                            .contains(doc['organization']) &&
+                                        doc['Admin'] == false) {
+                                      await Firestore.instance
+                                          .collection('global_users')
+                                          .document(globals.uid)
+                                          .updateData({'Admin': true});
+                                      await Firestore.instance
+                                          .collection('organizations')
+                                          .document()
+                                          .setData(
+                                              {'name': doc['organization']});
+                                    }
                                     try {
                                       globals.studentID = doc["StudentID"];
                                       globals.username = doc["name"];

@@ -20,6 +20,8 @@ String langaugeSet = "SimplifiedChinese";
 String organization = "";
 bool dark= false;
 int userSelectTheme = -1;
+List<String> existingOrganizations = [];
+
 class Item{
   String itemName;
   String itemLocation;
