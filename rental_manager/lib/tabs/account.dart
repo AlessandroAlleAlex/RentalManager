@@ -259,7 +259,7 @@ class FourthTab extends StatelessWidget {
                             color: textcolor(),
                           ),
                           Text(
-                            langaugeSetFunc('Details & Password'),
+                            langaugeSetFunc('Account Details'),
                             style: TextStyle(
                               fontSize: 20,
                               color: textcolor(),
@@ -357,7 +357,7 @@ class FourthTab extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: <Widget>[
                           Icon(
-                            Icons.wb_sunny,
+                            Icons.translate,
                             color: textcolor(),
                           ),
                           Text(

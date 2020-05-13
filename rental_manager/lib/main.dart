@@ -24,6 +24,7 @@ import 'package:progress_dialog/progress_dialog.dart';
 import "package:http/http.dart" as http;
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:rental_manager/qrcodelogin.dart';
+import 'language.dart';
 import 'qrcodelogin.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'dart:ui' as ui;
@@ -247,11 +248,11 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       globals.langaugeSet = "English";
     }
-    if (list == null) {
+    if(list == null){
       return;
     }
 
-    try {
+    try{
       if (list != null && list.length > 0) {
         globals.uid = list[0];
         globals.studentID = list[1];
@@ -264,9 +265,27 @@ class _MyHomePageState extends State<MyHomePage> {
         if (list.length > 7) {
           globals.organization = list[7];
         }
+
+        if(globals.organization == null || globals.organization.isEmpty){
+
+          await Firestore.instance
+              .collection('RentalManagerUsers')
+              .document(globals.uid)
+              .get()
+              .then((DocumentSnapshot ds) {
+            // use ds as a snapshot
+            var doc = ds.data;
+            try{
+              globals.organization = doc['organization'];
+            }catch(e){
+              print(e);
+            }
+          });
+
+        }
         Navigator.of(context).pushReplacementNamed('/MainViewScreen');
       }
-    } catch (e) {
+    }catch(e){
       print(e.toString());
     }
   }
@@ -355,60 +374,66 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                     ),
                     SizedBox(height: 10, width: 150),
-                    TextField(
-                      onChanged: (text) {
-                        username = text;
-                        print("First text field: $text");
-                      },
-                      // controller: _username,
-                      cursorColor: Colors.teal.shade900,
-                      scrollPadding: const EdgeInsets.symmetric(
-                          vertical: 10.0, horizontal: 30),
-                      decoration: InputDecoration(
-                        border: new OutlineInputBorder(
-                          borderRadius: const BorderRadius.all(
-                            const Radius.circular(8.0),
-                          ),
-                          borderSide: new BorderSide(
-                            color: Colors.transparent,
-                            width: 1.0,
-                          ),
-                        ),
-                        labelText: 'Enter your Email Address',
-                        prefixIcon:
-                            const Icon(Icons.person, color: Colors.black),
-                        // labelStyle:
-                        // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
-                        contentPadding: const EdgeInsets.symmetric(
+                    Container(
+                      padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+                      child: TextField(
+                        onChanged: (text) {
+                          username = text;
+                          print("First text field: $text");
+                        },
+                        // controller: _username,
+                        cursorColor: Colors.teal.shade900,
+                        scrollPadding: const EdgeInsets.symmetric(
                             vertical: 10.0, horizontal: 30),
+                        decoration: InputDecoration(
+                          border: new OutlineInputBorder(
+                            borderRadius: const BorderRadius.all(
+                              const Radius.circular(8.0),
+                            ),
+                            borderSide: new BorderSide(
+                              color: Colors.transparent,
+                              width: 1.0,
+                            ),
+                          ),
+                          labelText: langaugeSetFunc('Enter your Email Address'),
+                          prefixIcon:
+                              const Icon(Icons.person, color: Colors.black),
+                          // labelStyle:
+                          // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 30),
+                        ),
                       ),
                     ),
                     SizedBox(height: 20, width: 150),
-                    TextField(
-                      onChanged: (text) {
-                        password = text;
+                    Container(
+                      padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+                      child: TextField(
+                        onChanged: (text) {
+                          password = text;
 
-                        //print("First text field: $text");
-                      },
-                      obscureText: true,
-                      cursorColor: Colors.teal.shade900,
-                      decoration: InputDecoration(
-                        contentPadding:
-                            new EdgeInsets.fromLTRB(20.0, 10.0, 100.0, 10.0),
-                        border: new OutlineInputBorder(
-                          borderRadius: const BorderRadius.all(
-                            const Radius.circular(8.0),
+                          //print("First text field: $text");
+                        },
+                        obscureText: true,
+                        cursorColor: Colors.teal.shade900,
+                        decoration: InputDecoration(
+                          contentPadding:
+                              new EdgeInsets.fromLTRB(20.0, 10.0, 100.0, 10.0),
+                          border: new OutlineInputBorder(
+                            borderRadius: const BorderRadius.all(
+                              const Radius.circular(8.0),
+                            ),
+                            borderSide: new BorderSide(
+                              color: Colors.transparent,
+                              width: 1.0,
+                            ),
                           ),
-                          borderSide: new BorderSide(
-                            color: Colors.transparent,
-                            width: 1.0,
-                          ),
+                          labelText: langaugeSetFunc('Enter your Password'),
+                          prefixIcon: const Icon(Icons.lock, color: Colors.black),
+                          // labelStyle:
+                          // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
+                          // contentPadding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 50),
                         ),
-                        labelText: 'Enter your Password',
-                        prefixIcon: const Icon(Icons.lock, color: Colors.black),
-                        // labelStyle:
-                        // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
-                        // contentPadding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 50),
                       ),
                     ),
                     SizedBox(
@@ -432,7 +457,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               children: <Widget>[
                                 Center(
                                   child: Text(
-                                    "LOGIN",
+                                    langaugeSetFunc("LOGIN"),
                                     style: TextStyle(
                                       fontSize: 15,
                                       // backgroundColor:  Colors.teal[50],
@@ -445,107 +470,43 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                             onPressed: () async {
                               if (username == null || password == null) {
-//                          AwesomeDialog(
-//                              context: context,
-//                              dialogType: DialogType.ERROR,
-//                              animType: AnimType.RIGHSLIDE,
-//                              headerAnimationLoop: false,
-//                              tittle: 'Warning',
-//                              desc:
-//                              'Email Adress and Password Cannot be empty',
-//                              btnOkOnPress: () {
-//                                Navigator.of(context).pop();
-//                              },
-//                              btnOkColor: Colors.red)
-//                              .show();
-                                showDialog(
-                                    context: context,
-                                    builder: (_) => NetworkGiffyDialog(
-                                          key: keys[1],
-                                          image: Image.network(
-                                            "https://i.pinimg.com/originals/2c/dd/d1/2cddd1796354e90f4aab7fb1e48eafb4.gif",
-                                            fit: BoxFit.cover,
-                                          ),
-                                          entryAnimation:
-                                              EntryAnimation.TOP_RIGHT,
-                                          title: Text(
-                                            'Warning',
-                                            textAlign: TextAlign.center,
-                                            style: TextStyle(
-                                                fontSize: 22.0,
-                                                fontWeight: FontWeight.w600),
-                                          ),
-                                          description: Text(
-                                            'Email Adress and Password Cannot be empty',
-                                            textAlign: TextAlign.center,
-                                          ),
-                                          onlyCancelButton: true,
-                                          buttonCancelColor: Colors.teal,
-                                          buttonCancelText: Text('Try Again!'),
-                                        ));
+                                String a =  langaugeSetFunc('Warning') , b =  langaugeSetFunc('Email Adress and Password Cannot be empty');
+                                pop_window(a, b, context);
+
                               } else {
                                 var e = await authHandler.signIn(
                                     username, password);
                                 if (e == "false") {
-                                  AwesomeDialog(
-                                          context: context,
-                                          dialogType: DialogType.ERROR,
-                                          animType: AnimType.RIGHSLIDE,
-                                          headerAnimationLoop: false,
-                                          tittle: 'ERROR Email NEED VERFIED',
-                                          desc: 'Verify Your Email Please',
-                                          btnOkOnPress: () {},
-                                          btnOkColor: Colors.red)
-                                      .show();
+                                  String a =  langaugeSetFunc('ERROR Email NEED VERFIED'), b = langaugeSetFunc('Verify Your Email Please');
+                                  pop_window(a, b, context);
+
                                 } else if (ErrorDetect(e)) {
-                                  AwesomeDialog(
-                                          context: context,
-                                          dialogType: DialogType.ERROR,
-                                          animType: AnimType.RIGHSLIDE,
-                                          headerAnimationLoop: false,
-                                          tittle: errorDetect(e, pos: 0),
-                                          desc: errorDetect(e, pos: 1),
-                                          btnOkOnPress: () {},
-                                          btnOkColor: Colors.red)
-                                      .show();
+                                  String a = errorDetect(e, pos: 0), b = errorDetect(e, pos: 1);
+                                  pop_window(a, b, context);
                                 } else {
                                   username = username.trim();
                                   var email = username;
                                   globals.uid = 'AppSignInUser' + email;
 
                                   await Firestore.instance
-                                      .collection('global_users')
+                                      .collection('RentalManagerUsers')
                                       .document(globals.uid)
                                       .get()
-                                      .then((DocumentSnapshot ds) async {
+                                      .then((DocumentSnapshot ds) {
                                     // use ds as a snapshot
                                     var doc = ds.data;
-                                    if (!globals.existingOrganizations
-                                            .contains(doc['organization']) &&
-                                        doc['Admin'] == false) {
-                                      await Firestore.instance
-                                          .collection('global_users')
-                                          .document(globals.uid)
-                                          .updateData({'Admin': true});
-                                      await Firestore.instance
-                                          .collection('organizations')
-                                          .document()
-                                          .setData(
-                                              {'name': doc['organization']});
-                                    }
-                                    try {
+                                    try{
                                       globals.studentID = doc["StudentID"];
                                       globals.username = doc["name"];
                                       globals.UserImageUrl = doc["imageURL"];
                                       globals.phoneNumber = doc["PhoneNumber"];
                                       globals.email = doc["email"];
-                                      globals.organization =
-                                          doc['organization'];
-                                    } catch (e) {
+                                      globals.organization = doc['organization'];
+                                    }catch(e){
                                       print(e);
                                     }
                                   });
-
+                                  print("Here: " + globals.organization);
                                   List<String> userinfor = [];
                                   userinfor.add(globals.uid);
                                   userinfor.add(globals.studentID);
@@ -556,10 +517,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                   userinfor.add(globals.sex);
                                   userinfor.add(globals.organization);
                                   var prefs =
-                                      await SharedPreferences.getInstance();
+                                  await SharedPreferences.getInstance();
                                   await prefs.setStringList("user", userinfor);
                                   await prefs.setBool('isDark', false);
                                   await prefs.setInt('userSelectTheme', -1);
+
 
                                   Navigator.of(context)
                                       .pushReplacementNamed('/MainViewScreen');
@@ -598,7 +560,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 SizedBox(width: 20.0),
                                 Center(
                                   child: Text(
-                                    "Sign In With Google",
+                                    langaugeSetFunc("LOGIN With Google"),
                                     style: TextStyle(
                                       fontSize: 15,
                                       // backgroundColor:  Colors.teal[50],
@@ -744,7 +706,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 SizedBox(width: 20.0),
                                 Center(
                                   child: Text(
-                                    "Sign In With Scan",
+                                    langaugeSetFunc("Sign In With Scan"),
                                     style: TextStyle(
                                       fontSize: 15,
                                       // backgroundColor:  Colors.teal[50],
@@ -766,7 +728,7 @@ class _MyHomePageState extends State<MyHomePage> {
                               //Navigator.of(context).pushReplacementNamed('/MainViewScreen');
                             },
                             padding: EdgeInsets.all(7.0),
-                            //color: Colors.teal.shade900,
+                            //color: Colors.teal.shade900
                             disabledColor: Colors.black,
                             disabledTextColor: Colors.black,
                           ),
@@ -780,7 +742,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          'New to Rental Manager?',
+                          langaugeSetFunc('New to Rental Manager?'),
                           style: TextStyle(fontFamily: 'Montserrat'),
                         ),
                         SizedBox(width: 5.0),
@@ -796,7 +758,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             );
                           },
                           child: Text(
-                            'Register',
+                            langaugeSetFunc('Register'),
                             style: TextStyle(
                                 color: Colors.green,
                                 fontFamily: 'Montserrat',
@@ -821,7 +783,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     builder: (context) => resetPassword()));
                           },
                           child: Text(
-                            'Forgot Password',
+                            langaugeSetFunc('Forgot Password'),
                             style: TextStyle(
                                 color: Colors.green,
                                 fontWeight: FontWeight.bold,
@@ -862,7 +824,7 @@ class _resetPasswordState extends State<resetPassword> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text('Reset PassWord'),
+          title: Text(langaugeSetFunc('Reset PassWord')),
           backgroundColor: Colors.teal,
           leading: new IconButton(
             icon: new Icon(Icons.arrow_back_ios, color: Colors.white),
@@ -901,30 +863,33 @@ class _resetPasswordState extends State<resetPassword> {
               ),
               SizedBox(height: 10, width: 150),
 
-              TextField(
-                onChanged: (text) {
-                  email = text;
-                },
-                // controller: _username,
-                cursorColor: Colors.teal.shade900,
-                scrollPadding:
-                    const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30),
-                decoration: InputDecoration(
-                  border: new OutlineInputBorder(
-                    borderRadius: const BorderRadius.all(
-                      const Radius.circular(8.0),
+              Container(
+                padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+                child: TextField(
+                  onChanged: (text) {
+                    email = text;
+                  },
+                  // controller: _username,
+                  cursorColor: Colors.teal.shade900,
+                  scrollPadding:
+                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30),
+                  decoration: InputDecoration(
+                    border: new OutlineInputBorder(
+                      borderRadius: const BorderRadius.all(
+                        const Radius.circular(8.0),
+                      ),
+                      borderSide: new BorderSide(
+                        color: Colors.transparent,
+                        width: 1.0,
+                      ),
                     ),
-                    borderSide: new BorderSide(
-                      color: Colors.transparent,
-                      width: 1.0,
-                    ),
+                    labelText: langaugeSetFunc('Enter your Email Address'),
+                    prefixIcon: const Icon(Icons.email, color: Colors.black),
+                    // labelStyle:
+                    // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 10.0, horizontal: 30),
                   ),
-                  labelText: 'Enter your Email Address',
-                  prefixIcon: const Icon(Icons.email, color: Colors.black),
-                  // labelStyle:
-                  // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
-                  contentPadding: const EdgeInsets.symmetric(
-                      vertical: 10.0, horizontal: 30),
                 ),
               ),
               SizedBox(height: 20, width: 150),
@@ -950,7 +915,7 @@ class _resetPasswordState extends State<resetPassword> {
                         children: <Widget>[
                           Center(
                             child: Text(
-                              "Send Verification Email",
+                              langaugeSetFunc("Send Verification Email"),
                               style: TextStyle(
                                 fontSize: 15,
                                 // backgroundColor:  Colors.teal[50],
@@ -965,16 +930,9 @@ class _resetPasswordState extends State<resetPassword> {
                         bool isEmpty = false;
                         if (email == null) {
                           isEmpty = true;
-                          AwesomeDialog(
-                                  context: context,
-                                  dialogType: DialogType.ERROR,
-                                  animType: AnimType.RIGHSLIDE,
-                                  headerAnimationLoop: false,
-                                  tittle: 'Warning',
-                                  desc: 'Email Adress Cannot be empty',
-                                  btnOkOnPress: () {},
-                                  btnOkColor: Colors.red)
-                              .show();
+                          String a = 'Warning', b = 'Email Adress Cannot be empty';
+                          pop_window(a, b, context);
+
                         }
 
                         for (int i = 0; i < 100000; i++) {
@@ -982,13 +940,13 @@ class _resetPasswordState extends State<resetPassword> {
                         }
 
                         final QuerySnapshot result = await Firestore.instance
-                            .collection('usersByFullName')
+                            .collection(returnUserCollection())
                             .getDocuments();
                         final List<DocumentSnapshot> documents =
                             result.documents;
                         List<String> userNameList = [];
                         documents.forEach(
-                            (data) => userNameList.add(data.documentID));
+                                (data) => userNameList.add(data.documentID));
                         bool found = false;
                         for (var i = 0; i < userNameList.length; i++) {
                           if (email == userNameList[i]) {
@@ -1037,16 +995,9 @@ class _resetPasswordState extends State<resetPassword> {
 
                           print('Founding');
                         } else {
-                          AwesomeDialog(
-                                  context: context,
-                                  dialogType: DialogType.ERROR,
-                                  animType: AnimType.RIGHSLIDE,
-                                  headerAnimationLoop: false,
-                                  tittle: 'Warning',
-                                  desc: 'Email Adress Not Found in Records',
-                                  btnOkOnPress: () {},
-                                  btnOkColor: Colors.red)
-                              .show();
+                          String a = 'Warning', b = 'Email Adress Not Found in Records';
+                          pop_window(a, b, context);
+
                         }
                       },
                       padding: EdgeInsets.all(7.0),

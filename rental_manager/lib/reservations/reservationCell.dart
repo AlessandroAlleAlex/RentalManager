@@ -120,8 +120,11 @@ class _reservationCell extends State<reservationCell> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.teal,
-        title: Text(langaugeSetFunc('Reservation Details')),
+        iconTheme: IconThemeData(
+          color: textcolor(), //change your color here
+        ),
+        backgroundColor: backgroundcolor(),
+        title: Text(langaugeSetFunc('Reservation Details'), style: TextStyle(color: textcolor()),),
       ),
       body: SingleChildScrollView(
         child: Container(

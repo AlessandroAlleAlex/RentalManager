@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+List<String> existingOrganizations = [];
 String uid = '';
 String username = 'Xu Liu';
 String email = '';
@@ -20,7 +22,12 @@ String langaugeSet = "SimplifiedChinese";
 String organization = "";
 bool dark= false;
 int userSelectTheme = -1;
-List<String> existingOrganizations = [];
+BuildContext contextInManageOneItemView;
+BuildContext contextInManageItemView;
+String documentItemIDInManageView;
+String selectOrg = "Choose your organization";
+bool isAdmin = false;
+bool isDeveloper = false;
 
 class Item{
   String itemName;

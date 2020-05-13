@@ -1,13 +1,27 @@
+import 'package:file_picker/file_picker.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/cupertino.dart';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:intl/intl.dart';
+import 'package:progress_dialog/progress_dialog.dart';
 import 'package:rental_manager/CurrentReservation.dart';
+import 'package:rental_manager/Locations/arc.dart';
 import 'package:rental_manager/Locations/show_all.dart';
+import 'package:rental_manager/PlatformWidget/platform_alert_dialog.dart';
 import 'package:rental_manager/chatview/login.dart';
 import 'package:rental_manager/language.dart';
 import 'package:rental_manager/manager/manage_locations.dart';
 import 'package:rental_manager/tabs/locations.dart';
 import 'globals.dart' as globals;
+import "package:http/http.dart" as http;
+import 'package:rental_manager/SlideDialog/slide_popup_dialog.dart'
+    as slideDialog;
+import 'package:image_picker/image_picker.dart';
+import 'package:validators/validators.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'dart:io' show Platform;
 
 class Manager extends StatefulWidget {
   @override
@@ -66,6 +80,176 @@ class _ManagerState extends State<Manager> {
       ),
     );
   }
+}
+
+class CSVItem {
+  String name;
+  int amount;
+  String imageURL;
+  CSVItem(this.name, this.amount, this.imageURL);
+}
+
+void pickUpFile(BuildContext context, cater, subCollectionName) async {
+  String filelastnmae = "csv";
+  String _extension = "csv";
+  String mypath;
+  try {
+    print("OK");
+    mypath = "";
+    mypath += await FilePicker.getFilePath(
+        type: FileType.custom,
+        allowedExtensions: (filelastnmae?.isNotEmpty ?? false)
+            ? _extension?.replaceAll(' ', '')?.split(',')
+            : null);
+  } catch (e) {
+    print(e);
+  }
+  print(mypath);
+  var thefile = File(mypath);
+  contents = await thefile.readAsString();
+  int start = 0;
+  contents += "\n";
+  List<String> contentsList = [];
+  for (int i = 0; i < contents.length; i++) {
+    if (contents[i] == "\n") {
+      try {
+        var substr = contents.substring(start, i);
+        contentsList.add(contents.substring(start, i));
+        //print(substr);
+        if (i + 1 < contents.length) {
+          start = i + 1;
+        } else {
+          start = i;
+        }
+      } catch (e) {
+        print(e.toString());
+      }
+    }
+  }
+
+  bool popWindow = false;
+  for (int i = 0; i < contentsList.length; i++) {
+    var element = contentsList[i];
+    if (element.split(',').length > 3 || element.length < 2) {
+      popWindow = true;
+      break;
+    }
+  }
+
+  if(popWindow){
+    pop_window(
+        "Warning",
+        "The CSV file format is not correct\nEach Row should have at least 2 indexs but at most three indexs : ItemName, Amount, imageURL(optional)",
+        context);
+  }
+
+  List<List<String>> ListOfItemInfor = [];
+
+  contentsList.forEach((element) {
+    List<String> temp = element.split(',');
+    ListOfItemInfor.add(temp);
+  });
+
+  List<CSVItem> CSVItemList = [];
+  bool isadded = true;
+  String errorName = "";
+  for (int i = 0; i < ListOfItemInfor.length; i++) {
+    var element = ListOfItemInfor[i];
+    int amount = 0;
+    String name = "",
+        imageURL =
+            'https://ciat.cgiar.org/wp-content/uploads/image-not-found.png';
+
+    if (element.length == 2) {
+      name = element[0];
+      if (isDigit(element[1])) {
+        amount = int.parse(element[1]);
+      } else {
+        errorName = element[1];
+        isadded = false;
+        break;
+      }
+    } else if (element.length == 3) {
+      name = element[0];
+      if (isDigit(element[1])) {
+        amount = int.parse(element[1]);
+      } else {
+        errorName = element[1];
+        isadded = false;
+        break;
+      }
+      imageURL = element[2];
+    }
+    CSVItemList.add(CSVItem(name, amount, imageURL));
+  }
+
+  if (isadded) {
+    var map = {};
+
+    for (int i = 0; i < CSVItemList.length; i++) {
+      map[i] = "New";
+    }
+    QuerySnapshot list = await Firestore.instance
+        .collection('TempItemCollectionHold')
+        .document(subCollectionName)
+        .collection('item')
+        .getDocuments();
+    for (int i = 0; i < list.documents.length; i++) {
+      var ds = list.documents[i];
+
+      for (int i = 0; i < CSVItemList.length; i++) {
+        try {
+          if (CSVItemList[i].name == ds["name"]) {
+            map[i] = ds.documentID;
+            break;
+          }
+        } catch (e) {
+          print(e);
+        }
+      }
+    }
+
+    for (int i = 0; i < CSVItemList.length; i++) {
+      if (map[i] == "New") {
+        await Firestore.instance
+            .collection('TempItemCollectionHold')
+            .document(subCollectionName)
+            .collection('item')
+            .document()
+            .setData({
+          'name': CSVItemList[i].name,
+          'status': 'Hold',
+          'imageURL': CSVItemList[i].imageURL,
+          'amount': CSVItemList[i].amount,
+        });
+      } else {
+        await Firestore.instance
+            .collection('TempItemCollectionHold')
+            .document(subCollectionName)
+            .collection('item')
+            .document(map[i])
+            .updateData({
+          'name': CSVItemList[i].name,
+          'status': 'Hold',
+          'imageURL': CSVItemList[i].imageURL,
+          'amount': CSVItemList[i].amount,
+        });
+      }
+    }
+  } else {
+    pop_window(
+        langaugeSetFunc('Warning'),
+        langaugeSetFunc(
+            'The item $errorName\'s amount must be an integer. Please double check with that'),
+        context);
+  }
+}
+
+bool isDigit(String str) {
+  if (str == null) {
+    return false;
+  }
+  return double.tryParse(str) != null;
 }
 
 class booksTab extends StatefulWidget {
@@ -337,6 +521,7 @@ class _peopleTabState extends State<peopleTab> {
     if (latestTime != null && latestTime.length > 0) {
       return returnDifferenceTime(latestTime);
     }
+
     return "Non-Active";
   }
 
@@ -345,7 +530,8 @@ class _peopleTabState extends State<peopleTab> {
     return Scaffold(
       backgroundColor: backgroundcolor(),
       body: StreamBuilder(
-          stream: Firestore.instance.collection('global_users').snapshots(),
+          stream:
+              Firestore.instance.collection(returnUserCollection()).snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) return const Text('loading...');
             final List<DocumentSnapshot> documents = snapshot.data.documents;
@@ -362,17 +548,23 @@ class _peopleTabState extends State<peopleTab> {
                 }
                 var name = element["name"],
                     StudentID = element["StudentID"],
-                    email = element.documentID;
+                    email = element["email"];
                 var imageURL = element["imageURL"],
                     phoneNumber = element["PhoneNumber"],
                     latestTime = value;
-                peopleList.add(personInfo(
-                    name, StudentID, email, imageURL, phoneNumber, latestTime));
+                if (name == null) {
+                } else {
+                  var tmp = personInfo(name, StudentID, email, imageURL,
+                      phoneNumber, latestTime);
+                  if (tmp != null) {
+                    peopleList.add(tmp);
+                  } else {}
+                }
               });
             } catch (e) {
               print("a: " + e.toString());
             }
-            setUidList();
+            //setUidList();
 
             return ListView.builder(
                 itemCount: peopleList.length,
@@ -435,6 +627,14 @@ void test(DocumentSnapshot ds, uid) {
 
 class _managepeopleOrdersState extends State<managepeopleOrders> {
   @override
+  Icon returnAdminOrnot() {
+    if (globals.isAdmin) {
+      return Icon(Icons.lock_open);
+    } else {
+      return Icon(Icons.lock);
+    }
+  }
+
   Widget build(BuildContext context) {
     var uid = this.widget.uid, name = this.widget.name;
     return Scaffold(
@@ -445,6 +645,29 @@ class _managepeopleOrdersState extends State<managepeopleOrders> {
         backgroundColor: backgroundcolor(),
         title: Text('$name \'s ' + langaugeSetFunc('Orders'),
             style: TextStyle(color: textcolor())),
+        actions: <Widget>[
+          IconButton(
+            icon: returnAdminOrnot(),
+            onPressed: () {
+              String title = "Warning", content = "", actionText = "";
+              if (globals.isAdmin) {
+                content =
+                    "$name is a admin. Do you want to lock his access and let him become a user";
+                actionText = "Lock";
+              } else {
+                content =
+                    "$name is a user. Do you want to un-lock his access and let him become a admin";
+                actionText = "Unlock";
+              }
+              PlatformAlertDialog(
+                title: title,
+                content: content,
+                cancelActionText: "Cancel",
+                defaultActionText: actionText,
+              ).show(context);
+            },
+          ),
+        ],
       ),
       backgroundColor: backgroundcolor(),
       body: StreamBuilder(
@@ -539,4 +762,1641 @@ class _managepeopleOrdersState extends State<managepeopleOrders> {
           }),
     );
   }
+}
+
+class ManageDatabase extends StatefulWidget {
+  String catergory;
+  String locationName;
+  ManageDatabase({this.catergory, this.locationName});
+
+  @override
+  _ManageDatabaseState createState() => _ManageDatabaseState();
+}
+
+class ItemInformation {
+  String name;
+  int amount;
+  String imageURL;
+  String documentID;
+  ItemInformation(this.name, this.amount, this.imageURL, this.documentID);
+}
+
+Future<bool> urlCheck(String url) async {
+  try {
+    final response = await http.head(url);
+
+    if (response.statusCode != 200) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch (e) {
+    print(e.toString());
+  }
+  return false;
+}
+
+class _ManageDatabaseState extends State<ManageDatabase> {
+  GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+
+  void _showDialog(ItemInformation item) {
+    int amount = item.amount;
+    String name = item.name,
+        imageURL = item.imageURL,
+        documentID = item.documentID;
+    String modifyName = name,
+        modifyimageURL = item.imageURL,
+        inputImageURL = "";
+    int modifyAmount = amount;
+    void submit() async {
+      final form = _formKey.currentState;
+      if (form.validate()) {
+        print(modifyName);
+        print(modifyAmount);
+        print(modifyimageURL);
+        if (inputImageURL.isNotEmpty) {
+          modifyimageURL = inputImageURL;
+        }
+        await Firestore.instance
+            .collection(returnItemCollection())
+            .document(documentID)
+            .updateData({
+          '# of items': modifyAmount,
+          'imageURL': modifyimageURL,
+          'name': modifyName,
+          'category': widget.catergory,
+        });
+
+        pop_window(
+            "Succeed", "You should see the change on the list soon", context);
+      }
+    }
+
+    slideDialog.showSlideDialog(
+      context: context,
+      child: StreamBuilder(
+          stream: Firestore.instance
+              .collection('imageTmp')
+              .document(globals.uid)
+              .snapshots(),
+          builder: (context, snapshot) {
+            String theurl =
+                "https://images.unsplash.com/photo-1588693273928-92fa26159c88?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=975&q=80";
+            try {
+              var ds = snapshot.data;
+              theurl = ds.data["imageURL"];
+            } catch (e) {
+              print(e.toString());
+            }
+            return Container(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    Text(langaugeSetFunc('Click Image to Change')),
+                    InkWell(
+                      onTap: () async {
+                        ProgressDialog prUpdate;
+                        prUpdate = new ProgressDialog(context,
+                            type: ProgressDialogType.Normal);
+                        prUpdate.style(message: 'Showing some progress...');
+                        prUpdate.update(
+                          message: 'Uploading...',
+                          progressWidget: CircularProgressIndicator(),
+                          progressTextStyle: TextStyle(
+                              color: Colors.black,
+                              fontSize: 13.0,
+                              fontWeight: FontWeight.w400),
+                          messageTextStyle: TextStyle(
+                              color: Colors.black,
+                              fontSize: 19.0,
+                              fontWeight: FontWeight.w600),
+                        );
+
+                        File imageFile;
+                        imageFile = await ImagePicker.pickImage(
+                            source: ImageSource.gallery);
+
+                        if (imageFile != null) {
+                          await prUpdate.show();
+                          StorageReference reference = FirebaseStorage.instance
+                              .ref()
+                              .child(imageFile.path.toString());
+                          StorageUploadTask uploadTask =
+                              reference.putFile(imageFile);
+
+                          StorageTaskSnapshot downloadUrl =
+                              (await uploadTask.onComplete);
+
+                          String url = (await downloadUrl.ref.getDownloadURL());
+                          prUpdate.update(
+                            message: 'Complete',
+                            progressWidget: CircularProgressIndicator(),
+                            progressTextStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 13.0,
+                                fontWeight: FontWeight.w400),
+                            messageTextStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 19.0,
+                                fontWeight: FontWeight.w600),
+                          );
+                          await Firestore.instance
+                              .collection('imageTmp')
+                              .document(globals.uid)
+                              .setData({
+                            'imageURL': '$url',
+                          });
+                          modifyimageURL = url;
+                          print("URL:" + url);
+                          prUpdate.hide();
+                        }
+                      },
+                      child: CircleAvatar(
+                        radius: 52,
+                        backgroundColor: Colors.teal,
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundColor: Colors.teal,
+                          backgroundImage: NetworkImage(theurl),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    new Container(
+                      alignment: Alignment(-1.0, 0.0),
+                      child: new Text(
+                        langaugeSetFunc('Use Image URL Instead'),
+                        style: new TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      margin: new EdgeInsets.only(left: 30.0, right: 30.0),
+                    ),
+                    new Container(
+                      child: new TextFormField(
+                        onChanged: (text) {
+                          inputImageURL = text;
+                        },
+                        validator: (String val) {
+                          print(val);
+                          if (val == null || val.isEmpty) {
+                            return null;
+                          } else {
+                            if (modifyimageURL != imageURL &&
+                                inputImageURL.isNotEmpty) {
+                              return "Cannot use image URL after uploading a new image";
+                            }
+                            var match = isURL(val, requireTld: true);
+                            print("Match: " + match.toString());
+                            if (match) {
+                              return null;
+                            } else {
+                              return "InValid URL";
+                            }
+                          }
+                        },
+                        onSaved: (value) {
+                          inputImageURL = value;
+                        },
+                        decoration: new InputDecoration(
+                            hintText: langaugeSetFunc(
+                                "Leave it empty if this is not used"),
+                            border: new UnderlineInputBorder(),
+                            contentPadding: new EdgeInsets.all(5.0),
+                            hintStyle: new TextStyle(color: Colors.grey)),
+                      ),
+                      margin: new EdgeInsets.only(left: 30.0, right: 30.0),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    new Container(
+                      alignment: Alignment(-1.0, 0.0),
+                      child: new Text(
+                        langaugeSetFunc('Item Name'),
+                        style: new TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      margin: new EdgeInsets.only(left: 30.0, right: 30.0),
+                    ),
+                    new Container(
+                      child: new TextFormField(
+                        initialValue: name,
+                        onChanged: (text) {
+                          modifyName = text;
+                        },
+                        validator: (String val) {
+                          if (val.isEmpty) {
+                            return 'This Field Cannot Be Empty';
+                          }
+                          bool found = false;
+                          for (int i = 0; i < itemNameList.length; i++) {
+                            if (itemNameList[i] == val && name != val) {
+                              found = true;
+                              break;
+                            }
+                          }
+
+                          if (found) {
+                            return langaugeSetFunc(
+                                "This name has been used. Please try another one");
+                          }
+
+                          return null;
+                        },
+                        onSaved: (value) {},
+                        decoration: new InputDecoration(
+                            border: new UnderlineInputBorder(),
+                            contentPadding: new EdgeInsets.all(5.0),
+                            hintStyle: new TextStyle(color: Colors.grey)),
+                      ),
+                      margin: new EdgeInsets.only(left: 30.0, right: 30.0),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    new Container(
+                      alignment: Alignment(-1.0, 0.0),
+                      child: new Text(
+                        langaugeSetFunc('Item Amount'),
+                        style: new TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      margin: new EdgeInsets.only(left: 30.0, right: 30.0),
+                    ),
+                    new Container(
+                      child: new TextFormField(
+                        initialValue: amount.toString(),
+                        onChanged: (text) {
+                          modifyAmount = int.parse(text);
+                        },
+                        validator: (String val) {
+                          int amount = int.parse(val);
+                          if (val.isEmpty) {
+                            return 'This Field Cannot Be Empty';
+                          } else if (amount == 0) {
+                            return "Amount Cannot Be 0";
+                          }
+                          return null;
+                        },
+                        onSaved: (value) {},
+                        decoration: new InputDecoration(
+                            hintText: amount.toString(),
+                            border: new UnderlineInputBorder(),
+                            contentPadding: new EdgeInsets.all(5.0),
+                            hintStyle: new TextStyle(color: Colors.grey)),
+                        keyboardType: TextInputType.number,
+                      ),
+                      margin: new EdgeInsets.only(left: 30.0, right: 30.0),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 3 * 2,
+                      child: RaisedButton(
+                        highlightElevation: 0.0,
+                        splashColor: Colors.greenAccent,
+                        highlightColor: Colors.green,
+                        elevation: 0.0,
+                        color: Colors.green,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(30.0)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Center(
+                              child: Text(
+                                langaugeSetFunc('Submit'),
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  // backgroundColor:  Colors.teal[50],
+                                  color: Colors.white,
+                                  fontFamily: 'Montserrat',
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        onPressed: () async {
+                          submit();
+                        },
+                        padding: EdgeInsets.all(7.0),
+                        //color: Colors.teal.shade900,
+                        disabledColor: Colors.black,
+                        disabledTextColor: Colors.black,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 1,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 3 * 2,
+                      child: RaisedButton(
+                        highlightElevation: 0.0,
+                        splashColor: Colors.greenAccent,
+                        highlightColor: Colors.red,
+                        elevation: 0.0,
+                        color: Colors.red,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(30.0)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Center(
+                              child: Text(
+                                langaugeSetFunc('Delete'),
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  // backgroundColor:  Colors.teal[50],
+                                  color: Colors.white,
+                                  fontFamily: 'Montserrat',
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        onPressed: () async {
+                          globals.documentItemIDInManageView = "";
+                          globals.documentItemIDInManageView = documentID;
+                          globals.contextInManageOneItemView = context;
+                          PlatformAlertDialog(
+                            title: "Warning",
+                            content: "Are you going to delete this item",
+                            defaultActionText: "Delete",
+                            cancelActionText: "Cancel",
+                          ).show(context);
+                        },
+                        padding: EdgeInsets.all(7.0),
+                        //color: Colors.teal.shade900,
+                        disabledColor: Colors.black,
+                        disabledTextColor: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }),
+      textField: Container(
+        child: Column(
+          children: <Widget>[],
+        ),
+      ),
+      barrierColor: Colors.white.withOpacity(0.7),
+    );
+  }
+
+  void _showDialog2() {
+    String modifyName = "",
+        modifyimageURL =
+            'https://ciat.cgiar.org/wp-content/uploads/image-not-found.png',
+        inputImageURL = "";
+    int modifyAmount = 0;
+    void submit() async {
+      final form = _formKey.currentState;
+      if (form.validate()) {
+        if (modifyimageURL ==
+                'https://ciat.cgiar.org/wp-content/uploads/image-not-found.png' &&
+            inputImageURL.isNotEmpty) {
+          modifyimageURL = inputImageURL;
+        }
+
+        await Firestore.instance
+            .collection(returnItemCollection())
+            .document("123")
+            .setData({
+          '# of items': modifyAmount,
+          'category': widget.catergory,
+          'imageURL': modifyimageURL,
+          'name': modifyName,
+          'Location': this.widget.locationName,
+        });
+        pop_window('Succeed', "Upload a item Successfully", context);
+      }
+    }
+
+    NetworkImage Netimage() {
+      return NetworkImage(modifyimageURL);
+    }
+
+    slideDialog.showSlideDialog(
+      context: context,
+      child: StreamBuilder(
+          stream: Firestore.instance
+              .collection('imageTmp')
+              .document(globals.uid)
+              .snapshots(),
+          builder: (context, snapshot) {
+            String theurl =
+                'https://images.unsplash.com/photo-1588693273928-92fa26159c88?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=975&q=80';
+            try {
+              var ds = snapshot.data;
+              theurl = ds.data["imageURL"];
+            } catch (e) {
+              print(e.toString());
+            }
+            print(theurl);
+            return Container(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    Text(langaugeSetFunc('Click Image to Change')),
+                    InkWell(
+                      onTap: () async {
+                        ProgressDialog prUpdate;
+                        prUpdate = new ProgressDialog(context,
+                            type: ProgressDialogType.Normal);
+                        prUpdate.style(message: 'Showing some progress...');
+                        prUpdate.update(
+                          message: 'Uploading...',
+                          progressWidget: CircularProgressIndicator(),
+                          progressTextStyle: TextStyle(
+                              color: Colors.black,
+                              fontSize: 13.0,
+                              fontWeight: FontWeight.w400),
+                          messageTextStyle: TextStyle(
+                              color: Colors.black,
+                              fontSize: 19.0,
+                              fontWeight: FontWeight.w600),
+                        );
+
+                        File imageFile;
+                        imageFile = await ImagePicker.pickImage(
+                            source: ImageSource.gallery);
+
+                        if (imageFile != null) {
+                          await prUpdate.show();
+                          StorageReference reference = FirebaseStorage.instance
+                              .ref()
+                              .child(imageFile.path.toString());
+                          StorageUploadTask uploadTask =
+                              reference.putFile(imageFile);
+
+                          StorageTaskSnapshot downloadUrl =
+                              (await uploadTask.onComplete);
+
+                          String url = (await downloadUrl.ref.getDownloadURL());
+                          prUpdate.update(
+                            message: 'Complete',
+                            progressWidget: CircularProgressIndicator(),
+                            progressTextStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 13.0,
+                                fontWeight: FontWeight.w400),
+                            messageTextStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 19.0,
+                                fontWeight: FontWeight.w600),
+                          );
+                          await Firestore.instance
+                              .collection('imageTmp')
+                              .document(globals.uid)
+                              .setData({
+                            'imageURL': '$url',
+                          });
+                          setState(() {
+                            modifyimageURL = url;
+                          });
+                          modifyimageURL = url;
+                          print("URL:" + url);
+                          prUpdate.hide();
+                        }
+                      },
+                      child: CircleAvatar(
+                        radius: 52,
+                        backgroundColor: Colors.teal,
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundColor: Colors.teal,
+                          backgroundImage: NetworkImage(theurl),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    new Container(
+                      alignment: Alignment(-1.0, 0.0),
+                      child: new Text(
+                        langaugeSetFunc('Use Image URL Instead'),
+                        style: new TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      margin: new EdgeInsets.only(left: 30.0, right: 30.0),
+                    ),
+                    new Container(
+                      child: new TextFormField(
+                        onChanged: (text) {
+                          inputImageURL = text;
+                        },
+                        validator: (String val) {
+                          print(val);
+                          if (val == null || val.isEmpty) {
+                            return null;
+                          } else {
+                            if (modifyimageURL !=
+                                    'https://ciat.cgiar.org/wp-content/uploads/image-not-found.png' &&
+                                inputImageURL.isNotEmpty) {
+                              return langaugeSetFunc(
+                                  "Cannot use image URL after uploading a new image");
+                            }
+                            var match = isURL(val, requireTld: true);
+                            print("Match: " + match.toString());
+                            if (match) {
+                              return null;
+                            } else {
+                              return langaugeSetFunc("InValid URL");
+                            }
+                          }
+                        },
+                        onSaved: (value) {
+                          inputImageURL = value;
+                        },
+                        decoration: new InputDecoration(
+                            hintText: langaugeSetFunc(
+                                "Leave it empty if this is not used"),
+                            border: new UnderlineInputBorder(),
+                            contentPadding: new EdgeInsets.all(5.0),
+                            hintStyle: new TextStyle(color: Colors.grey)),
+                      ),
+                      margin: new EdgeInsets.only(left: 30.0, right: 30.0),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    new Container(
+                      alignment: Alignment(-1.0, 0.0),
+                      child: new Text(
+                        langaugeSetFunc('Item Name'),
+                        style: new TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      margin: new EdgeInsets.only(left: 30.0, right: 30.0),
+                    ),
+                    new Container(
+                      child: new TextFormField(
+                        initialValue: modifyName,
+                        onChanged: (text) {
+                          modifyName = text;
+                        },
+                        validator: (String val) {
+                          if (val.isEmpty) {
+                            return langaugeSetFunc(
+                                'This Field Cannot Be Empty');
+                          }
+
+                          bool found = false;
+
+                          for (int i = 0; i < itemNameList.length; i++) {
+                            if (itemNameList[i] == val) {
+                              found = true;
+                              break;
+                            }
+                          }
+
+                          if (found) {
+                            return langaugeSetFunc(
+                                "This name has been used. Please try another one");
+                          }
+
+                          return null;
+                        },
+                        onSaved: (value) {},
+                        decoration: new InputDecoration(
+                            border: new UnderlineInputBorder(),
+                            contentPadding: new EdgeInsets.all(5.0),
+                            hintStyle: new TextStyle(color: Colors.grey)),
+                      ),
+                      margin: new EdgeInsets.only(left: 30.0, right: 30.0),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    new Container(
+                      alignment: Alignment(-1.0, 0.0),
+                      child: new Text(
+                        langaugeSetFunc('Item Amount'),
+                        style: new TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      margin: new EdgeInsets.only(left: 30.0, right: 30.0),
+                    ),
+                    new Container(
+                      child: new TextFormField(
+                        initialValue: modifyAmount.toString(),
+                        onChanged: (text) {
+                          modifyAmount = int.parse(text);
+                        },
+                        validator: (String val) {
+                          if (val.isEmpty) {
+                            return 'This Field Cannot Be Empty';
+                          } else {
+                            var amount = int.parse(val);
+
+                            if (amount == 0) {
+                              return "Amount Cannot Be 0";
+                            }
+                          }
+                          return null;
+                        },
+                        onSaved: (value) {},
+                        decoration: new InputDecoration(
+                            hintText: modifyAmount.toString(),
+                            border: new UnderlineInputBorder(),
+                            contentPadding: new EdgeInsets.all(5.0),
+                            hintStyle: new TextStyle(color: Colors.grey)),
+                        keyboardType: TextInputType.number,
+                      ),
+                      margin: new EdgeInsets.only(left: 30.0, right: 30.0),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 3 * 2,
+                      child: RaisedButton(
+                        highlightElevation: 0.0,
+                        splashColor: Colors.greenAccent,
+                        highlightColor: Colors.green,
+                        elevation: 0.0,
+                        color: Colors.green,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(30.0)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Center(
+                              child: Text(
+                                langaugeSetFunc('Submit'),
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  // backgroundColor:  Colors.teal[50],
+                                  color: Colors.white,
+                                  fontFamily: 'Montserrat',
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        onPressed: () async {
+                          submit();
+                        },
+                        padding: EdgeInsets.all(7.0),
+                        //color: Colors.teal.shade900,
+                        disabledColor: Colors.black,
+                        disabledTextColor: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }),
+      textField: Container(
+        child: Column(
+          children: <Widget>[],
+        ),
+      ),
+      barrierColor: Colors.white.withOpacity(0.7),
+    );
+  }
+
+  List<String> itemNameList = [];
+  @override
+  Widget build(BuildContext context) {
+    String cater = this.widget.catergory;
+    globals.contextInManageItemView = context;
+    List<String> _locations = ['A', 'B', 'C', 'D']; // Option 2
+    String _selectedLocation; // Option 2
+    return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: textcolor(), //change your color here
+        ),
+        title: Text(
+          langaugeSetFunc("Manage your Database"),
+          style: TextStyle(color: textcolor()),
+        ),
+        backgroundColor: backgroundcolor(),
+        actions: <Widget>[
+          new PopupMenuButton(
+              icon: Icon(Icons.add, color: textcolor()),
+              onSelected: (String value) async {
+                if ("Add items manually" == value) {
+                  await Firestore.instance
+                      .collection('imageTmp')
+                      .document(globals.uid)
+                      .setData({
+                    'imageURL':
+                        'https://ciat.cgiar.org/wp-content/uploads/image-not-found.png',
+                  });
+                  _showDialog2();
+                } else if (value == "Upload a CSV file") {
+//                  pop_window(
+//                      "Warning",
+//                      "You will use a csv file with name amount imageURL(Optional) to add item(s)",
+//                      context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => upLoadCSV(this.widget.catergory,
+                              this.widget.locationName)));
+                }
+              },
+              itemBuilder: (BuildContext context) => <PopupMenuItem<String>>[
+                    new PopupMenuItem(
+                        value: "Upload a CSV file",
+                        child: new Text(
+                            langaugeSetFunc("Add items via a CSV file"))),
+                    new PopupMenuItem(
+                        value: "Add items manually",
+                        child: new Text(langaugeSetFunc("Add items manually"))),
+                  ]),
+        ],
+      ),
+      backgroundColor: backgroundcolor(),
+      body: StreamBuilder(
+          stream: Firestore.instance
+              .collection(returnItemCollection())
+              .where('category', isEqualTo: this.widget.catergory)
+              .where('Location', isEqualTo: this.widget.locationName)
+              .snapshots(),
+          builder: (context, snapshot) {
+            List<ItemInformation> itemList = new List();
+
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: Text(
+                  langaugeSetFunc('Loading...'),
+                  style: TextStyle(color: textcolor()),
+                ),
+              );
+            } else {
+              try {
+                final List<DocumentSnapshot> documents =
+                    snapshot.data.documents;
+                itemNameList.clear();
+                documents.forEach((element) {
+                  itemNameList.add(element['name']);
+                  itemList.add(ItemInformation(
+                      element['name'],
+                      element['# of items'],
+                      element['imageURL'],
+                      element.documentID));
+                });
+              } catch (e) {
+                print(e.toString());
+              }
+            }
+
+            return ListView.builder(
+                itemCount: itemList.length,
+                itemBuilder: (context, i) {
+                  return Column(
+                    children: <Widget>[
+                      Container(
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage: NetworkImage(itemList[i].imageURL),
+                          ),
+                          trailing: new Icon(
+                            Icons.chevron_right,
+                            color: textcolor(),
+                          ),
+                          title: new Text(itemList[i].name,
+                              style: TextStyle(color: textcolor())),
+                          subtitle: new Text(
+                              langaugeSetFunc('Amount:') +
+                                  itemList[i].amount.toString(),
+                              style: TextStyle(color: textcolor())),
+                          onTap: () async {
+                            String imageURL = itemList[i].imageURL;
+                            await Firestore.instance
+                                .collection('imageTmp')
+                                .document(globals.uid)
+                                .setData({
+                              'imageURL': '$imageURL',
+                            });
+                            _showDialog(itemList[i]);
+                          },
+                        ),
+                      ),
+                      Divider(
+                        height: 2.0,
+                      ),
+                    ],
+                  );
+                });
+          }),
+    );
+  }
+}
+
+class OnHoldItems {
+  String name;
+  int amount;
+  String imageURL;
+  String status;
+  String documentID;
+  OnHoldItems(
+      this.name, this.amount, this.imageURL, this.status, this.documentID);
+}
+
+Widget switchButton(OnHoldItems aitem, subCollectionName) {
+  bool val = false;
+  if (aitem.status == 'Hold') {
+    val = true;
+  }
+
+  if (Platform.isAndroid == true) {
+    return Switch(
+      value: val,
+      onChanged: (value) async {
+        String result = 'hide';
+
+        if (value == true) {
+          result = 'Hold';
+        }
+
+        await Firestore.instance
+            .collection('TempItemCollectionHold')
+            .document(subCollectionName)
+            .collection('item')
+            .document(aitem.documentID)
+            .updateData({
+          'status': result,
+        });
+      },
+    );
+  }
+
+  return CupertinoSwitch(
+    value: val,
+    onChanged: (bool value) async {
+      String result = 'hide';
+
+      if (value == true) {
+        result = 'Hold';
+      }
+
+      await Firestore.instance
+          .collection('TempItemCollectionHold')
+          .document(subCollectionName)
+          .collection('item')
+          .document(aitem.documentID)
+          .updateData({
+        'status': result,
+      });
+    },
+  );
+}
+
+class upLoadCSV extends StatefulWidget {
+  String cater = "";
+  String locationName = "";
+  upLoadCSV(this.cater, this.locationName);
+  @override
+  _upLoadCSVState createState() => _upLoadCSVState();
+}
+
+BuildContext maincontxt;
+
+class _upLoadCSVState extends State<upLoadCSV> {
+  @override
+  GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
+  String subCollectionName = "";
+  void _showDialog(OnHoldItems item) {
+    int amount = item.amount;
+    String name = item.name,
+        imageURL = item.imageURL,
+        documentID = item.documentID;
+    String modifyName = name,
+        modifyimageURL = item.imageURL,
+        inputImageURL = '';
+    int modifyAmount = amount;
+    void submit() async {
+      final form = _formKey.currentState;
+      if (form.validate()) {
+        print(modifyName);
+        print(modifyAmount);
+        print(modifyimageURL);
+        if (inputImageURL.isNotEmpty) {
+          modifyimageURL = imageURL;
+        }
+        await Firestore.instance
+            .collection('TempItemCollectionHold')
+            .document(subCollectionName)
+            .collection('item')
+            .document(item.documentID)
+            .updateData({
+          'amount': modifyAmount,
+          'imageURL': modifyimageURL,
+          'name': modifyName,
+        });
+
+        pop_window(
+            "Succeed", "You should see the change on the list soon", context);
+      }
+    }
+
+    slideDialog.showSlideDialog(
+      context: context,
+      child: StreamBuilder(
+          stream: Firestore.instance
+              .collection('TempItemCollectionHold')
+              .document(subCollectionName)
+              .collection('imageTemp')
+              .document(item.documentID)
+              .snapshots(),
+          builder: (context, snapshot) {
+            String theurl = imageURL;
+            try {
+              var ds = snapshot.data;
+              theurl = ds.data["imageURL"];
+            } catch (e) {
+              print(e.toString());
+            }
+            return Container(
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  children: <Widget>[
+                    Text(langaugeSetFunc('Click Image to Change')),
+                    InkWell(
+                      onTap: () async {
+                        ProgressDialog prUpdate;
+                        prUpdate = new ProgressDialog(context,
+                            type: ProgressDialogType.Normal);
+                        prUpdate.style(message: 'Showing some progress...');
+                        prUpdate.update(
+                          message: 'Uploading...',
+                          progressWidget: CircularProgressIndicator(),
+                          progressTextStyle: TextStyle(
+                              color: Colors.black,
+                              fontSize: 13.0,
+                              fontWeight: FontWeight.w400),
+                          messageTextStyle: TextStyle(
+                              color: Colors.black,
+                              fontSize: 19.0,
+                              fontWeight: FontWeight.w600),
+                        );
+
+                        File imageFile;
+                        imageFile = await ImagePicker.pickImage(
+                            source: ImageSource.gallery);
+
+                        if (imageFile != null) {
+                          await prUpdate.show();
+                          StorageReference reference = FirebaseStorage.instance
+                              .ref()
+                              .child(imageFile.path.toString());
+                          StorageUploadTask uploadTask =
+                              reference.putFile(imageFile);
+
+                          StorageTaskSnapshot downloadUrl =
+                              (await uploadTask.onComplete);
+
+                          String url = (await downloadUrl.ref.getDownloadURL());
+                          prUpdate.update(
+                            message: 'Complete',
+                            progressWidget: CircularProgressIndicator(),
+                            progressTextStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 13.0,
+                                fontWeight: FontWeight.w400),
+                            messageTextStyle: TextStyle(
+                                color: Colors.black,
+                                fontSize: 19.0,
+                                fontWeight: FontWeight.w600),
+                          );
+                          await Firestore.instance
+                              .collection('TempItemCollectionHold')
+                              .document(subCollectionName)
+                              .collection('imageTemp')
+                              .document(item.documentID)
+                              .setData({
+                            'imageURL': '$url',
+                          });
+                          modifyimageURL = url;
+                          print("URL:" + url);
+                          prUpdate.hide();
+                        }
+                      },
+                      child: CircleAvatar(
+                        radius: 52,
+                        backgroundColor: Colors.teal,
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundColor: Colors.teal,
+                          backgroundImage: NetworkImage(theurl),
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    new Container(
+                      alignment: Alignment(-1.0, 0.0),
+                      child: new Text(
+                        langaugeSetFunc('Use Image URL Instead'),
+                        style: new TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      margin: new EdgeInsets.only(left: 30.0, right: 30.0),
+                    ),
+                    new Container(
+                      child: new TextFormField(
+                        onChanged: (text) {
+                          inputImageURL = text;
+                        },
+                        validator: (String val) {
+                          print(val);
+                          if (val == null || val.isEmpty) {
+                            return null;
+                          } else {
+                            if (modifyimageURL != imageURL &&
+                                inputImageURL.isNotEmpty) {
+                              return "Cannot use image URL after uploading a new image";
+                            }
+                            var match = isURL(val, requireTld: true);
+                            print("Match: " + match.toString());
+                            if (match) {
+                              return null;
+                            } else {
+                              return "InValid URL";
+                            }
+                          }
+                        },
+                        onSaved: (value) {
+                          inputImageURL = value;
+                        },
+                        decoration: new InputDecoration(
+                            hintText: langaugeSetFunc(
+                                "Leave it empty if this is not used"),
+                            border: new UnderlineInputBorder(),
+                            contentPadding: new EdgeInsets.all(5.0),
+                            hintStyle: new TextStyle(color: Colors.grey)),
+                      ),
+                      margin: new EdgeInsets.only(left: 30.0, right: 30.0),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    new Container(
+                      alignment: Alignment(-1.0, 0.0),
+                      child: new Text(
+                        langaugeSetFunc('Item Name'),
+                        style: new TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      margin: new EdgeInsets.only(left: 30.0, right: 30.0),
+                    ),
+                    new Container(
+                      child: new TextFormField(
+                        initialValue: name,
+                        onChanged: (text) {
+                          modifyName = text;
+                        },
+                        validator: (String val) {
+                          if (val.isEmpty) {
+                            return 'This Field Cannot Be Empty';
+                          }
+                          return null;
+                        },
+                        onSaved: (value) {},
+                        decoration: new InputDecoration(
+                            border: new UnderlineInputBorder(),
+                            contentPadding: new EdgeInsets.all(5.0),
+                            hintStyle: new TextStyle(color: Colors.grey)),
+                      ),
+                      margin: new EdgeInsets.only(left: 30.0, right: 30.0),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    new Container(
+                      alignment: Alignment(-1.0, 0.0),
+                      child: new Text(
+                        langaugeSetFunc('Item Amount'),
+                        style: new TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14.0,
+                        ),
+                      ),
+                      margin: new EdgeInsets.only(left: 30.0, right: 30.0),
+                    ),
+                    new Container(
+                      child: new TextFormField(
+                        initialValue: amount.toString(),
+                        onChanged: (text) {
+                          modifyAmount = int.parse(text);
+                        },
+                        validator: (String val) {
+                          int amount = int.parse(val);
+                          if (val.isEmpty) {
+                            return 'This Field Cannot Be Empty';
+                          } else if (amount == 0) {
+                            return "Amount Cannot Be 0";
+                          }
+                          return null;
+                        },
+                        onSaved: (value) {},
+                        decoration: new InputDecoration(
+                            hintText: amount.toString(),
+                            border: new UnderlineInputBorder(),
+                            contentPadding: new EdgeInsets.all(5.0),
+                            hintStyle: new TextStyle(color: Colors.grey)),
+                        keyboardType: TextInputType.number,
+                      ),
+                      margin: new EdgeInsets.only(left: 30.0, right: 30.0),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 3 * 2,
+                      child: RaisedButton(
+                        highlightElevation: 0.0,
+                        splashColor: Colors.greenAccent,
+                        highlightColor: Colors.green,
+                        elevation: 0.0,
+                        color: Colors.green,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(30.0)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Center(
+                              child: Text(
+                                langaugeSetFunc('Submit'),
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  // backgroundColor:  Colors.teal[50],
+                                  color: Colors.white,
+                                  fontFamily: 'Montserrat',
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        onPressed: () async {
+                          submit();
+                        },
+                        padding: EdgeInsets.all(7.0),
+                        //color: Colors.teal.shade900,
+                        disabledColor: Colors.black,
+                        disabledTextColor: Colors.black,
+                      ),
+                    ),
+                    SizedBox(
+                      height: 1,
+                    ),
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width / 3 * 2,
+                      child: RaisedButton(
+                        highlightElevation: 0.0,
+                        splashColor: Colors.greenAccent,
+                        highlightColor: Colors.red,
+                        elevation: 0.0,
+                        color: Colors.red,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: new BorderRadius.circular(30.0)),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Center(
+                              child: Text(
+                                langaugeSetFunc('Delete'),
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  // backgroundColor:  Colors.teal[50],
+                                  color: Colors.white,
+                                  fontFamily: 'Montserrat',
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        onPressed: () async {
+                          String cancel = "Cancel", action = "Delete";
+                          String title = "Warning",
+                              content =
+                                  "Are you sure you want to delete this one in your InHold items?";
+                          OnHoldDelete(context, cancel, action, title, content,
+                              documentID, subCollectionName);
+                        },
+                        padding: EdgeInsets.all(7.0),
+                        //color: Colors.teal.shade900,
+                        disabledColor: Colors.black,
+                        disabledTextColor: Colors.black,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          }),
+      textField: Container(
+        child: Column(
+          children: <Widget>[],
+        ),
+      ),
+      barrierColor: Colors.white.withOpacity(0.7),
+    );
+  }
+
+  bool oneMore = false;
+  Widget ButtonSelectAll(i) {
+    if (i == 0 && oneMore) {
+      return CupertinoButton(
+        padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width / 8, 0,
+            MediaQuery.of(context).size.width / 8, 0),
+        color: Colors.green,
+        child: Text(langaugeSetFunc("Wake Up All")),
+        onPressed: () async {
+          QuerySnapshot list = await Firestore.instance
+              .collection('TempItemCollectionHold')
+              .document(subCollectionName)
+              .collection('item')
+              .getDocuments();
+
+          for (int i = 0; i < list.documents.length; i++) {
+            var ds = list.documents[i];
+            await Firestore.instance
+                .collection('TempItemCollectionHold')
+                .document(subCollectionName)
+                .collection('item')
+                .document(ds.documentID)
+                .updateData({'status': 'Hold'});
+          }
+
+          print("Select All");
+        },
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  Widget ButtonCancelAll(i) {
+    if (i == 0 && oneMore) {
+      return CupertinoButton(
+        padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width / 7, 0,
+            MediaQuery.of(context).size.width / 7, 0),
+        color: Colors.red,
+        child: Text(langaugeSetFunc("Sleep All")),
+        onPressed: () async {
+          QuerySnapshot list = await Firestore.instance
+              .collection('TempItemCollectionHold')
+              .document(subCollectionName)
+              .collection('item')
+              .getDocuments();
+          for (int i = 0; i < list.documents.length; i++) {
+            var ds = list.documents[i];
+            await Firestore.instance
+                .collection('TempItemCollectionHold')
+                .document(subCollectionName)
+                .collection('item')
+                .document(ds.documentID)
+                .updateData({'status': 'hide'});
+          }
+
+          print("Cancel All");
+        },
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  Widget Submit(List<OnHoldItems> OnHoldItemsList, i) {
+    if (!oneMore && i == 0) {
+      return CupertinoButton(
+        minSize: 10,
+        color: Colors.blue,
+        child: Text(langaugeSetFunc("Push")),
+        onPressed: () async {
+          QuerySnapshot list = await Firestore.instance
+              .collection('TempItemCollectionHold')
+              .document(subCollectionName)
+              .collection('item')
+              .getDocuments();
+
+          QuerySnapshot theitemlist = await Firestore.instance
+              .collection(returnItemCollection())
+              .getDocuments();
+          String updateDocumentID = "new";
+          for (int i = 0; i < list.documents.length; i++) {
+            var ds = list.documents[i];
+            String imageURL =
+                    'https://ciat.cgiar.org/wp-content/uploads/image-not-found.png',
+                name = 'NoName';
+            int amount = 0;
+            imageURL = ds["imageURL"];
+            name = ds["name"];
+            amount = ds["amount"];
+
+            for (int j = 0; j < theitemlist.documents.length; j++) {
+              var innerds = theitemlist.documents[j];
+              var innerName = '';
+              innerName = innerds['name'];
+              if (name == innerName) {
+                updateDocumentID = innerds.documentID;
+                break;
+              }
+            }
+
+            try {
+              if (ds["status"] == "Hold") {
+                if (updateDocumentID == "new") {
+                  await Firestore.instance
+                      .collection(returnItemCollection())
+                      .document()
+                      .setData({
+                    'name': name,
+                    '# of items': amount,
+                    'category': this.widget.cater,
+                    'imageURL': imageURL,
+                    'Location': this.widget.locationName,
+                  });
+                } else {
+                  await Firestore.instance
+                      .collection(returnItemCollection())
+                      .document(updateDocumentID)
+                      .setData({
+                    'name': name,
+                    '# of items': amount,
+                    'category': this.widget.cater,
+                    'imageURL': imageURL,
+                    'Location': this.widget.locationName,
+                  });
+                }
+                await Firestore.instance
+                    .collection('TempItemCollectionHold')
+                    .document(subCollectionName)
+                    .collection('item')
+                    .document(ds.documentID)
+                    .delete();
+              }
+            } catch (e) {
+              print(e);
+            }
+          }
+
+          print("Push");
+        },
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  Widget Delete(List<OnHoldItems> OnHoldItemsList, i) {
+    if (!oneMore && i == 0) {
+      return CupertinoButton(
+        minSize: 10,
+        color: Colors.red,
+        child: Text(langaugeSetFunc("Clear")),
+        onPressed: () async {
+          QuerySnapshot list = await Firestore.instance
+              .collection('TempItemCollectionHold')
+              .document(subCollectionName)
+              .collection('item')
+              .getDocuments();
+          for (int i = 0; i < list.documents.length; i++) {
+            var ds = list.documents[i];
+            String imageURL =
+                    'https://ciat.cgiar.org/wp-content/uploads/image-not-found.png',
+                name = 'NoName';
+            int amount = 0;
+            imageURL = ds["imageURL"];
+            name = ds["name"];
+            amount = ds["amount"];
+            try {
+              if (ds["status"] != "Hold") {
+                await Firestore.instance
+                    .collection('TempItemCollectionHold')
+                    .document(subCollectionName)
+                    .collection('item')
+                    .document(ds.documentID)
+                    .delete();
+              }
+            } catch (e) {
+              print(e);
+            }
+          }
+
+          print("Push");
+        },
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  Widget diviera(i) {
+    if (i == 0 && oneMore) {
+      return Divider(
+        height: 2.0,
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  Widget divierb(i) {
+    if (i == 0 && !oneMore) {
+      return Divider(
+        height: 2.0,
+      );
+    } else {
+      return Container();
+    }
+  }
+
+  Widget build(BuildContext context) {
+    maincontxt = context;
+    subCollectionName = this.widget.locationName + this.widget.cater;
+    return Scaffold(
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: textcolor(), //change your color here
+        ),
+        title: Text(
+          langaugeSetFunc("OnHold items"),
+          style: TextStyle(color: textcolor()),
+        ),
+        backgroundColor: backgroundcolor(),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(
+              Icons.file_upload,
+              color: textcolor(),
+            ),
+            onPressed: () async {
+              pickUpFile(context, this.widget.cater, subCollectionName);
+            },
+          ),
+          IconButton(
+            icon: Icon(
+              Icons.format_list_bulleted,
+              color: textcolor(),
+            ),
+            onPressed: () async {
+              setState(() {
+                oneMore = !oneMore;
+              });
+            },
+          ),
+        ],
+      ),
+      backgroundColor: backgroundcolor(),
+      body: StreamBuilder(
+          stream: Firestore.instance
+              .collection('TempItemCollectionHold')
+              .document(subCollectionName)
+              .collection('item')
+              .snapshots(),
+          builder: (context, snapshot) {
+            List<OnHoldItems> OnHoldItemsList = [];
+
+            try {
+              var documents = snapshot.data.documents;
+              for (int i = 0; i < documents.length; i++) {
+                String name = "NoName", status = "hide";
+                String imageURL =
+                    'https://ciat.cgiar.org/wp-content/uploads/image-not-found.png';
+                String documentID = documents[i].documentID;
+                int amount = 0;
+
+                try {
+                  name = documents[i]["name"];
+                  status = documents[i]["status"];
+                  imageURL = documents[i]["imageURL"];
+                  amount = documents[i]["amount"];
+                } catch (e) {
+                  print(e);
+                }
+                var value =
+                    OnHoldItems(name, amount, imageURL, status, documentID);
+                OnHoldItemsList.add(value);
+              }
+            } catch (e) {
+              print(e.toString());
+            }
+
+            return ListView.builder(
+                itemCount: OnHoldItemsList.length,
+                itemBuilder: (context, i) {
+                  return Column(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          ButtonCancelAll(i),
+                          ButtonSelectAll(i),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Submit(OnHoldItemsList, i),
+                          Delete(OnHoldItemsList, i),
+                        ],
+                      ),
+                      Container(
+                        margin: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage:
+                                NetworkImage(OnHoldItemsList[i].imageURL),
+                          ),
+                          trailing: switchButton(
+                              OnHoldItemsList[i], subCollectionName),
+                          title: new Text(OnHoldItemsList[i].name,
+                              style: TextStyle(color: textcolor())),
+                          subtitle: new Text(
+                              langaugeSetFunc('Amount:') +
+                                  '${OnHoldItemsList[i].amount}',
+                              style: TextStyle(color: textcolor())),
+                          onTap: () {
+                            Fluttertoast.showToast(
+                              msg: 'Long Press To Edit',
+                            );
+                          },
+                          onLongPress: () {
+                            _showDialog(OnHoldItemsList[i]);
+                            print(1);
+                          },
+                        ),
+                      ),
+                      Divider(
+                        height: 2.0,
+                      ),
+                    ],
+                  );
+                });
+          }),
+    );
+  }
+}
+
+Future<void> OnHoldDelete(context, cancel, action, title, content, documentID,
+    subCollectionName) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // user must tap button!
+    builder: (BuildContext context) {
+      return CupertinoAlertDialog(
+        title: Text(title),
+        content: Text(content),
+        actions: <Widget>[
+          CupertinoDialogAction(
+            child: Text(cancel),
+            onPressed: () {
+              print(1);
+              Navigator.of(context).pop(true);
+            },
+          ),
+          CupertinoDialogAction(
+            child: Text(
+              action,
+            ),
+            onPressed: () async {
+              await Firestore.instance
+                  .collection('TempItemCollectionHold')
+                  .document(subCollectionName)
+                  .collection('item')
+                  .document(documentID)
+                  .delete();
+
+              Navigator.of(context).pop(true);
+              FocusScope.of(context).requestFocus(FocusNode());
+              Navigator.pop(context, false);
+            },
+          ),
+        ],
+      );
+    },
+  );
 }

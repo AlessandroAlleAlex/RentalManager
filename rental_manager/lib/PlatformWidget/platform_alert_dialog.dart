@@ -35,14 +35,14 @@ class PlatformAlertDialog extends PlatformWidget {
   Future<bool> show(BuildContext context) async {
     return Platform.isIOS
         ? await showCupertinoDialog<bool>(
-            context: context,
-            builder: (BuildContext context) => this,
-          )
+      context: context,
+      builder: (BuildContext context) => this,
+    )
         : await showDialog<bool>(
-            context: context,
-            barrierDismissible: false,
-            builder: (BuildContext context) => this,
-          );
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) => this,
+    );
   }
 
   @override
@@ -86,6 +86,39 @@ class PlatformAlertDialog extends PlatformWidget {
 
 
           Navigator.of(context).pop(true);
+
+          if(content == "Are you going to delete this item"){
+            print("Here");
+            pop_window("Confirmed", "This item has been removed in your firebase", globals.contextInManageOneItemView);
+            //print(globals.documentItemIDInManageView);
+            await Firestore.instance.collection(returnItemCollection()).document(globals.documentItemIDInManageView).delete();
+          }
+
+          if("This item has been removed in your firebase" == content || "Upload a item Successfully" == content){
+            FocusScope.of(context).requestFocus(FocusNode());
+            Navigator.pop(context, false);
+          }
+
+          if("You will use a csv file with name amount imageURL(Optional) to add item(s)" == content){
+            pickUpFile(context);
+          }
+
+          if(content.contains("Do you want to lock his access and let him become a user")){
+            globals.isAdmin = false;
+            pop_window("Access Locked", "This person becomes a user", context);
+          }
+          if(content.contains('Do you want to un-lock his access and let him become a admin')){
+            globals.isAdmin = true;
+            print("globals.isAdmin: " + globals.isAdmin.toString());
+            pop_window("Access Unlocked", "This person becomes a admin", context);
+          }
+
+          if(content == "You should see the change on the list soon"){
+            FocusScope.of(context).requestFocus(FocusNode());
+            Navigator.pop(context, false);
+          }
+
+
           if(defaultActionText == "Yes?") {
             Fluttertoast.showToast(
                 msg: "You will be emailed when the item is in stock");
@@ -135,14 +168,14 @@ class PlatformAlertDialog extends PlatformWidget {
 
             double rate = 0;
 
-             for(int i = 0 ; i < globals.returnDOCIDList.length; i++){
-               String time =  DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
-               await Firestore.instance.collection(returnReservationCollection()).document(globals.returnDOCIDList[i])
-                   .updateData({
-                 'return time': time,
-                  'status' : 'Returned',
-               });
-             }
+            for(int i = 0 ; i < globals.returnDOCIDList.length; i++){
+              String time =  DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
+              await Firestore.instance.collection(returnReservationCollection()).document(globals.returnDOCIDList[i])
+                  .updateData({
+                'return time': time,
+                'status' : 'Returned',
+              });
+            }
 
             slideDialog.showSlideDialog(
               context: context,
@@ -240,8 +273,8 @@ class PlatformAlertDialog extends PlatformWidget {
             );
 
             for(int i = 0; i < globals.returnDOCIDList.length; i++){
-               //await Firestore.instance.collection(globals.collectionName).document(globals.returnDOCIDList[i]).delete();
-             }
+              //await Firestore.instance.collection(globals.collectionName).document(globals.returnDOCIDList[i]).delete();
+            }
 
           }
         },
@@ -271,7 +304,7 @@ class PlatformAlertDialogAction extends PlatformWidget {
       onPressed: onPressed,
     );
   }
-  
+
 }
 
 

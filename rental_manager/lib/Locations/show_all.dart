@@ -25,7 +25,7 @@ String returnReservationCollection(){
 }
 
 String returnUserCollection(){
-  return '${globals.organization}_users';
+  return 'global_users';
 }
 
 String returnLocationsCollection(){
@@ -70,16 +70,7 @@ class _showAllState extends State<showAll> {
           stream: Firestore.instance.collection(returnItemCollection()).snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) return const Text('loading...');
-            // print(snapshot.data.documents.length);
-            //   final results = snapshot.data.documents.where(
-            //   (DocumentSnapshot a) =>
-            //       a.data['name'].toString().toLowerCase().contains(
-            //             query.trim().toLowerCase(),
-            //           ),
-            // );
 
-            // final names = snapshot.data.documents.data;
-            // return displayGrids(names);
             return ListView.builder(
               reverse: true,
               itemCount: snapshot.data.documents.length,
