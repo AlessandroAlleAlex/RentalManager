@@ -269,7 +269,7 @@ class _MyHomePageState extends State<MyHomePage> {
         if(globals.organization == null || globals.organization.isEmpty){
 
           await Firestore.instance
-              .collection('RentalManagerUsers')
+              .collection(returnUserCollection())
               .document(globals.uid)
               .get()
               .then((DocumentSnapshot ds) {
@@ -489,7 +489,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                   globals.uid = 'AppSignInUser' + email;
 
                                   await Firestore.instance
-                                      .collection('RentalManagerUsers')
+                                      .collection(returnUserCollection())
                                       .document(globals.uid)
                                       .get()
                                       .then((DocumentSnapshot ds) {
@@ -593,7 +593,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
                                   final QuerySnapshot result = await Firestore
                                       .instance
-                                      .collection('usersByFullName')
+                                      .collection(returnUserCollection())
                                       .getDocuments();
                                   final List<DocumentSnapshot> documents =
                                       result.documents;
@@ -610,7 +610,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     print("UserExists\n");
                                     try {
                                       await Firestore.instance
-                                          .collection('usersByFullName')
+                                          .collection(returnUserCollection())
                                           .document(globals.uid)
                                           .get()
                                           .then((DocumentSnapshot ds) {
@@ -640,7 +640,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                     }
                                   } else {
                                     await databaseReference
-                                        .collection("usersByFullName")
+                                        .collection(returnUserCollection())
                                         .document(globals.uid)
                                         .setData({
                                       'name': fullName,
