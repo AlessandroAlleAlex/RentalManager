@@ -203,6 +203,30 @@ class LoginScreenState extends State<LoginScreen> {
       });
     }
   }
+  SpeedDialChild returnManagerWidget(){
+    print(!globals.isAdmin);
+    if(globals.isAdmin){
+      return  SpeedDialChild(
+        child: Icon(Icons.receipt, color: Colors.white),
+        backgroundColor: Colors.green,
+        onTap: (){
+          Navigator.push(context, MaterialPageRoute(builder: (context) => Manager()));
+          //pickUpFile(context);
+          print(contents);
+        },
+        label: langaugeSetFunc('Manager View'),
+        labelStyle: TextStyle(fontWeight: FontWeight.w500),
+        labelBackgroundColor: Colors.green,
+      );
+    }else{
+      return SpeedDialChild(
+        child: Icon(Icons.keyboard_hide, color: Colors.white),
+        backgroundColor: Colors.green,
+        label: langaugeSetFunc('Click to Hide'),
+        labelBackgroundColor: Colors.green,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -466,19 +490,8 @@ class LoginScreenState extends State<LoginScreen> {
             labelStyle: TextStyle(fontWeight: FontWeight.w500),
             labelBackgroundColor: Colors.teal,
           ),
-          SpeedDialChild(
-            child: Icon(Icons.receipt, color: Colors.white),
-            backgroundColor: Colors.green,
-            onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => Manager()));
-               //pickUpFile(context);
-               print(contents);
-            },
-            label: langaugeSetFunc('Manager View'),
-            labelStyle: TextStyle(fontWeight: FontWeight.w500),
-            labelBackgroundColor: Colors.green,
-          ),
 
+          returnManagerWidget(),
         ],
       );
     }
