@@ -109,7 +109,7 @@ class _EditProfileState extends State<EditProfile> {
         await databaseReference
             .collection(returnUserCollection())
             .document(globals.uid)
-            .setData({
+            .updateData({
           'name': fullName,
           'email': globals.email,
           'StudentID': globals.studentID,
@@ -426,7 +426,7 @@ class EditProfileScreenState extends State<EditProfileScreen> {
         await databaseReference
             .collection(returnUserCollection())
             .document(globals.uid)
-            .setData({
+            .updateData({
           'name': fullName,
           'email': globals.email,
           'StudentID': globals.studentID,
