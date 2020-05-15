@@ -1,16 +1,19 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-
+import 'package:rental_manager/SlideDialog/slide_popup_dialog.dart' as slideDialog;
 import 'package:flutter/services.dart';
 import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
 import 'package:rental_manager/Locations/show_all.dart';
+import 'package:rental_manager/chatview/login.dart';
 import 'package:rental_manager/data.dart';
 import 'package:rental_manager/language.dart';
 import 'package:rental_manager/reservations/reservationCell.dart';
@@ -49,9 +52,23 @@ class ItemInfo {
 
 
 String parseTime(String time_str){
-  final reservationStartTime = DateFormat.yMd().add_jm().format(DateTime.parse(time_str));
-
+  var reservationStartTime = time_str;
+  try {
+    reservationStartTime = DateFormat.yMd().add_jm().format(
+        DateTime.parse(time_str));
+  }catch(e){
+    print(e);
+  }
   return reservationStartTime.toString();
+}
+
+class itemMultiplSelect{
+  String name;
+  String imageURL;
+  String startTime;
+  String documentID;
+  int index;
+  itemMultiplSelect(this.name, this.imageURL,this.startTime, this.documentID,this.index);
 }
 
 
@@ -87,7 +104,7 @@ class _CureentReservationState extends State<CureentReservation> {
   @override
   Widget build(BuildContext context) {
     // Scaffold is a layout for the major Material Components.
-
+    globals.ContextInOrder = context;
     List<Widget> _getListings(BuildContext context, itemList) {
       // <<<<< Note this change for the return type
       List listings = new List<Widget>();
@@ -217,11 +234,176 @@ class _CureentReservationState extends State<CureentReservation> {
     Map<String, String> urls = {};
 
     Map<String, int> index_map = {};
-
+    Map<String ,String> uid_map = {};
+    List<itemMultiplSelect> itemSelectedList = [];
+    var testa = itemMultiplSelect('Test', 'Test', 'Test','123', -1);
+    var rate = 0.0;
+    Map<itemMultiplSelect, bool>final_map = {};
     List<globals.ReservationItem> mylist = [];
+    Future<void> ReturnOrdersPopWindow2(context, cancel, action, title, content) async {
+      return showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+
+          return CupertinoAlertDialog(
+            title: Text(title),
+            content: Text(content),
+            actions: <Widget>[
+              CupertinoDialogAction(
+                child: Text(action,),
+                onPressed: () async{
+                  FocusScope.of(context).requestFocus(FocusNode());
+                  Navigator.pop(context, false);
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+    Future<void> ReturnOrdersPopWindow1(context, cancel, action, title, content, List<itemMultiplSelect> itemMultiplSelectList) async {
+      return showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          var contextHold = context;
+          return CupertinoAlertDialog(
+            title: Text(title),
+            content: Text(content),
+            actions: <Widget>[
+              CupertinoDialogAction(
+                child: Text(cancel ),
+                onPressed: () {
+
+                  Navigator.pop(context, false);
+
+                },
+              ),
+              CupertinoDialogAction(
+                child: Text(action,),
+                onPressed: () async{
+                  Navigator.of(context).pop(true);
+                  slideDialog.showSlideDialog(
+                    context: globals.ContextInOrder,
+                    child:  Container(
+                      child: Form(
+
+                        child: Column(
+                          children: <Widget>[
+                            Center(
+                              child:Text("Thanks for your returning!\nDid you enjoy this experience"),
+                            ),
+
+                            Center(
+                              child:  RatingBar(
+                                initialRating: 0,
+                                minRating: 1,
+                                direction: Axis.horizontal,
+                                allowHalfRating: true,
+                                itemCount: 5,
+                                itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                                itemBuilder: (context, _) => Icon(
+                                  Icons.star,
+                                  color: Colors.amber,
+                                ),
+                                onRatingUpdate: (rating) {
+                                  var rate = rating;
+                                  print(rating);
+                                },
+                              ),
+                            ),
+                            SizedBox(
+                              height: 20,
+                            ),
+                            SizedBox(
+                              width: 300,
+                              child: RaisedButton(
+                                highlightElevation: 0.0,
+                                splashColor: Colors.greenAccent,
+                                highlightColor: Colors.green,
+                                elevation: 0.0,
+                                color: Colors.green,
+                                shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: <Widget>[
+                                    Center(
+                                      child: Text(
+                                        langaugeSetFunc("Submit"),
+                                        style: TextStyle(
+                                          fontSize: 15,
+                                          // backgroundColor:  Colors.teal[50],
+                                          color: Colors.white,
+                                          fontFamily: 'Montserrat',
+                                        ),
+                                      ),
+                                    ),
+
+                                  ],
+                                ),
+                                onPressed: () async{
+                                  print('submit123 here\n ');
+                                  print("length = " + itemMultiplSelectList.length.toString());
+                                  setState(() {
+
+                                  });
+                                  for(int i = 0 ; i < itemMultiplSelectList.length; i++){
+                                    String time =  DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
+                                    print(itemMultiplSelectList[i].documentID);
+                                    await Firestore.instance.collection(returnReservationCollection()).document(itemMultiplSelectList[i].documentID)
+                                        .updateData({
+                                      'return time': time,
+                                      'status' : 'Returned',
+                                    });
+                                  }
+                                  for(int i = 0; i <  itemMultiplSelectList.length; i++){
+                                    await Firestore.instance.collection(returnReservationCollection()).document( itemMultiplSelectList[i].documentID)
+                                        .updateData({
+                                      'Review': rate / 5,
+
+                                    });
+                                  }
+                                  FocusScope.of(globals.ContextInOrder).requestFocus(FocusNode());
+                                  Navigator.pop(globals.ContextInOrder, false);
+                                  pop_window('Awesome', "Thanks for your review!", globals.ContextInOrder);
+                                  //await ReturnOrdersPopWindow2(globals.ContextInOrder, '','OK',"Thanks for your review","We appreciate your evaluation!\nYour review will be used in the Help- track Page");
+
+                                },
+                                padding: EdgeInsets.all(7.0),
+                                //color: Colors.teal.shade900,
+                                disabledColor: Colors.black,
+                                disabledTextColor: Colors.black,
+
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    textField: Container(
+                      child: Column(
+                        children: <Widget>[
+                        ],
+                      ),
+                    ),
+                    barrierColor: Colors.white.withOpacity(0.7),
+                  );
+
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+
+
 
     Widget a(int i) {
-      print(i.toString());
+
+
       if (i == 0) {
         return MaterialButton(
           child: Text('Cancel',style: TextStyle(color: textcolor())),
@@ -237,20 +419,21 @@ class _CureentReservationState extends State<CureentReservation> {
     Widget b(int i) {
       if (i == 0) {
         return new MaterialButton(
-          onPressed: () {
-            List<int> returningList = [];
-            titles.forEach((key, value) {
+          onPressed: () async{
+            List<itemMultiplSelect> returningList = [];
 
-              if (value == true) {
-                int i = index_map[key];
-                returningList.add(i);
+            final_map.forEach((key, value) {
+              if(value == true){
+                returningList.add(key);
+
               }
             });
 
+            print(returningList.length);
             int itemNum = returningList.length;
             String itemName = "";
             for(int i = 0; i < returningList.length; i++){
-              String name = mylist[returningList[i]].name;
+              String name = returningList[i].name;
               if(i == 0){
                 itemName += name;
               }else{
@@ -266,20 +449,11 @@ class _CureentReservationState extends State<CureentReservation> {
                 defaultActionText: Strings.ok,
               ).show(context);
             }else{
-              globals.returnDOCIDList.clear();
-              for(int i = 0; i < returningList.length; i++){
-                globals.returnDOCIDList.add(mylist[returningList[i]].documentID);
-              }
-              globals.ContextInOrder = context;
-              PlatformAlertDialog(
-                title: "Please Confirm",
-                content: "You are returning $itemNum items:\n $itemName",
-                defaultActionText: "Confirm",
-                cancelActionText: "Cancel",
-              ).show(context);
+              await ReturnOrdersPopWindow1(context,'Cancel', 'Return','Warning', 'Are you going to return following items:\n $itemName', returningList);
               setState(() {
 
               });
+
             }
 
 
@@ -374,6 +548,9 @@ class _CureentReservationState extends State<CureentReservation> {
       return itemList;
     }
 
+
+
+
     return new Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
@@ -413,14 +590,23 @@ class _CureentReservationState extends State<CureentReservation> {
               });
               var list = await getList();
               mylist = list;
-
-
+              final_map.clear();
+              itemSelectedList.clear();
               for (int i = 0; i < mylist.length; i++) {
-                titles[mylist[i].name] = false;
-                subtitles[mylist[i].name] = mylist[i].startTime;
-                urls[mylist[i].name] = mylist[i].imageURL;
-                index_map[mylist[i].name] = i;
+                uid_map[mylist[i].documentID] = mylist[i].name;
+                titles[mylist[i].documentID] = false;
+                subtitles[mylist[i].documentID] = mylist[i].startTime;
+                urls[mylist[i].documentID] = mylist[i].imageURL;
+                index_map[mylist[i].documentID] = i;
+
+                itemSelectedList.add(itemMultiplSelect(mylist[i].name, mylist[i].imageURL,mylist[i].startTime,mylist[i].documentID, i));
+
               }
+              for(int i = 0; i < itemSelectedList.length;i++){
+                var item = itemSelectedList[i];
+                final_map[item] = false;
+              }
+              print(final_map.length);
               deleteTestMode();
             },
           ),
@@ -440,29 +626,33 @@ class _CureentReservationState extends State<CureentReservation> {
               return Container(
                 margin: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
                 child: ListView(
-                  children: titles.keys.map((String key) {
+                  children: final_map.keys.map((itemMultiplSelect key) {
                     return Column(
                       children: <Widget>[
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: <Widget>[
-                            a(index_map[key]),
-                            b(index_map[key]),
+                            a(key.index),
+                            b(key.index),
                           ],
                         ),
                         new Theme(
                           data: ThemeData(unselectedWidgetColor: textcolor()),
                           child: CheckboxListTile(
-                            activeColor: Colors.transparent,
+                            activeColor: Colors.blue,
 
-                            title: new Text(key, style: TextStyle(color: textcolor()),),
-                            subtitle: new Text(parseTime(subtitles[key]), style: TextStyle(color: textcolor()),),
+                            title: new Text(key.name,style: TextStyle(color: textcolor()),),
+                            subtitle: new Text(parseTime(key.startTime), style: TextStyle(color: textcolor()),),
                             secondary: CircleAvatar(
-                              backgroundImage: NetworkImage(urls[key]),
+                              backgroundImage: NetworkImage(key.imageURL),
                             ),
-                            value: titles[key],
+                            value: final_map[key],
                             onChanged: (bool value) async {
-                              titles[key] = value;
+                              final_map.forEach((thiskey, avalue) {
+                                if(thiskey.documentID == key.documentID){
+                                  final_map[thiskey] = value;
+                                }
+                              });
                               uploadMask();
                               deleteTestMode();
                             },
@@ -545,12 +735,24 @@ class _CureentReservationState extends State<CureentReservation> {
               subtitles = {};
               urls = {};
               index_map = {};
+              uid_map = {};
+              itemSelectedList.clear();
+              final_map.clear();
               for (int i = 0; i < itemList.length; i++) {
-                titles[itemList[i].name] = false;
-                subtitles[itemList[i].name] = itemList[i].startTime;
-                urls[itemList[i].name] = itemList[i].imageURL;
-                index_map[itemList[i].name] = i;
+                var mylist = itemList;
+                uid_map[mylist[i].documentID] = itemList[i].name;
+                titles[mylist[i].documentID] = false;
+                subtitles[mylist[i].documentID] = itemList[i].startTime;
+                urls[mylist[i].documentID] = itemList[i].imageURL;
+                index_map[mylist[i].documentID] = i;
+                itemSelectedList.add(itemMultiplSelect(mylist[i].name, mylist[i].imageURL,  mylist[i].startTime, mylist[i].documentID,i));
               }
+                for(int i = 0; i < itemSelectedList.length;i++){
+                  var item = itemSelectedList[i];
+
+                  final_map[item] = false;
+                }
+
               return ListView.builder(
                   itemCount: itemList.length,
                   itemBuilder: (context, i) {
@@ -929,6 +1131,8 @@ class _TicketState extends State<Ticket> {
       ],
     );
   }
+  var rate = 0;
+
 }
 
 class Share {
@@ -960,6 +1164,7 @@ class Share {
     return channel.invokeMethod<void>('share', params);
   }
 }
+
 
 /*
 *  Container(
