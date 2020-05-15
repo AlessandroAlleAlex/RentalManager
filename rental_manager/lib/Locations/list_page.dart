@@ -16,6 +16,15 @@ class ListPage extends StatefulWidget {
 }
 
 class _ListPageState extends State<ListPage> {
+  // @override
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+  //   setManager();
+  // }
+
+  // Future setManager() {}
+
   Future getFirestoreData() async {
     final firestore = Firestore.instance;
     print('${globals.organization} ---------------------------');

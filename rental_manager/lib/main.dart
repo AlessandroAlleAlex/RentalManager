@@ -248,11 +248,11 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       globals.langaugeSet = "English";
     }
-    if(list == null){
+    if (list == null) {
       return;
     }
 
-    try{
+    try {
       if (list != null && list.length > 0) {
         globals.uid = list[0];
         globals.studentID = list[1];
@@ -266,8 +266,7 @@ class _MyHomePageState extends State<MyHomePage> {
           globals.organization = list[7];
         }
 
-        if(globals.organization == null || globals.organization.isEmpty){
-
+        if (globals.organization == null || globals.organization.isEmpty) {
           await Firestore.instance
               .collection(returnUserCollection())
               .document(globals.uid)
@@ -275,17 +274,16 @@ class _MyHomePageState extends State<MyHomePage> {
               .then((DocumentSnapshot ds) {
             // use ds as a snapshot
             var doc = ds.data;
-            try{
+            try {
               globals.organization = doc['organization'];
-            }catch(e){
+            } catch (e) {
               print(e);
             }
           });
-
         }
         Navigator.of(context).pushReplacementNamed('/MainViewScreen');
       }
-    }catch(e){
+    } catch (e) {
       print(e.toString());
     }
   }
@@ -395,7 +393,8 @@ class _MyHomePageState extends State<MyHomePage> {
                               width: 1.0,
                             ),
                           ),
-                          labelText: langaugeSetFunc('Enter your Email Address'),
+                          labelText:
+                              langaugeSetFunc('Enter your Email Address'),
                           prefixIcon:
                               const Icon(Icons.person, color: Colors.black),
                           // labelStyle:
@@ -429,7 +428,8 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                           ),
                           labelText: langaugeSetFunc('Enter your Password'),
-                          prefixIcon: const Icon(Icons.lock, color: Colors.black),
+                          prefixIcon:
+                              const Icon(Icons.lock, color: Colors.black),
                           // labelStyle:
                           // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
                           // contentPadding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 50),
@@ -470,18 +470,22 @@ class _MyHomePageState extends State<MyHomePage> {
                             ),
                             onPressed: () async {
                               if (username == null || password == null) {
-                                String a =  langaugeSetFunc('Warning') , b =  langaugeSetFunc('Email Adress and Password Cannot be empty');
+                                String a = langaugeSetFunc('Warning'),
+                                    b = langaugeSetFunc(
+                                        'Email Adress and Password Cannot be empty');
                                 pop_window(a, b, context);
-
                               } else {
                                 var e = await authHandler.signIn(
                                     username, password);
                                 if (e == "false") {
-                                  String a =  langaugeSetFunc('ERROR Email NEED VERFIED'), b = langaugeSetFunc('Verify Your Email Please');
+                                  String a = langaugeSetFunc(
+                                          'ERROR Email NEED VERFIED'),
+                                      b = langaugeSetFunc(
+                                          'Verify Your Email Please');
                                   pop_window(a, b, context);
-
                                 } else if (ErrorDetect(e)) {
-                                  String a = errorDetect(e, pos: 0), b = errorDetect(e, pos: 1);
+                                  String a = errorDetect(e, pos: 0),
+                                      b = errorDetect(e, pos: 1);
                                   pop_window(a, b, context);
                                 } else {
                                   username = username.trim();
@@ -492,18 +496,37 @@ class _MyHomePageState extends State<MyHomePage> {
                                       .collection(returnUserCollection())
                                       .document(globals.uid)
                                       .get()
-                                      .then((DocumentSnapshot ds) {
+                                      .then((DocumentSnapshot ds) async {
                                     // use ds as a snapshot
                                     var doc = ds.data;
-                                    try{
+                                    if (!globals.existingOrganizations
+                                            .contains(doc['organization']) &&
+                                        doc['Admin'] == false) {
+                                      await Firestore.instance
+                                          .collection('global_users')
+                                          .document(globals.uid)
+                                          .updateData({'Admin': true});
+                                      await Firestore.instance
+                                          .collection('organizations')
+                                          .document()
+                                          .setData(
+                                              {'name': doc['organization']});
+                                    }
+                                    try {
                                       globals.studentID = doc["StudentID"];
                                       globals.username = doc["name"];
                                       globals.UserImageUrl = doc["imageURL"];
                                       globals.phoneNumber = doc["PhoneNumber"];
                                       globals.email = doc["email"];
-                                      globals.organization = doc['organization'];
-                                    }catch(e){
+                                      globals.organization =
+                                          doc['organization'];
+                                    } catch (e) {
                                       print(e);
+                                    }
+                                    if (doc['Admin'] == true) {
+                                      globals.isAdmin = true;
+                                    } else {
+                                      globals.isAdmin = false;
                                     }
                                   });
                                   print("Here: " + globals.organization);
@@ -517,11 +540,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                   userinfor.add(globals.sex);
                                   userinfor.add(globals.organization);
                                   var prefs =
-                                  await SharedPreferences.getInstance();
+                                      await SharedPreferences.getInstance();
                                   await prefs.setStringList("user", userinfor);
                                   await prefs.setBool('isDark', false);
                                   await prefs.setInt('userSelectTheme', -1);
-
 
                                   Navigator.of(context)
                                       .pushReplacementNamed('/MainViewScreen');
@@ -871,8 +893,8 @@ class _resetPasswordState extends State<resetPassword> {
                   },
                   // controller: _username,
                   cursorColor: Colors.teal.shade900,
-                  scrollPadding:
-                  const EdgeInsets.symmetric(vertical: 10.0, horizontal: 30),
+                  scrollPadding: const EdgeInsets.symmetric(
+                      vertical: 10.0, horizontal: 30),
                   decoration: InputDecoration(
                     border: new OutlineInputBorder(
                       borderRadius: const BorderRadius.all(
@@ -930,9 +952,9 @@ class _resetPasswordState extends State<resetPassword> {
                         bool isEmpty = false;
                         if (email == null) {
                           isEmpty = true;
-                          String a = 'Warning', b = 'Email Adress Cannot be empty';
+                          String a = 'Warning',
+                              b = 'Email Adress Cannot be empty';
                           pop_window(a, b, context);
-
                         }
 
                         for (int i = 0; i < 100000; i++) {
@@ -946,7 +968,7 @@ class _resetPasswordState extends State<resetPassword> {
                             result.documents;
                         List<String> userNameList = [];
                         documents.forEach(
-                                (data) => userNameList.add(data.documentID));
+                            (data) => userNameList.add(data.documentID));
                         bool found = false;
                         for (var i = 0; i < userNameList.length; i++) {
                           if (email == userNameList[i]) {
@@ -995,9 +1017,9 @@ class _resetPasswordState extends State<resetPassword> {
 
                           print('Founding');
                         } else {
-                          String a = 'Warning', b = 'Email Adress Not Found in Records';
+                          String a = 'Warning',
+                              b = 'Email Adress Not Found in Records';
                           pop_window(a, b, context);
-
                         }
                       },
                       padding: EdgeInsets.all(7.0),

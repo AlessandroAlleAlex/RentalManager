@@ -20,49 +20,48 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:rental_manager/PlatformWidget/platform_alert_dialog.dart';
 import 'package:rental_manager/PlatformWidget/strings.dart';
-import 'package:rental_manager/SlideDialog/slide_popup_dialog.dart' as slideDialog;
+import 'package:rental_manager/SlideDialog/slide_popup_dialog.dart'
+    as slideDialog;
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart'; //For creating the SMTP Server
 import '../globals.dart';
 
 String contents;
 
-void sendEmail(String subject, String text, BuildContext context) async{
+void sendEmail(String subject, String text, BuildContext context) async {
   String username = 'jagaoabc@gmail.com';
   String password = 'Aa123456!';
   text = 'UserEmail: $email\nText:\n$text';
   final smtpServer = gmail(username, password);
 // Creating the Gmail server
 
-
 // Create our email message.
   final message = Message()
     ..from = Address(username)
     ..recipients.add(globals.email) //recipent email
-    ..ccRecipients.addAll(['jagaoabc@gmail.com', 'jagaoabc2@gmail.com']) //cc Recipents emails
-    ..bccRecipients.add(Address('bccAddress@example.com')) //bcc Recipents emails
+    ..ccRecipients.addAll(
+        ['jagaoabc@gmail.com', 'jagaoabc2@gmail.com']) //cc Recipents emails
+    ..bccRecipients
+        .add(Address('bccAddress@example.com')) //bcc Recipents emails
     ..subject = subject //subject of the email
     ..text = text; //body of the email
 
   try {
     final sendReport = await send(message, smtpServer);
-    print('Message sent: ' + sendReport.toString()); //print if the email is sent
+    print(
+        'Message sent: ' + sendReport.toString()); //print if the email is sent
   } on MailerException catch (e) {
-    print('Message not sent. \n'+ e.toString()); //print if the email is not sent
+    print(
+        'Message not sent. \n' + e.toString()); //print if the email is not sent
 // e.toString() will show why the email is not sending
   }
-
 }
-
-
 
 class ThirdTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       body: LoginScreen(title: 'Chat'),
-
     );
   }
 }
@@ -105,7 +104,6 @@ class LoginScreenState extends State<LoginScreen> {
 //        MaterialPageRoute(builder: (context) => MainScreen(currentUserId: prefs.getString('id'))),
 //      );
 
-
     }
     print(isLoggedIn);
     this.setState(() {
@@ -120,7 +118,6 @@ class LoginScreenState extends State<LoginScreen> {
       isLoading = true;
     });
 
-
     GoogleSignIn _googleSignIn = GoogleSignIn(
       scopes: [
         'email',
@@ -131,10 +128,10 @@ class LoginScreenState extends State<LoginScreen> {
     final GoogleSignIn googleSignIn = new GoogleSignIn();
     FirebaseUser firebaseUser;
 
-    if(globals.mygoogleuser != null){
+    if (globals.mygoogleuser != null) {
       firebaseUser = globals.mygoogleuser;
       Fluttertoast.showToast(msg: "Alredy Sign in with google account");
-    }else {
+    } else {
       print(globals.mygoogleuser == null);
       GoogleSignInAccount googleUser = await _googleSignIn.signIn();
       try {
@@ -165,12 +162,17 @@ class LoginScreenState extends State<LoginScreen> {
     if (firebaseUser != null) {
       // Check is already sign up
 
-      final QuerySnapshot result =
-      await Firestore.instance.collection(returnUserCollection()).where('id', isEqualTo: firebaseUser.uid).getDocuments();
+      final QuerySnapshot result = await Firestore.instance
+          .collection(returnUserCollection())
+          .where('id', isEqualTo: firebaseUser.uid)
+          .getDocuments();
       final List<DocumentSnapshot> documents = result.documents;
       if (documents.length == 0) {
         // Update data to server if new user
-        Firestore.instance.collection(returnUserCollection()).document(firebaseUser.uid).setData({
+        Firestore.instance
+            .collection(returnUserCollection())
+            .document(firebaseUser.uid)
+            .setData({
           'nickname': firebaseUser.displayName,
           'photoUrl': firebaseUser.photoUrl,
           'id': firebaseUser.uid,
@@ -195,7 +197,11 @@ class LoginScreenState extends State<LoginScreen> {
         isLoading = false;
       });
       print("firebaseUser.uid:" + firebaseUser.uid);
-      Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen(currentUserId: firebaseUser.uid)));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) =>
+                  MainScreen(currentUserId: firebaseUser.uid)));
     } else {
       Fluttertoast.showToast(msg: "Sign in fail");
       this.setState(() {
@@ -203,14 +209,15 @@ class LoginScreenState extends State<LoginScreen> {
       });
     }
   }
-  SpeedDialChild returnManagerWidget(){
-    print(!globals.isAdmin);
-    if(globals.isAdmin){
-      return  SpeedDialChild(
+
+  SpeedDialChild returnManagerWidget() {
+    if (globals.isAdmin) {
+      return SpeedDialChild(
         child: Icon(Icons.receipt, color: Colors.white),
         backgroundColor: Colors.green,
-        onTap: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context) => Manager()));
+        onTap: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Manager()));
           //pickUpFile(context);
           print(contents);
         },
@@ -218,7 +225,7 @@ class LoginScreenState extends State<LoginScreen> {
         labelStyle: TextStyle(fontWeight: FontWeight.w500),
         labelBackgroundColor: Colors.green,
       );
-    }else{
+    } else {
       return SpeedDialChild(
         child: Icon(Icons.keyboard_hide, color: Colors.white),
         backgroundColor: Colors.green,
@@ -232,7 +239,7 @@ class LoginScreenState extends State<LoginScreen> {
   Widget build(BuildContext context) {
     GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
     var buttonWidth = MediaQuery.of(context).size.width / 10 * 7;
-    void _onSubmit(String email, String subject, String text) async{
+    void _onSubmit(String email, String subject, String text) async {
       final form = _formKey.currentState;
       if (form.validate()) {
         form.save();
@@ -242,36 +249,42 @@ class LoginScreenState extends State<LoginScreen> {
         final smtpServer = gmail(username, password);
         // Creating the Gmail server
 
-
         // Create our email message.
         final message = Message()
           ..from = Address(username)
           ..recipients.add('jagaoabc@gmail.com') //recipent email
-          ..ccRecipients.addAll(['destCc1@example.com', 'destCc2@example.com']) //cc Recipents emails
-          ..bccRecipients.add(Address('bccAddress@example.com')) //bcc Recipents emails
+          ..ccRecipients.addAll([
+            'destCc1@example.com',
+            'destCc2@example.com'
+          ]) //cc Recipents emails
+          ..bccRecipients
+              .add(Address('bccAddress@example.com')) //bcc Recipents emails
           ..subject = subject //subject of the email
           ..text = text; //body of the email
 
         try {
           final sendReport = await send(message, smtpServer);
-          print('Message sent: ' + sendReport.toString()); //print if the email is sent
+          print('Message sent: ' +
+              sendReport.toString()); //print if the email is sent
         } on MailerException catch (e) {
-          print('Message not sent. \n'+ e.toString()); //print if the email is not sent
+          print('Message not sent. \n' +
+              e.toString()); //print if the email is not sent
           // e.toString() will show why the email is not sending
         }
-        pop_window('Confirmed!', 'This informaton will be sent to our assistants', context);
+        pop_window('Confirmed!',
+            'This informaton will be sent to our assistants', context);
       }
     }
+
     void _showDialog(String s) {
       String email, subject, atext;
       slideDialog.showSlideDialog(
         context: context,
-        child:  Container(
+        child: Container(
           child: Form(
             key: _formKey,
             child: Column(
               children: <Widget>[
-
                 Text(
                   langaugeSetFunc(s),
                   style: TextStyle(
@@ -286,19 +299,20 @@ class LoginScreenState extends State<LoginScreen> {
                   ),
                 ),
                 TextFormField(
-                  onChanged:(text){
+                  onChanged: (text) {
                     print("First text field: $text");
                     email = text;
                   },
-                  validator: (String val){
-                    if(VerifyEmail(val) == false){
+                  validator: (String val) {
+                    if (VerifyEmail(val) == false) {
                       var str_mssage = "Please enter your valid email address";
                       return langaugeSetFunc(str_mssage);
                     }
                     return null;
                   },
                   cursorColor: Colors.teal.shade900,
-                  scrollPadding:  const EdgeInsets.symmetric(vertical: 20.0,horizontal: 50),
+                  scrollPadding: const EdgeInsets.symmetric(
+                      vertical: 20.0, horizontal: 50),
                   decoration: InputDecoration(
                     border: new OutlineInputBorder(
                       borderRadius: const BorderRadius.all(
@@ -313,26 +327,28 @@ class LoginScreenState extends State<LoginScreen> {
                     prefixIcon: const Icon(Icons.email, color: Colors.black),
                     // labelStyle:
                     // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 50),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 20.0, horizontal: 50),
                   ),
                 ),
                 SizedBox(
                   height: 10,
                 ),
                 TextFormField(
-                  onChanged:(text){
+                  onChanged: (text) {
                     print("First text field: $text");
                     subject = text;
                   },
-                  validator: (String val){
-                    if(val.isEmpty){
+                  validator: (String val) {
+                    if (val.isEmpty) {
                       var str_message = "Please fill in the blank";
                       return langaugeSetFunc(str_message);
                     }
                     return null;
                   },
                   cursorColor: Colors.teal.shade900,
-                  scrollPadding:  const EdgeInsets.symmetric(vertical: 20.0,horizontal: 50),
+                  scrollPadding: const EdgeInsets.symmetric(
+                      vertical: 20.0, horizontal: 50),
                   decoration: InputDecoration(
                     border: new OutlineInputBorder(
                       borderRadius: const BorderRadius.all(
@@ -347,19 +363,20 @@ class LoginScreenState extends State<LoginScreen> {
                     prefixIcon: const Icon(Icons.title, color: Colors.black),
                     // labelStyle:
                     // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 50),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 20.0, horizontal: 50),
                   ),
                 ),
                 SizedBox(
                   height: 10,
                 ),
                 TextFormField(
-                  onChanged:(text){
+                  onChanged: (text) {
                     print("First text field: $text");
                     atext = text;
                   },
-                  validator: (String val){
-                    if(val.isEmpty){
+                  validator: (String val) {
+                    if (val.isEmpty) {
                       var str_message = "Please fill in the blank";
                       return langaugeSetFunc(str_message);
                     }
@@ -369,7 +386,8 @@ class LoginScreenState extends State<LoginScreen> {
                   keyboardType: TextInputType.multiline,
                   maxLines: null,
                   cursorColor: Colors.teal.shade900,
-                  scrollPadding:  const EdgeInsets.symmetric(vertical: 50.0,horizontal: 50),
+                  scrollPadding: const EdgeInsets.symmetric(
+                      vertical: 50.0, horizontal: 50),
                   decoration: InputDecoration(
                     border: new OutlineInputBorder(
                       borderRadius: const BorderRadius.all(
@@ -381,10 +399,12 @@ class LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     labelText: langaugeSetFunc('Text'),
-                    prefixIcon: const Icon(Icons.content_paste, color: Colors.black),
+                    prefixIcon:
+                        const Icon(Icons.content_paste, color: Colors.black),
                     // labelStyle:
                     // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
-                    contentPadding: const EdgeInsets.symmetric(vertical: 50.0,horizontal: 50),
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 50.0, horizontal: 50),
                   ),
                 ),
                 SizedBox(
@@ -398,7 +418,8 @@ class LoginScreenState extends State<LoginScreen> {
                     highlightColor: Colors.green,
                     elevation: 0.0,
                     color: Colors.blue,
-                    shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                    shape: RoundedRectangleBorder(
+                        borderRadius: new BorderRadius.circular(30.0)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -413,25 +434,19 @@ class LoginScreenState extends State<LoginScreen> {
                             ),
                           ),
                         ),
-
                       ],
                     ),
-                    onPressed: () async{
+                    onPressed: () async {
                       //_handleSignIn();
-
 
                       _onSubmit(email, subject, atext);
                       //rewriteData();
                       //Navigator.of(context).pushReplacementNamed('/MainViewScreen');
-
-
-
                     },
                     padding: EdgeInsets.all(7.0),
                     //color: Colors.teal.shade900,
                     disabledColor: Colors.black,
                     disabledTextColor: Colors.black,
-
                   ),
                 ),
               ],
@@ -440,8 +455,7 @@ class LoginScreenState extends State<LoginScreen> {
         ),
         textField: Container(
           child: Column(
-            children: <Widget>[
-            ],
+            children: <Widget>[],
           ),
         ),
         barrierColor: Colors.white.withOpacity(0.7),
@@ -452,7 +466,7 @@ class LoginScreenState extends State<LoginScreen> {
       double height = MediaQuery.of(context).size.height;
       return SpeedDial(
         marginRight: 10,
-        marginBottom: height/3,
+        marginBottom: height / 3,
         animatedIcon: AnimatedIcons.menu_close,
         animatedIconTheme: IconThemeData(size: 22.0),
         // child: Icon(Icons.add),
@@ -464,7 +478,8 @@ class LoginScreenState extends State<LoginScreen> {
           SpeedDialChild(
             child: Icon(Icons.lock, color: Colors.white),
             backgroundColor: Colors.deepOrange,
-            onTap: () => _showDialog("Describe the item and leave your contact"),
+            onTap: () =>
+                _showDialog("Describe the item and leave your contact"),
             label: langaugeSetFunc('Lost And Found'),
             labelStyle: TextStyle(fontWeight: FontWeight.w500),
             labelBackgroundColor: Colors.deepOrangeAccent,
@@ -483,18 +498,19 @@ class LoginScreenState extends State<LoginScreen> {
           SpeedDialChild(
             child: Icon(Icons.search, color: Colors.white),
             backgroundColor: Colors.teal,
-            onTap: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context) => track()));
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => track()));
             },
             label: langaugeSetFunc('Track'),
             labelStyle: TextStyle(fontWeight: FontWeight.w500),
             labelBackgroundColor: Colors.teal,
           ),
-
           returnManagerWidget(),
         ],
       );
     }
+
     //globals.AppBarheight = AppBar().preferredSize.height;
     return Scaffold(
         appBar: AppBar(
@@ -505,18 +521,21 @@ class LoginScreenState extends State<LoginScreen> {
           backgroundColor: backgroundcolor(),
           centerTitle: true,
         ),
-        floatingActionButton:buildSpeedDial(),
+        floatingActionButton: buildSpeedDial(),
         body: Stack(
           children: <Widget>[
             Center(
               child: Container(
-                width:  buttonWidth,
-
+                width: buttonWidth,
                 child: FlatButton(
                     onPressed: handleSignIn,
                     child: Row(
                       children: <Widget>[
-                        Image(image: NetworkImage('https://pluspng.com/img-png/google-logo-png-open-2000.png'), height: 30,),
+                        Image(
+                          image: NetworkImage(
+                              'https://pluspng.com/img-png/google-logo-png-open-2000.png'),
+                          height: 30,
+                        ),
                         SizedBox(width: 20.0),
                         Text(
                           'GOOGLE Sign In',
@@ -526,7 +545,6 @@ class LoginScreenState extends State<LoginScreen> {
                     ),
                     shape: RoundedRectangleBorder(
                       borderRadius: new BorderRadius.circular(30.0),
-
                     ),
                     color: Colors.teal,
                     highlightColor: Color(0xffff7f7f),
@@ -540,13 +558,13 @@ class LoginScreenState extends State<LoginScreen> {
             Positioned(
               child: isLoading
                   ? Container(
-                child: Center(
-                  child: CircularProgressIndicator(
-                    valueColor: AlwaysStoppedAnimation<Color>(themeColor),
-                  ),
-                ),
-                color: Colors.white.withOpacity(0.8),
-              )
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          valueColor: AlwaysStoppedAnimation<Color>(themeColor),
+                        ),
+                      ),
+                      color: Colors.white.withOpacity(0.8),
+                    )
                   : Container(),
             ),
           ],
@@ -554,16 +572,13 @@ class LoginScreenState extends State<LoginScreen> {
   }
 }
 
-void pop_window(a, b, context){
+void pop_window(a, b, context) {
   PlatformAlertDialog(
     title: a,
     content: b,
     defaultActionText: Strings.ok,
   ).show(context);
 }
-
-
-
 
 bool VerifyEmail(String value) {
   Pattern pattern =
@@ -572,7 +587,7 @@ bool VerifyEmail(String value) {
   return (!regex.hasMatch(value)) ? false : true;
 }
 
-void pickUpFile(BuildContext context)async{
+void pickUpFile(BuildContext context) async {
   String filelastnmae = "csv";
   String _extension = "csv";
   String mypath;
@@ -584,16 +599,15 @@ void pickUpFile(BuildContext context)async{
         allowedExtensions: (filelastnmae?.isNotEmpty ?? false)
             ? _extension?.replaceAll(' ', '')?.split(',')
             : null);
-  }catch(e){
+  } catch (e) {
     print(e);
   }
   print(mypath);
   var thefile = File(mypath);
   contents = await thefile.readAsString();
-  for(int i = 0; i < contents.length; i++){
-    if(contents[i] == "\n"){
+  for (int i = 0; i < contents.length; i++) {
+    if (contents[i] == "\n") {
       print("newline");
-
     }
   }
 
