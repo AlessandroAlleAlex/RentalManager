@@ -59,7 +59,7 @@ class _ManageCategoryState extends State<ManageCategory> {
     String modifyName = "",
         modifyimageURL =
             'https://ciat.cgiar.org/wp-content/uploads/image-not-found.png',
-        inputImageURL = " ";
+        inputImageURL = "";
     int modifyAmount = 0;
 
     void submit() async {
@@ -74,15 +74,17 @@ class _ManageCategoryState extends State<ManageCategory> {
 
       if (form.validate()) {
 
+
         if(inputImageURL.isNotEmpty){
           modifyimageURL = inputImageURL;
-          categoryList.add({'name': modifyName, 'imageURL': modifyimageURL});
-        }else{
-          categoryList.add({'name': modifyName, 'imageURL': modifyimageURL});
         }
 
+
+        listcater.add({'name': modifyName, 'imageURL': modifyimageURL});
+
+        print(listcater[listcater.length - 1]['imageURL']);
         await Firestore.instance.collection(returnLocationsCollection()).document(this.widget.documentID).updateData({
-          "categories": categoryList,}
+          "categories":  listcater,}
           );
         pop_window('Succeed', "Upload a item Successfully", context);
       }
