@@ -178,7 +178,33 @@ class CustomSearchDelegate extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    return null;
+    return StreamBuilder(
+        stream: Firestore.instance.collection('organizations').snapshots(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData) return Center(child: Text('Loading...'));
+          var results = snapshot.data.documents
+              .where(
+                (DocumentSnapshot doc) =>
+                    doc.data['name'].toString().toLowerCase().contains(
+                          query.trim().toLowerCase(),
+                        ),
+              )
+              .toList();
+          return ListView.builder(
+            itemCount: results.length,
+            itemBuilder: (context, index) => ListTile(
+              // title: Text(results.length.toString()),
+              title: Center(
+                child: Text(
+                  results[index]['name'].toString(),
+                  style: TextStyle(fontSize: 20, color: Colors.blue),
+                ),
+              ),
+              onTap: () =>
+                  navigateToSignUp(results[index]['name'].toString(), context),
+            ),
+          );
+        });
   }
 
   @override
