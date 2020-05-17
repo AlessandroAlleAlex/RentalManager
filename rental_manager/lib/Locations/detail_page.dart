@@ -49,6 +49,13 @@ class _DetailPage extends State<DetailPage> {
     });
   }
 
+  Future decrementItemAmount() {
+    return Firestore.instance
+        .collection(returnItemCollection())
+        .document(widget.itemSelected.documentID)
+        .updateData({'# of items': _itemTotalAmount - _currentResAmount});
+  }
+
   Widget reserveButton() {
     return _currentResAmount < 1 || _itemTotalAmount < 1
         ? Text(
@@ -137,15 +144,6 @@ class _DetailPage extends State<DetailPage> {
             reserveButton()
           ],
         );
-
-        Text(
-            langaugeSetFunc('Remaining Amount:') +
-                ' ' +
-                snapshot.data['# of items'].toString(),
-            style: TextStyle(
-                fontSize: 16.0,
-                color: Colors.red,
-                fontWeight: FontWeight.bold));
       },
     );
   }
@@ -182,11 +180,9 @@ class _DetailPage extends State<DetailPage> {
   }
 
   testingReservations(String itemID) async {
-    print(globals.uid);
+    // print(globals.uid);
     var now = new DateTime.now();
     var time = DateFormat("yyyy-MM-dd HH:mm:ss").format(now);
-    var pickUpBefore = now.add(new Duration(minutes: 10));
-    print("Reservation Created time: " + time);
     String itemName;
     await Firestore.instance
         .collection(returnItemCollection())
@@ -195,7 +191,6 @@ class _DetailPage extends State<DetailPage> {
         .then((DocumentSnapshot ds) {
       try {
         itemName = ds["name"];
-        print("Found in ${returnItemCollection()}");
       } catch (e) {
         print(e);
       }
@@ -204,8 +199,8 @@ class _DetailPage extends State<DetailPage> {
         "Order Confirmed",
         "Your order item is $itemName\nNumber: 1\nTime you ordered is $time",
         context);
-    print("Reservation pickup before time: " +
-        DateFormat("yyyy-MM-dd HH:mm:ss").format(pickUpBefore));
+    // print("Reservation pickup before time: " +
+    //     DateFormat("yyyy-MM-dd HH:mm:ss").format(pickUpBefore));
     uploadData(itemID, globals.uid, time);
   }
 
@@ -219,7 +214,6 @@ class _DetailPage extends State<DetailPage> {
         .then((DocumentSnapshot ds) {
       try {
         itemName = ds["name"];
-        print("Found in ${returnItemCollection()}");
       } catch (e) {
         print(e);
       }
@@ -232,7 +226,6 @@ class _DetailPage extends State<DetailPage> {
         .then((DocumentSnapshot ds) {
       try {
         imageURL = ds["imageURL"];
-        print("Found in ${returnItemCollection()}");
       } catch (e) {
         print(e);
       }
@@ -270,6 +263,8 @@ class _DetailPage extends State<DetailPage> {
         .updateData({
       'LatestReservation': dateTime,
     });
+
+    await decrementItemAmount();
 
     PlatformAlertDialog(
       title: 'Your item has placed',

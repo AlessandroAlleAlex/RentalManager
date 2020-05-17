@@ -27,6 +27,8 @@ class _reservationCell extends State<reservationCell> {
       Firestore.instance.collection(returnReservationCollection());
   Timer _timer;
   int displayRemainingTime = -1;
+  String itemID;
+  int itemAmount;
 
   Future pickedUp() async {
     await firestore
@@ -41,10 +43,27 @@ class _reservationCell extends State<reservationCell> {
         .updateData({'status': 'Returned'}).catchError((error) => print(error));
   }
 
+  Future incrementItemAmount() {
+    return Firestore.instance
+        .collection(returnItemCollection())
+        .document(itemID)
+        .get()
+        .then(
+      (doc) {
+        Firestore.instance
+            .collection(returnItemCollection())
+            .document(itemID)
+            .updateData({'# of items': doc.data['# of items'] + itemAmount});
+      },
+    );
+  }
+
   Future cancelReservation() async {
     await firestore
         .document(widget.passedFirestoreData.documentID.toString())
         .updateData({'status': 'Returned'}).catchError((error) => print(error));
+    incrementItemAmount();
+    // await Firestore.instance.collection(returnItemCollection()).document(itemID).setData({'# of items': +itemAmount});
   }
 
   void _showCancelDialog() {
@@ -83,6 +102,8 @@ class _reservationCell extends State<reservationCell> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    itemID = widget.passedFirestoreData.data['item'];
+    itemAmount = int.parse(widget.passedFirestoreData.data['amount']);
     startTimer();
     if (displayRemainingTime >= -1) {
       _timer = Timer.periodic(Duration(seconds: 60), (Timer t) => startTimer());
@@ -124,7 +145,10 @@ class _reservationCell extends State<reservationCell> {
           color: textcolor(), //change your color here
         ),
         backgroundColor: backgroundcolor(),
-        title: Text(langaugeSetFunc('Reservation Details'), style: TextStyle(color: textcolor()),),
+        title: Text(
+          langaugeSetFunc('Reservation Details'),
+          style: TextStyle(color: textcolor()),
+        ),
       ),
       body: SingleChildScrollView(
         child: Container(
