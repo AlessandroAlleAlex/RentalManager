@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:numberpicker/numberpicker.dart';
 import 'package:rental_manager/Locations/show_all.dart';
 import 'package:rental_manager/chatview/login.dart';
 import 'package:rental_manager/language.dart';
@@ -21,60 +22,73 @@ class DetailPage extends StatefulWidget {
 }
 
 class _DetailPage extends State<DetailPage> {
-  Container getImage() {
-    return Container(
-      alignment: Alignment.center,
-      child: Image.network(
-        widget.itemSelected.data['imageURL'],
-        fit: BoxFit.cover,
-        height: 300.0,
-      ),
-      // constraints: BoxConstraints.expand(height: 300.0),
-    );
+  int _currentResAmount = 1;
+  int _itemTotalAmount = -1;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _itemTotalAmount = widget.itemSelected.data['# of items'];
   }
 
-  Container getDescription() {
-    return Container(
-      alignment: Alignment.center,
-      // alignment: Alignment.topCenter,
-      child: Text('some item description information...'),
-    );
+  void _showNumberPickerDialog() {
+    showDialog<int>(
+        context: context,
+        builder: (BuildContext context) {
+          return new NumberPickerDialog.integer(
+            initialIntegerValue: _currentResAmount,
+            minValue: 1,
+            maxValue: _itemTotalAmount,
+            title: new Text("edit amount"),
+          );
+        }).then((value) {
+      if (value != null) {
+        setState(() => _currentResAmount = value);
+      }
+    });
   }
 
-  // Container reserveButton() {
-  //   return Container(
-  //     alignment: Alignment.center,
-  //     child: RaisedButton(
-  //       onPressed: () {
-  //         print('button pressed! (reserve)');
-  //         testingReservations(widget.itemSelected.documentID);
-  //       },
-  //       child: Text('Reserve Now', style: TextStyle(color: Colors.white)),
-  //       color: Colors.teal,
-  //     ),
-  //   );
-  // }
-
-  Container reserveButton() {
-    return Container(
-      padding: EdgeInsets.symmetric(vertical: 16.0),
-      width: MediaQuery.of(context).size.width,
-      child: RaisedButton(
-        onPressed: () {
-          print('button pressed! (reserve)');
-          testingReservations(widget.itemSelected.documentID);
-        },
-        child: Text(langaugeSetFunc('Reserve Now'), style: TextStyle(color: Colors.white)),
-        color: Colors.teal,
-      ),
-    );
+  Widget reserveButton() {
+    return _currentResAmount < 1 || _itemTotalAmount < 1
+        ? Text(
+            'The item you have selected is currently not available.',
+            style: TextStyle(
+              color: Colors.red,
+              fontSize: 22,
+            ),
+          )
+        : SizedBox(
+            height: 50,
+            width: double.infinity,
+            child: RaisedButton.icon(
+              color: Colors.blue,
+              textColor: Colors.white,
+              elevation: 2.0,
+              shape: new RoundedRectangleBorder(
+                borderRadius: new BorderRadius.circular(40.0),
+              ),
+              onPressed: () {
+                testingReservations(widget.itemSelected.documentID);
+              },
+              icon: Icon(
+                Icons.bookmark,
+                size: 30.0,
+              ),
+              label: Text(
+                langaugeSetFunc('Reserve') +
+                    ': ${_currentResAmount.toString()}',
+                style: TextStyle(fontSize: 20.0),
+              ),
+            ),
+          );
   }
 
-  Container top() {
+  Container picture() {
     return Container(
       // padding: EdgeInsets.only(left: 10.0),
-      height: MediaQuery.of(context).size.height * 0.5,
-      // width: MediaQuery.of(context).size.width * 0.5,
+      height: MediaQuery.of(context).size.height * 0.3,
+      width: MediaQuery.of(context).size.width * 0.5,
       decoration: new BoxDecoration(
         image: new DecorationImage(
           image: NetworkImage(widget.itemSelected.data['imageURL']),
@@ -85,46 +99,54 @@ class _DetailPage extends State<DetailPage> {
     );
   }
 
-  Text descriptionText() {
-    return Text('Some Item Description???', style: TextStyle(fontSize: 18.0));
-  }
-
-  Widget amount() {
-    return Container(
-      padding: EdgeInsets.fromLTRB(0, 20, 30, 0),
-      child: Align(
-        alignment: Alignment.centerRight,
-        child: StreamBuilder(
-          stream: Firestore.instance
-              .collection(returnItemCollection())
-              .document(widget.itemSelected.documentID)
-              .snapshots(),
-          builder: (context, snapshot) {
-
-            if (!snapshot.hasData) return const Text('loading...');
-            return Text( langaugeSetFunc('Remaining Amount:')+ '',
+  Widget bottom3Widgets() {
+    return StreamBuilder(
+      stream: Firestore.instance
+          .collection(returnItemCollection())
+          .document(widget.itemSelected.documentID)
+          .snapshots(),
+      builder: (context, snapshot) {
+        if (!snapshot.hasData) return const Text('loading...');
+        _itemTotalAmount = snapshot.data['# of items'];
+        return Column(
+          children: <Widget>[
+            Text(
+                langaugeSetFunc('Remaining Amount:') +
+                    ' ' +
+                    snapshot.data['# of items'].toString(),
                 style: TextStyle(
-                    fontSize: 14.0,
-                    color: Colors.redAccent,
-                    fontWeight: FontWeight.bold));
-          },
-        ),
-      ),
-    );
-  }
+                    fontSize: 20.0,
+                    color: Colors.red,
+                    fontWeight: FontWeight.bold)),
+            SizedBox(height: 10.0),
+            snapshot.data['# of items'] < 2
+                ? Container()
+                : GestureDetector(
+                    onTap: () {
+                      _showNumberPickerDialog();
+                    },
+                    child: Text(
+                      'click to edit reservation amount',
+                      style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          color: Colors.red,
+                          fontSize: 18.0),
+                    ),
+                  ),
+            SizedBox(height: 40.0),
+            reserveButton()
+          ],
+        );
 
-  Container bottom() {
-    return Container(
-      // height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      // color: Theme.of(context).primaryColor,
-      padding: EdgeInsets.fromLTRB(30.0, 10.0, 30.0, 30.0),
-      // padding: EdgeInsets.all(40.0),
-      child: Center(
-        child: Column(
-          children: <Widget>[descriptionText(), reserveButton()],
-        ),
-      ),
+        Text(
+            langaugeSetFunc('Remaining Amount:') +
+                ' ' +
+                snapshot.data['# of items'].toString(),
+            style: TextStyle(
+                fontSize: 16.0,
+                color: Colors.red,
+                fontWeight: FontWeight.bold));
+      },
     );
   }
 
@@ -132,59 +154,40 @@ class _DetailPage extends State<DetailPage> {
   Widget build(BuildContext context) {
     // TODO: implement build
     return Scaffold(
-        appBar: AppBar(
-          iconTheme: IconThemeData(
-            color: textcolor(), //change your color here
-          ),
-          title: Text( langaugeSetFunc('Details of:') + ' ${widget.itemSelected.data['name']}', style: TextStyle(color: textcolor()),),
-          backgroundColor: backgroundcolor(),
+      appBar: AppBar(
+        iconTheme: IconThemeData(
+          color: textcolor(), //change your color here
         ),
-        backgroundColor: Colors.blueGrey,
-        // body: Image.network(
-        //   widget.itemSelected.data['imageURL'],
-        // ),
-        body: Scaffold(
-          body: Column(
-            children: <Widget>[top(), amount(), bottom()],
+        title: Text(
+          widget.itemSelected.data['name'],
+          style: TextStyle(color: textcolor()),
+        ),
+        backgroundColor: backgroundcolor(),
+      ),
+      body: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.symmetric(vertical: 30.0, horizontal: 30.0),
+          child: Column(
+            children: <Widget>[
+              picture(),
+              SizedBox(height: 20.0),
+              bottom3Widgets(),
+              // SizedBox(height: 20.0),
+              // reserveButton(),
+            ],
           ),
-        )
-
-        // Column(
-        //   crossAxisAlignment: CrossAxisAlignment.stretch,
-        //   children: <Widget>[
-        //     getImage(),
-        //     getDescription(),
-        //     getButton(),
-        //   ],
-        // ),
-
-        // constraints: BoxConstraints.expand(),
-        // color: Colors.blueGrey,
-        // child: Stack(children: <Widget>[
-        //   getImage(),
-        //   getDescription(),
-        // ]),
-        );
+        ),
+      ),
+    );
   }
-// }
 
   testingReservations(String itemID) async {
     print(globals.uid);
-    // final QuerySnapshot result =
-    // await Firestore.instance.collection('items').getDocuments();
-    // final List<DocumentSnapshot> documents = result.documents;
-    // List<String> itemIDs = [];
-    // documents.forEach((data) => itemIDs.add(data.documentID));
-    // print(documents.length);
-    //for(int i = 0; i< snapshot.length;i++){
-    print(itemID);
-    //}
     var now = new DateTime.now();
     var time = DateFormat("yyyy-MM-dd HH:mm:ss").format(now);
     var pickUpBefore = now.add(new Duration(minutes: 10));
     print("Reservation Created time: " + time);
-    String itemName, imageURL;
-    final databaseReference = Firestore.instance;
+    String itemName;
     await Firestore.instance
         .collection(returnItemCollection())
         .document(itemID)
@@ -197,7 +200,10 @@ class _DetailPage extends State<DetailPage> {
         print(e);
       }
     });
-    sendEmail("Order Confirmed", "Your order item is $itemName\nNumber: 1\nTime you ordered is $time", context);
+    sendEmail(
+        "Order Confirmed",
+        "Your order item is $itemName\nNumber: 1\nTime you ordered is $time",
+        context);
     print("Reservation pickup before time: " +
         DateFormat("yyyy-MM-dd HH:mm:ss").format(pickUpBefore));
     uploadData(itemID, globals.uid, time);
@@ -241,25 +247,29 @@ class _DetailPage extends State<DetailPage> {
       imageURL = "www.gooogle.com";
     }
 
-    await databaseReference.collection(returnReservationCollection()).document().setData({
+    await databaseReference
+        .collection(returnReservationCollection())
+        .document()
+        .setData({
       'imageURL': imageURL,
       'name': itemName,
       'uid': uid,
       'item': itemID,
-      'uid': uid,
-      'amount': "1",
+      'amount': _currentResAmount.toString(),
       'startTime': dateTime,
       'status': "Reserved",
-      'reserved time' : dateTime,
-      'picked Up time' : 'NULL',
+      'reserved time': dateTime,
+      'picked Up time': 'NULL',
       'return time': 'NULL',
       'endTime': "TBD",
       'UserName': globals.username,
     });
-    await databaseReference.collection(returnUserCollection()).document(globals.uid).updateData({
+    await databaseReference
+        .collection(returnUserCollection())
+        .document(globals.uid)
+        .updateData({
       'LatestReservation': dateTime,
     });
-
 
     PlatformAlertDialog(
       title: 'Your item has placed',
