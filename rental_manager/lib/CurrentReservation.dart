@@ -154,10 +154,10 @@ class _CureentReservationState extends State<CureentReservation> {
                       var theitem = ItemInfo(url, person, date, item, status,
                           start, Return, timeNow, uid, docuementID);
 
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => Ticket(theitem)));
+//                      Navigator.push(
+//                          context,
+//                          MaterialPageRoute(
+//                              builder: (context) => Ticket(theitem)));
 
 //                AwesomeDialog(
 //                  context: context,
@@ -798,10 +798,10 @@ class _CureentReservationState extends State<CureentReservation> {
                                   uid,
                                   docuementID);
 
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Ticket(theitem)));
+//                              Navigator.push(
+//                                  context,
+//                                  MaterialPageRoute(
+//                                      builder: (context) => Ticket(theitem)));
                             },
                           ),
                         ),
@@ -875,34 +875,30 @@ void GetImageURL(String uid) async {
 class TicketView extends StatelessWidget {
   @override
   ItemInfo theItem;
-
-  TicketView(theItem) {
-    this.theItem = theItem;
+  DocumentSnapshot item;
+  TicketView(DocumentSnapshot theItem) {
+    this.item = theItem;
   }
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      home: Ticket(theItem),
+      home: Ticket(item),
     );
   }
 }
 
 class Ticket extends StatefulWidget {
   @override
-  ItemInfo theItem;
+  DocumentSnapshot theItem;
 
-  Ticket(ItemInfo theItem) {
+  Ticket(DocumentSnapshot  theItem) {
     this.theItem = theItem;
   }
-  _TicketState createState() => _TicketState(theItem);
+  _TicketState createState() => _TicketState();
 }
 
 class _TicketState extends State<Ticket> {
-  ItemInfo theItem;
 
-  _TicketState(ItemInfo theItem) {
-    this.theItem = theItem;
-  }
 
   GlobalKey theGlobalKey = new GlobalKey();
 
@@ -929,20 +925,24 @@ class _TicketState extends State<Ticket> {
 
   @override
   Widget build(BuildContext context) {
-    String person = theItem.person;
-    String date = theItem.date.substring(0, 10);
-    String item = theItem.item;
-    String status = theItem.status;
 
-    String start = theItem.start;
-    start = start.substring(11);
-    String Return = theItem.Return;
-    String url = theItem.imageUrl;
-    String uid = theItem.uid;
-    String timeNow = theItem.timeNow;
+    String person = this.widget.theItem["UserName"];
+    String date = parseTime(this.widget.theItem["startTime"]).substring(0, 10);
+    String item = this.widget.theItem["name"];
+    if(item.length >= 20){
+      item = item.substring(0,17) + "...";
+    }
+    String status = this.widget.theItem["status"];
+
+    String start = parseTime(this.widget.theItem["startTime"]);
+    start = start.substring(10);
+    String amount = this.widget.theItem["amount"];
+    String url = this.widget.theItem["imageURL"];
+    String uid = this.widget.theItem["uid"];
+
     print(MediaQuery.of(context).size.width);
 
-    var reservationID = theItem.documentID; // this is reservationID
+    var reservationID = this.widget.theItem.documentID; // this is reservationID
     print(reservationID);
 
     File _imageFile;
@@ -1036,19 +1036,22 @@ class _TicketState extends State<Ticket> {
                     padding: const EdgeInsets.only(top: 25.0),
                     child: Column(
                       children: <Widget>[
-                        ticketDetailsWidget(
-                            'Person', '$person', 'Date', '$date'),
                         Padding(
-                          padding:
-                              const EdgeInsets.only(top: 12.0, right: 50.0),
+                          padding:const EdgeInsets.only(top: 12.0, right: 40.0),
                           child: ticketDetailsWidget(
-                              'Item', '$item', 'Status', '$status'),
+                              'Person', '$person', 'Date', '$date'),
                         ),
                         Padding(
                           padding:
-                              const EdgeInsets.only(top: 12.0, right: 40.0),
+                              const EdgeInsets.only(top: 12.0, right: 59.0),
                           child: ticketDetailsWidget(
-                              'Start', '$start', 'Return', '$Return'),
+                              'Item', '$item', 'Amount', '$amount'),
+                        ),
+                        Padding(
+                          padding:
+                              const EdgeInsets.only(top: 12.0, right: 41.0),
+                          child: ticketDetailsWidget(
+                              'Start', '$start', 'Status', '$status'),
                         ),
                       ],
                     ),

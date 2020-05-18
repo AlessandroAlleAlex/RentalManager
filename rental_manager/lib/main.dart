@@ -233,12 +233,9 @@ class _MyHomePageState extends State<MyHomePage> {
       print(e);
     }
 
-    for (int i = 0; i < list.length; i++) {
-      print(list[i]);
-    }
-
     var language = prefs.getString('mylanguage');
-    print(language);
+
+    
     if (language != null) {
       if (language == 'English' || language == 'SimplifiedChinese') {
         globals.langaugeSet = language;

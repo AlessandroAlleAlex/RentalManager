@@ -124,64 +124,7 @@ class FourthTab extends StatelessWidget {
                   ),
                 ],
               ),
-              Container(
-                padding:EdgeInsets.all(0.6),
-                margin:EdgeInsets.only(left:0, right:0,),
-                color: accountBackgroundColor(),
-                child: FlatButton(
-                  onPressed: () async{
-                    await pr.show();
 
-                    var mylist = await setData();
-                    globals.itemList = mylist;
-
-                    pr.hide();
-                    print(mylist.length.toString());
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => CureentReservation()));
-                  },
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Icon(
-                            Icons.book,
-                            color: textcolor(),
-                          ),
-                          Text(
-                              langaugeSetFunc('Orders'),
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: textcolor(),
-                                fontFamily: 'Source Sans Pro',
-                              )
-                          ),
-                          Text(
-                              '>>',
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: textcolor(),
-                                fontFamily: 'Source Sans Pro',
-                              )
-                          ),
-                        ],
-                      ),
-
-                    ],
-                  ),
-                ),
-              ),
-              Row(
-                children: <Widget>[
-                  SizedBox(
-                    height: 1,
-                    width: screenwidth,
-                    child: Divider(
-                      color: backgroundcolor(),
-                    ),
-                  ),
-                ],
-              ),
               Container(
                 padding:EdgeInsets.all(0.6),
                 margin:EdgeInsets.only(left:0, right:0,),
@@ -399,6 +342,56 @@ class FourthTab extends StatelessWidget {
                 color: accountBackgroundColor(),
                 child: FlatButton(
                   onPressed: () async{
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => GenerateScreen()));
+                  },
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: <Widget>[
+                          Icon(
+                            Icons.perm_identity,
+                            color: textcolor(),
+                          ),
+                          Text(
+                              langaugeSetFunc('QR Code'),
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: textcolor(),
+                                fontFamily: 'Source Sans Pro',
+                              )
+                          ),
+                          Text(
+                              '>>',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: textcolor(),
+                                fontFamily: 'Source Sans Pro',
+                              )
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+              Row(
+                children: <Widget>[
+                  SizedBox(
+                    height: 1,
+                    width: screenwidth,
+                    child: Divider(
+                      color: backgroundcolor(),
+                    ),
+                  ),
+                ],
+              ),
+              Container(
+                padding:EdgeInsets.all(0.6),
+                margin:EdgeInsets.only(left:0, right:0,),
+                color: accountBackgroundColor(),
+                child: FlatButton(
+                  onPressed: () async{
                     print('Log out');
                     await pr.show();
 
@@ -453,56 +446,7 @@ class FourthTab extends StatelessWidget {
                   ),
                 ],
               ),
-              Container(
-                padding:EdgeInsets.all(0.6),
-                margin:EdgeInsets.only(left:0, right:0,),
-                color: accountBackgroundColor(),
-                child: FlatButton(
-                  onPressed: () async{
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => GenerateScreen()));
-                  },
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: <Widget>[
-                          Icon(
-                            Icons.perm_identity,
-                            color: textcolor(),
-                          ),
-                          Text(
-                              langaugeSetFunc('QR Code'),
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: textcolor(),
-                                fontFamily: 'Source Sans Pro',
-                              )
-                          ),
-                          Text(
-                              '>>',
-                              style: TextStyle(
-                                fontSize: 20,
-                                color: textcolor(),
-                                fontFamily: 'Source Sans Pro',
-                              )
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            Row(
-              children: <Widget>[
-                SizedBox(
-                  height: 1,
-                  width: screenwidth,
-                  child: Divider(
-                    color: backgroundcolor(),
-                  ),
-                ),
-              ],
-            ),
+
             ],
           ),
         ),
@@ -510,7 +454,7 @@ class FourthTab extends StatelessWidget {
     );
   }
 }
-
+//
 //Future<List<globals.ReservationItem>> setDataNew() async{
 //  List<globals.ReservationItem> itemList = new List();
 //

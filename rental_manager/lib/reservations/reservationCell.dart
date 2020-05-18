@@ -3,6 +3,7 @@ import 'package:rental_manager/Locations/show_all.dart';
 import 'package:rental_manager/language.dart';
 import 'package:rental_manager/tabs/locations.dart';
 
+import '../Locations/show_all.dart';
 import '../globals.dart' as globals;
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +12,7 @@ import 'package:intl/intl.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 import '../CurrentReservation.dart';
+import '../tabs/reservations.dart';
 
 class reservationCell extends StatefulWidget {
   final DocumentSnapshot passedFirestoreData;
@@ -31,12 +33,16 @@ class _reservationCell extends State<reservationCell> {
   int itemAmount;
 
   Future pickedUp() async {
+    String date = DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
     await firestore
         .document(widget.passedFirestoreData.documentID.toString())
-        .updateData({'status': 'Picked Up'}).catchError(
+        .updateData(
+        {'status': 'Picked Up',
+          'picked Up time': date,
+        }
+    ).catchError(
             (error) => print(error));
   }
-
   Future timeExpired() async {
     await firestore
         .document(widget.passedFirestoreData.documentID.toString())
@@ -276,8 +282,11 @@ class _reservationCell extends State<reservationCell> {
                   ),
                   onPressed: () async {
                     // print(widget.passedFirestoreData.documentID.toString());
+
                     pickedUp();
-                    Navigator.pop(context);
+                    QuerySnapshot documents = await Firestore.instance.collection(returnReservationCollection()).where('uid', isEqualTo: globals.uid).where('status', isEqualTo: 'Reserved').getDocuments();
+
+                    Navigator.of(context).pop(documents.documents);
                   },
                   icon: Icon(Icons.insert_emoticon, size: 30.0),
                   label: Text(

@@ -211,7 +211,7 @@ class LoginScreenState extends State<LoginScreen> {
   }
 
   SpeedDialChild returnManagerWidget() {
-    if (globals.isAdmin) {
+    if (!globals.isAdmin) {
       return SpeedDialChild(
         child: Icon(Icons.receipt, color: Colors.white),
         backgroundColor: Colors.green,

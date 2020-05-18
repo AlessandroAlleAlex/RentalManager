@@ -746,10 +746,10 @@ class _managepeopleOrdersState extends State<managepeopleOrders> {
                                 uid,
                                 docuementID);
 
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => Ticket(theitem)));
+//                            Navigator.push(
+//                                context,
+//                                MaterialPageRoute(
+//                                    builder: (context) => Ticket(theitem)));
                           },
                         ),
                       ),
