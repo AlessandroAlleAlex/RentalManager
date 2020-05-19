@@ -1,3 +1,5 @@
+// cit from https://github.com/sarbagyastha/flutter_rating_bar/blob/master/lib/flutter_rating_bar.dart
+// should use this api added in the yaml file but head file not work so use this method;
 import 'package:flutter/material.dart';
 
 /// Defines widgets which are to used as rating bar items.
