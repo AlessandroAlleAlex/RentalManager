@@ -7,7 +7,6 @@ import 'package:rental_manager/tabs/locations.dart';
 import 'package:rental_manager/tabs/reservations.dart';
 import 'package:rental_manager/tabs/help.dart';
 import 'package:rental_manager/tabs/account.dart';
-import 'package:rental_manager/chatview/login.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'globals.dart' as globals;
 bool get isIos => foundation.defaultTargetPlatform == foundation.TargetPlatform.iOS;

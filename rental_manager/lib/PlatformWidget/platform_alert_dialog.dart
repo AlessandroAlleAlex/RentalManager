@@ -16,7 +16,7 @@ import 'package:intl/intl.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../chatview/login.dart';
 import 'package:rental_manager/SlideDialog/slide_popup_dialog.dart' as slideDialog;
-import '../rate.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 class PlatformAlertDialog extends PlatformWidget {
   PlatformAlertDialog({
     @required this.title,

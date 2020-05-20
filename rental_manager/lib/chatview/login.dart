@@ -21,7 +21,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:rental_manager/PlatformWidget/platform_alert_dialog.dart';
 import 'package:rental_manager/PlatformWidget/strings.dart';
 import 'package:rental_manager/SlideDialog/slide_popup_dialog.dart'
-as slideDialog;
+    as slideDialog;
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart'; //For creating the SMTP Server
 import '../globals.dart';
@@ -365,34 +365,15 @@ class _ThirdTabState extends State<ThirdTab> {
     }
 
     //globals.AppBarheight = AppBar().preferredSize.height;
-    return MaterialApp(
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text(langaugeSetFunc("FAQ & Guides"), style: TextStyle(color: textcolor()),),
-          backgroundColor: backgroundcolor(),
-          centerTitle: true,
-          actions: <Widget>[
-            IconButton(
-              icon: Icon(Icons.add),
-              onPressed: (){
-                setState(() {
-
-                });
-              },
-            ),
-          ],
-        ),
-        floatingActionButton: buildSpeedDial(),
-        body: ListView.builder(
-          itemBuilder: (BuildContext context, int index) =>
-              EntryItem(data[index]),
-          itemCount: data.length,
-        ),
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(langaugeSetFunc("Help"), style: TextStyle(color: textcolor()),),
+        backgroundColor: backgroundcolor(),
+        centerTitle: true,
       ),
+      floatingActionButton: buildSpeedDial(),
     );
   }
-
-
 }
 
 void pop_window(a, b, context) {
@@ -441,72 +422,4 @@ void pickUpFile(BuildContext context) async {
   ).show(context);
 
   print(contents);
-}
-
-class Entry {
-  Entry(this.title, [this.children = const <Entry>[]]);
-
-  final String title;
-  final List<Entry> children;
-}
-
-final List<Entry> data = <Entry>[
-  Entry(
-    langaugeSetFunc('How to place an order as a user'),
-    <Entry>[
-      Entry(
-        'Section A0',
-        <Entry>[
-          Entry('Item A0.1'),
-          Entry('Item A0.2'),
-          Entry('Item A0.3'),
-        ],
-      ),
-      Entry('Section A1'),
-      Entry('Section A2'),
-    ],
-  ),
-  Entry(
-    'Chapter B',
-    <Entry>[
-      Entry('Section B0'),
-      Entry('Section B1'),
-    ],
-  ),
-  Entry(
-    'Chapter C',
-    <Entry>[
-      Entry('Section C0'),
-      Entry('Section C1'),
-      Entry(
-        'Section C2',
-        <Entry>[
-          Entry('Item C2.0'),
-          Entry('Item C2.1'),
-          Entry('Item C2.2'),
-          Entry('Item C2.3'),
-        ],
-      ),
-    ],
-  ),
-];
-
-class EntryItem extends StatelessWidget {
-  const EntryItem(this.entry);
-
-  final Entry entry;
-
-  Widget _buildTiles(Entry root) {
-    if (root.children.isEmpty) return ListTile(title: Text(root.title));
-    return ExpansionTile(
-      key: PageStorageKey<Entry>(root),
-      title: Text(root.title),
-      children: root.children.map(_buildTiles).toList(),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return _buildTiles(entry);
-  }
 }

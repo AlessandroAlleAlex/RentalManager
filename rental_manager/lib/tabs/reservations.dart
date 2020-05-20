@@ -1,5 +1,3 @@
-
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,7 +21,8 @@ import '../reservations/reservationList.dart';
 import 'package:rental_manager/globals.dart' as globals;
 import 'package:fluttertoast/fluttertoast.dart';
 import 'locations.dart';
-import 'package:rental_manager/SlideDialog/slide_popup_dialog.dart' as slideDialog;
+import 'package:rental_manager/SlideDialog/slide_popup_dialog.dart'
+    as slideDialog;
 
 BuildContext secondTabContext;
 
@@ -44,8 +43,6 @@ class _SecondTabState extends State<SecondTab> {
   }
 
   Widget giveCenter(String yourText, [List<DocumentSnapshot> resetList]) {
-
-
     if (rightButton == "Edit") {
       if (yourText == "Reserved Page") {
         return ListView.builder(
@@ -56,7 +53,7 @@ class _SecondTabState extends State<SecondTab> {
                   ListTile(
                       leading: CircleAvatar(
                         backgroundImage:
-                        NetworkImage(reservationList[index]["imageURL"]),
+                            NetworkImage(reservationList[index]["imageURL"]),
                       ),
                       title: Text(reservationList[index]["name"],
                           style: TextStyle(color: textcolor())),
@@ -80,27 +77,27 @@ class _SecondTabState extends State<SecondTab> {
                       ),
                       onTap: () {
                         Navigator.of(context)
-                            .push(MaterialPageRoute(builder: (context) => reservationCell(passedFirestoreData: reservationList[index])))
+                            .push(MaterialPageRoute(
+                                builder: (context) => reservationCell(
+                                    passedFirestoreData:
+                                        reservationList[index])))
                             .then((value) {
                           print(value.length);
                           setState(() {
                             var mylist = reservationList;
-                            try{
-                              if(value != null) {
+                            try {
+                              if (value != null) {
                                 if (reservationList.length != value.length) {
                                   reservationList = value;
                                 }
                               }
-                            }catch(e){
+                            } catch (e) {
                               print(e);
                             }
                             giveCenter("Reserved Page", mylist);
-
                           });
-
                         });
-                      }
-                  ),
+                      }),
                   Divider(
                     height: 2.0,
                     color: textcolor(),
@@ -117,22 +114,22 @@ class _SecondTabState extends State<SecondTab> {
                   ListTile(
                     leading: CircleAvatar(
                       backgroundImage:
-                      NetworkImage(inUseList[index]["imageURL"]),
+                          NetworkImage(inUseList[index]["imageURL"]),
                     ),
                     title: Text(
                       inUseList[index]["name"],
                       style: TextStyle(color: textcolor()),
                     ),
                     subtitle: Text(
-                      langaugeSetFunc("Amount: ") +
-                          inUseList[index]["amount"],
+                      langaugeSetFunc("Amount: ") + inUseList[index]["amount"],
                       style: TextStyle(color: textcolor()),
                     ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Text(
-                          getAMPM(inUseList[index]['startTime']), style: TextStyle(color: textcolor(), fontSize: 15),
+                          getAMPM(inUseList[index]['startTime']),
+                          style: TextStyle(color: textcolor(), fontSize: 15),
                         ),
                         Icon(
                           CupertinoIcons.info,
@@ -140,7 +137,7 @@ class _SecondTabState extends State<SecondTab> {
                         ),
                       ],
                     ),
-                    onTap: (){
+                    onTap: () {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -165,7 +162,7 @@ class _SecondTabState extends State<SecondTab> {
                   ListTile(
                       leading: CircleAvatar(
                         backgroundImage:
-                        NetworkImage(reservationList[index]["imageURL"]),
+                            NetworkImage(reservationList[index]["imageURL"]),
                       ),
                       title: Text(
                         reservationList[index]["name"],
@@ -176,11 +173,12 @@ class _SecondTabState extends State<SecondTab> {
                             reservationList[index]["amount"],
                         style: TextStyle(color: textcolor()),
                       ),
-                      trailing:  Row(
+                      trailing: Row(
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           Text(
-                            getAMPM(reservationList[index]['startTime']), style: TextStyle(color: textcolor(), fontSize: 15),
+                            getAMPM(reservationList[index]['startTime']),
+                            style: TextStyle(color: textcolor(), fontSize: 15),
                           ),
                           checkBox(reservationMap[index]),
                         ],
@@ -197,7 +195,7 @@ class _SecondTabState extends State<SecondTab> {
                 ],
               );
             });
-      }else{
+      } else {
         return ListView.builder(
             itemCount: inUseMap.length,
             itemBuilder: (context, index) {
@@ -206,7 +204,7 @@ class _SecondTabState extends State<SecondTab> {
                   ListTile(
                       leading: CircleAvatar(
                         backgroundImage:
-                        NetworkImage(inUseList[index]["imageURL"]),
+                            NetworkImage(inUseList[index]["imageURL"]),
                       ),
                       title: Text(
                         inUseList[index]["name"],
@@ -221,7 +219,8 @@ class _SecondTabState extends State<SecondTab> {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           Text(
-                            getAMPM(inUseList[index]['startTime']), style: TextStyle(color: textcolor(), fontSize: 15),
+                            getAMPM(inUseList[index]['startTime']),
+                            style: TextStyle(color: textcolor(), fontSize: 15),
                           ),
                           checkBox(inUseMap[index]),
                         ],
@@ -244,7 +243,6 @@ class _SecondTabState extends State<SecondTab> {
   }
 
   @override
-
   Widget build(BuildContext context) {
     getList();
 
@@ -280,7 +278,6 @@ class _SecondTabState extends State<SecondTab> {
               rightButton = "Edit";
               theriGroupVakue = changeFromGroupValue;
               view = theriGroupVakue + 1;
-
             });
           },
           children: logoWidgets,
@@ -312,58 +309,66 @@ class _SecondTabState extends State<SecondTab> {
     );
   }
 
-  bool checkPickOrReturn(){
-    if(rightButton != "Edit"){
+  bool checkPickOrReturn() {
+    if (rightButton != "Edit") {
       print(view);
-      if(view == 1){
+      if (view == 1) {
         PickUpList.clear();
-        for(int i = 0; i < reservationMap.length; i++){
-          if(reservationMap[i]){
+        for (int i = 0; i < reservationMap.length; i++) {
+          if (reservationMap[i]) {
             var value = reservationList[i];
             PickUpList.add(value);
           }
         }
-      }else{
+      } else {
         ReturnList.clear();
-        for(int i = 0; i < inUseMap.length; i++){
-          if(inUseMap[i]){
+        for (int i = 0; i < inUseMap.length; i++) {
+          if (inUseMap[i]) {
+            print("added");
             var value = inUseList[i];
             ReturnList.add(value);
           }
         }
       }
     }
-    if(view == 1){
+    if (view == 1) {
       print(PickUpList.isNotEmpty);
       return PickUpList.isEmpty;
-    }else{
+    } else {
       return ReturnList.isEmpty;
     }
   }
 
-  Widget leadingIcon(){
-    if(rightButton != "Edit") {
+  Widget leadingIcon() {
+    if (rightButton != "Edit") {
       return IconButton(
-        icon: Icon(Icons.check, color:  Colors.blue,),
-        onPressed: checkPickOrReturn()? (){Fluttertoast.showToast(
-          msg: 'Please select item(s)',
-        );}:(){
-          _handleClickMePickUP();
-        },
+        icon: Icon(
+          Icons.check,
+          color: Colors.blue,
+        ),
+        onPressed: checkPickOrReturn()
+            ? () {
+                Fluttertoast.showToast(
+                  msg: 'Please select item(s)',
+                );
+              }
+            : () {
+                _handleClickMePickUP();
+              },
       );
-
     }
   }
+
   Future<void> _handleClickMePickUP() async {
     String infor = "";
-    if(view == 1) {
+    if (view == 1) {
       infor = 'Are you going to pick up below item(s):\n';
       PickUpList.forEach((element) {
         String name = element['name'];
         String amount = element['amount'].toString();
         infor += name + '(' + amount + ')' + '\n';
       });
-    }else{
+    } else {
       infor = 'Are you going to return below item(s):\n';
       ReturnList.forEach((element) {
         String name = element['name'];
@@ -372,47 +377,68 @@ class _SecondTabState extends State<SecondTab> {
       });
     }
 
-
-
-
-
     return showCupertinoModalPopup<void>(
       context: context,
       builder: (BuildContext context) {
         return CupertinoActionSheet(
-
-          title: Text(infor, style: TextStyle(color: Colors.black),),
-
+          title: Text(
+            infor,
+            style: TextStyle(color: Colors.black),
+          ),
           actions: <Widget>[
             CupertinoActionSheetAction(
               isDefaultAction: true,
-              child: Text('Confirm', style: TextStyle(color: Colors.red),),
-              onPressed: () async{
-                var time = DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
-                var copyReturnList = ReturnList;
-                if(view == 1){
+              child: Text(
+                'Confirm',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () async {
+                var time =
+                    DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
+                var copyReturnList = [];
+                ReturnList.forEach((value) {
+                  copyReturnList.add(value);
+                });
+                if (view == 1) {
                   PickUpList.forEach((element) {
-                    Firestore.instance.collection(returnReservationCollection()).document(element.documentID).updateData(
-                        {'status': 'Picked Up',
-                          'picked Up time': time,
-                        }
-                    );
+                    Firestore.instance
+                        .collection(returnReservationCollection())
+                        .document(element.documentID)
+                        .updateData({
+                      'status': 'Picked Up',
+                      'picked Up time': time,
+                    });
                   });
-                }else{
-                  ReturnList.forEach((element) {
-                    Firestore.instance.collection(returnReservationCollection()).document(element.documentID).updateData({
-                      'status' : 'Returned',
+                } else {
+                  for (int i = 0; i < ReturnList.length; i++) {
+                    var element = ReturnList[i];
+                    await Firestore.instance
+                        .collection(returnReservationCollection())
+                        .document(element.documentID)
+                        .updateData({
+                      'status': 'Returned',
                       'return time': time,
                     });
-                    var amount = element['amount'];
-                    var num = int.parse(amount);
-                    Firestore.instance.collection(returnItemCollection()).document(element['item']).get().then((value){
-                      Firestore.instance.collection(returnItemCollection()).document(element['item']).updateData({
-                        '# of items': int.parse(element['amount']) + value.data['# of items'],
-                      });
+                  }
+                  for (int i = 0; i < ReturnList.length; i++) {
+                    var element = ReturnList[i];
+                    int num = int.parse(element['amount']);
+
+                    await Firestore.instance
+                        .collection(returnItemCollection())
+                        .document(element['item'])
+                        .get()
+                        .then((value) {
+                      num += value.data['# of items'];
                     });
 
-                  });
+                    await Firestore.instance
+                        .collection(returnItemCollection())
+                        .document(element['item'])
+                        .updateData({
+                      '# of items': num,
+                    });
+                  }
                 }
 
                 QuerySnapshot documents1 = await Firestore.instance
@@ -440,37 +466,37 @@ class _SecondTabState extends State<SecondTab> {
                 });
 
                 String View = "In Use";
-                if(view == 1){
+                if (view == 1) {
                   setState(() {
                     giveCenter("Reserved Page");
                   });
-                }else{
+                } else {
                   setState(() {
                     giveCenter("Using Page");
                   });
                 }
                 Navigator.pop(context);
                 var rate = 5.0;
-                if(view == 2){
+                if (view == 2) {
                   slideDialog.showSlideDialog(
                     context: secondTabContext,
-                    child:  Container(
+                    child: Container(
                       child: Form(
-
                         child: Column(
                           children: <Widget>[
                             Center(
-                              child:Text("Thanks for your returning!\nDid you enjoy this experience"),
+                              child: Text(
+                                  "Thanks for your returning!\nDid you enjoy this experience"),
                             ),
-
                             Center(
-                              child:  RatingBar(
+                              child: RatingBar(
                                 initialRating: 5,
                                 minRating: 1,
                                 direction: Axis.horizontal,
                                 allowHalfRating: true,
                                 itemCount: 5,
-                                itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                                itemPadding:
+                                    EdgeInsets.symmetric(horizontal: 4.0),
                                 itemBuilder: (context, _) => Icon(
                                   Icons.star,
                                   color: Colors.amber,
@@ -492,7 +518,9 @@ class _SecondTabState extends State<SecondTab> {
                                 highlightColor: Colors.green,
                                 elevation: 0.0,
                                 color: Colors.green,
-                                shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        new BorderRadius.circular(30.0)),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
@@ -507,27 +535,31 @@ class _SecondTabState extends State<SecondTab> {
                                         ),
                                       ),
                                     ),
-
                                   ],
                                 ),
-                                onPressed: () async{
+                                onPressed: () async {
                                   context = secondTabContext;
+                                  print("here" + copyReturnList.length.toString());
                                   copyReturnList.forEach((element) {
-                                    Firestore.instance.collection(returnReservationCollection()).document(element.documentID).updateData({
+                                    Firestore.instance
+                                        .collection(
+                                            returnReservationCollection())
+                                        .document(element.documentID)
+                                        .updateData({
                                       'rate': rate,
                                     });
                                   });
-                                  FocusScope.of(context).requestFocus(FocusNode());
+                                  FocusScope.of(context)
+                                      .requestFocus(FocusNode());
                                   Navigator.pop(context, false);
-                                  pop_window('Awesome', "Thanks for your review!", context);
+                                  pop_window('Awesome',
+                                      "Thanks for your review!", context);
                                   //await ReturnOrdersPopWindow2(globals.ContextInOrder, '','OK',"Thanks for your review","We appreciate your evaluation!\nYour review will be used in the Help- track Page");
-
                                 },
                                 padding: EdgeInsets.all(7.0),
                                 //color: Colors.teal.shade900,
                                 disabledColor: Colors.black,
                                 disabledTextColor: Colors.black,
-
                               ),
                             ),
                           ],
@@ -536,15 +568,12 @@ class _SecondTabState extends State<SecondTab> {
                     ),
                     textField: Container(
                       child: Column(
-                        children: <Widget>[
-                        ],
+                        children: <Widget>[],
                       ),
                     ),
                     barrierColor: Colors.white.withOpacity(0.7),
                   );
                 }
-
-
               },
             ),
           ],
@@ -560,8 +589,6 @@ class _SecondTabState extends State<SecondTab> {
     );
   }
 }
-
-
 
 class reservationPage extends StatefulWidget {
   final String title;
@@ -580,8 +607,8 @@ List<DocumentSnapshot> inUseList = [];
 List<String> namelist = [];
 List<bool> reservationMap = [];
 List<bool> inUseMap = [];
-List<DocumentSnapshot>PickUpList = [];
-List<DocumentSnapshot>ReturnList = [];
+List<DocumentSnapshot> PickUpList = [];
+List<DocumentSnapshot> ReturnList = [];
 String getAMPM(String time_str) {
   time_str = parseTime(time_str);
   return time_str.substring(10);
@@ -600,6 +627,7 @@ Widget checkBox(bool check) {
     );
   }
 }
+
 void getList() async {
   QuerySnapshot documents1 = await Firestore.instance
       .collection(returnReservationCollection())
@@ -615,6 +643,7 @@ void getList() async {
   reservationList = documents1.documents;
   inUseList = documents2.documents;
 }
+
 class _reservationPageState extends State<reservationPage> {
   int theriGroupVakue = 0;
 
@@ -625,8 +654,6 @@ class _reservationPageState extends State<reservationPage> {
   }
 
   Widget giveCenter(String yourText, [List<DocumentSnapshot> resetList]) {
-
-
     if (rightButton == "Edit") {
       if (yourText == "Reserved Page") {
         return ListView.builder(
@@ -635,53 +662,53 @@ class _reservationPageState extends State<reservationPage> {
               return Column(
                 children: <Widget>[
                   ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage:
-                          NetworkImage(reservationList[index]["imageURL"]),
-                    ),
-                    title: Text(reservationList[index]["name"],
-                        style: TextStyle(color: textcolor())),
-                    subtitle: Text(
-                      langaugeSetFunc("Amount: ") +
-                          reservationList[index]["amount"],
-                      style: TextStyle(color: textcolor()),
-                    ),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: <Widget>[
-                        Text(
-                          getAMPM(reservationList[index]['startTime']),
-                          style: TextStyle(color: textcolor(), fontSize: 15),
-                        ),
-                        Icon(
-                          CupertinoIcons.info,
-                          color: textcolor(),
-                        ),
-                      ],
-                    ),
-                    onTap: () {
-                      Navigator.of(context)
-                          .push(MaterialPageRoute(builder: (context) => reservationCell(passedFirestoreData: reservationList[index])))
-                          .then((value) {
-                            print(value.length);
-                            setState(() {
-                              var mylist = reservationList;
-                              try{
-                                if(value != null) {
-                                  if (reservationList.length != value.length) {
-                                    reservationList = value;
-                                  }
+                      leading: CircleAvatar(
+                        backgroundImage:
+                            NetworkImage(reservationList[index]["imageURL"]),
+                      ),
+                      title: Text(reservationList[index]["name"],
+                          style: TextStyle(color: textcolor())),
+                      subtitle: Text(
+                        langaugeSetFunc("Amount: ") +
+                            reservationList[index]["amount"],
+                        style: TextStyle(color: textcolor()),
+                      ),
+                      trailing: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Text(
+                            getAMPM(reservationList[index]['startTime']),
+                            style: TextStyle(color: textcolor(), fontSize: 15),
+                          ),
+                          Icon(
+                            CupertinoIcons.info,
+                            color: textcolor(),
+                          ),
+                        ],
+                      ),
+                      onTap: () {
+                        Navigator.of(context)
+                            .push(MaterialPageRoute(
+                                builder: (context) => reservationCell(
+                                    passedFirestoreData:
+                                        reservationList[index])))
+                            .then((value) {
+                          print(value.length);
+                          setState(() {
+                            var mylist = reservationList;
+                            try {
+                              if (value != null) {
+                                if (reservationList.length != value.length) {
+                                  reservationList = value;
                                 }
-                              }catch(e){
-                                print(e);
                               }
-                              giveCenter("Reserved Page", mylist);
-
-                            });
-
-                      });
-                    }
-                  ),
+                            } catch (e) {
+                              print(e);
+                            }
+                            giveCenter("Reserved Page", mylist);
+                          });
+                        });
+                      }),
                   Divider(
                     height: 2.0,
                     color: textcolor(),
@@ -705,15 +732,15 @@ class _reservationPageState extends State<reservationPage> {
                       style: TextStyle(color: textcolor()),
                     ),
                     subtitle: Text(
-                      langaugeSetFunc("Amount: ") +
-                          inUseList[index]["amount"],
+                      langaugeSetFunc("Amount: ") + inUseList[index]["amount"],
                       style: TextStyle(color: textcolor()),
                     ),
                     trailing: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: <Widget>[
                         Text(
-                          getAMPM(inUseList[index]['startTime']), style: TextStyle(color: textcolor(), fontSize: 15),
+                          getAMPM(inUseList[index]['startTime']),
+                          style: TextStyle(color: textcolor(), fontSize: 15),
                         ),
                         Icon(
                           CupertinoIcons.info,
@@ -721,11 +748,11 @@ class _reservationPageState extends State<reservationPage> {
                         ),
                       ],
                     ),
-                    onTap: (){
+                    onTap: () {
                       Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Ticket(inUseList[index])));
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Ticket(inUseList[index])));
                     },
                   ),
                   Divider(
@@ -770,7 +797,7 @@ class _reservationPageState extends State<reservationPage> {
                 ],
               );
             });
-      }else{
+      } else {
         return ListView.builder(
             itemCount: inUseMap.length,
             itemBuilder: (context, index) {
@@ -779,7 +806,7 @@ class _reservationPageState extends State<reservationPage> {
                   ListTile(
                       leading: CircleAvatar(
                         backgroundImage:
-                        NetworkImage(inUseList[index]["imageURL"]),
+                            NetworkImage(inUseList[index]["imageURL"]),
                       ),
                       title: Text(
                         inUseList[index]["name"],
@@ -794,7 +821,8 @@ class _reservationPageState extends State<reservationPage> {
                         mainAxisSize: MainAxisSize.min,
                         children: <Widget>[
                           Text(
-                            getAMPM(inUseList[index]['startTime']), style: TextStyle(color: textcolor(), fontSize: 15),
+                            getAMPM(inUseList[index]['startTime']),
+                            style: TextStyle(color: textcolor(), fontSize: 15),
                           ),
                           checkBox(inUseMap[index]),
                         ],
@@ -817,8 +845,6 @@ class _reservationPageState extends State<reservationPage> {
   }
 
   @override
-
-
   Widget build(BuildContext context) {
     getList();
 
@@ -854,7 +880,6 @@ class _reservationPageState extends State<reservationPage> {
               rightButton = "Edit";
               theriGroupVakue = changeFromGroupValue;
               view = theriGroupVakue + 1;
-
             });
           },
           children: logoWidgets,
@@ -886,58 +911,65 @@ class _reservationPageState extends State<reservationPage> {
     );
   }
 
-  bool checkPickOrReturn(){
-    if(rightButton != "Edit"){
+  bool checkPickOrReturn() {
+    if (rightButton != "Edit") {
       print(view);
-      if(view == 1){
+      if (view == 1) {
         PickUpList.clear();
-        for(int i = 0; i < reservationMap.length; i++){
-          if(reservationMap[i]){
+        for (int i = 0; i < reservationMap.length; i++) {
+          if (reservationMap[i]) {
             var value = reservationList[i];
             PickUpList.add(value);
           }
         }
-      }else{
+      } else {
         ReturnList.clear();
-        for(int i = 0; i < inUseMap.length; i++){
-          if(inUseMap[i]){
+        for (int i = 0; i < inUseMap.length; i++) {
+          if (inUseMap[i]) {
             var value = inUseList[i];
             ReturnList.add(value);
           }
         }
       }
     }
-    if(view == 1){
+    if (view == 1) {
       print(PickUpList.isNotEmpty);
       return PickUpList.isEmpty;
-    }else{
+    } else {
       return ReturnList.isEmpty;
     }
   }
 
-  Widget leadingIcon(){
-    if(rightButton != "Edit") {
+  Widget leadingIcon() {
+    if (rightButton != "Edit") {
       return IconButton(
-        icon: Icon(Icons.check, color:  Colors.blue,),
-        onPressed: checkPickOrReturn()? (){Fluttertoast.showToast(
-          msg: 'Please select item(s)',
-        );}:(){
-          _handleClickMePickUP();
-        },
+        icon: Icon(
+          Icons.check,
+          color: Colors.blue,
+        ),
+        onPressed: checkPickOrReturn()
+            ? () {
+                Fluttertoast.showToast(
+                  msg: 'Please select item(s)',
+                );
+              }
+            : () {
+                _handleClickMePickUP();
+              },
       );
-
     }
   }
+
   Future<void> _handleClickMePickUP() async {
     String infor = "";
-    if(view == 1) {
+    if (view == 1) {
       infor = 'Are you going to pick up below item(s):\n';
       PickUpList.forEach((element) {
         String name = element['name'];
         String amount = element['amount'].toString();
         infor += name + '(' + amount + ')' + '\n';
       });
-    }else{
+    } else {
       infor = 'Are you going to return below item(s):\n';
       ReturnList.forEach((element) {
         String name = element['name'];
@@ -946,46 +978,59 @@ class _reservationPageState extends State<reservationPage> {
       });
     }
 
-
-
-
-
     return showCupertinoModalPopup<void>(
       context: context,
       builder: (BuildContext context) {
         return CupertinoActionSheet(
-
-          title: Text(infor, style: TextStyle(color: Colors.black),),
-
+          title: Text(
+            infor,
+            style: TextStyle(color: Colors.black),
+          ),
           actions: <Widget>[
             CupertinoActionSheetAction(
               isDefaultAction: true,
-              child: Text('Confirm', style: TextStyle(color: Colors.red),),
-              onPressed: () async{
-                var time = DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
+              child: Text(
+                'Confirm',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () async {
+                var time =
+                    DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
                 var copyReturnList = ReturnList;
-                if(view == 1){
+                if (view == 1) {
                   PickUpList.forEach((element) {
-                    Firestore.instance.collection(returnReservationCollection()).document(element.documentID).updateData(
-                        {'status': 'Picked Up',
-                          'picked Up time': time,
-                        }
-                    );
+                    Firestore.instance
+                        .collection(returnReservationCollection())
+                        .document(element.documentID)
+                        .updateData({
+                      'status': 'Picked Up',
+                      'picked Up time': time,
+                    });
                   });
-                }else{
+                } else {
                   ReturnList.forEach((element) {
-                    Firestore.instance.collection(returnReservationCollection()).document(element.documentID).updateData({
-                      'status' : 'Returned',
+                    Firestore.instance
+                        .collection(returnReservationCollection())
+                        .document(element.documentID)
+                        .updateData({
+                      'status': 'Returned',
                       'return time': time,
                     });
                     var amount = element['amount'];
                     var num = int.parse(amount);
-                    Firestore.instance.collection(returnItemCollection()).document(element['item']).get().then((value){
-                      Firestore.instance.collection(returnItemCollection()).document(element['item']).updateData({
-                      '# of items': int.parse(element['amount']) + value.data['# of items'],
+                    Firestore.instance
+                        .collection(returnItemCollection())
+                        .document(element['item'])
+                        .get()
+                        .then((value) {
+                      Firestore.instance
+                          .collection(returnItemCollection())
+                          .document(element['item'])
+                          .updateData({
+                        '# of items': int.parse(element['amount']) +
+                            value.data['# of items'],
                       });
                     });
-
                   });
                 }
 
@@ -1014,37 +1059,37 @@ class _reservationPageState extends State<reservationPage> {
                 });
 
                 String View = "In Use";
-                if(view == 1){
+                if (view == 1) {
                   setState(() {
                     giveCenter("Reserved Page");
                   });
-                }else{
+                } else {
                   setState(() {
                     giveCenter("Using Page");
                   });
                 }
                 Navigator.pop(context);
                 var rate = 5.0;
-                if(view == 2){
+                if (view == 2) {
                   slideDialog.showSlideDialog(
                     context: secondTabContext,
-                    child:  Container(
+                    child: Container(
                       child: Form(
-
                         child: Column(
                           children: <Widget>[
                             Center(
-                              child:Text("Thanks for your returning!\nDid you enjoy this experience"),
+                              child: Text(
+                                  "Thanks for your returning!\nDid you enjoy this experience"),
                             ),
-
                             Center(
-                              child:  RatingBar(
+                              child: RatingBar(
                                 initialRating: 5,
                                 minRating: 1,
                                 direction: Axis.horizontal,
                                 allowHalfRating: true,
                                 itemCount: 5,
-                                itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+                                itemPadding:
+                                    EdgeInsets.symmetric(horizontal: 4.0),
                                 itemBuilder: (context, _) => Icon(
                                   Icons.star,
                                   color: Colors.amber,
@@ -1066,7 +1111,9 @@ class _reservationPageState extends State<reservationPage> {
                                 highlightColor: Colors.green,
                                 elevation: 0.0,
                                 color: Colors.green,
-                                shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius:
+                                        new BorderRadius.circular(30.0)),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
@@ -1081,27 +1128,30 @@ class _reservationPageState extends State<reservationPage> {
                                         ),
                                       ),
                                     ),
-
                                   ],
                                 ),
-                                onPressed: () async{
+                                onPressed: () async {
                                   context = secondTabContext;
                                   copyReturnList.forEach((element) {
-                                    Firestore.instance.collection(returnReservationCollection()).document(element.documentID).updateData({
+                                    Firestore.instance
+                                        .collection(
+                                            returnReservationCollection())
+                                        .document(element.documentID)
+                                        .updateData({
                                       'rate': rate,
                                     });
                                   });
-                                  FocusScope.of(context).requestFocus(FocusNode());
+                                  FocusScope.of(context)
+                                      .requestFocus(FocusNode());
                                   Navigator.pop(context, false);
-                                  pop_window('Awesome', "Thanks for your review!", context);
+                                  pop_window('Awesome',
+                                      "Thanks for your review!", context);
                                   //await ReturnOrdersPopWindow2(globals.ContextInOrder, '','OK',"Thanks for your review","We appreciate your evaluation!\nYour review will be used in the Help- track Page");
-
                                 },
                                 padding: EdgeInsets.all(7.0),
                                 //color: Colors.teal.shade900,
                                 disabledColor: Colors.black,
                                 disabledTextColor: Colors.black,
-
                               ),
                             ),
                           ],
@@ -1110,15 +1160,12 @@ class _reservationPageState extends State<reservationPage> {
                     ),
                     textField: Container(
                       child: Column(
-                        children: <Widget>[
-                        ],
+                        children: <Widget>[],
                       ),
                     ),
                     barrierColor: Colors.white.withOpacity(0.7),
                   );
                 }
-
-
               },
             ),
           ],
@@ -1133,5 +1180,4 @@ class _reservationPageState extends State<reservationPage> {
       },
     );
   }
-
 }
