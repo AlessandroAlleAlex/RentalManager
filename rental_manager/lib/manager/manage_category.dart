@@ -43,7 +43,7 @@ class _ManageCategoryState extends State<ManageCategory> {
         onSelected: (val) async {
           switch (val) {
             case 'add category':
-              await Firestore.instance.collection('imageTmp').document(globals.uid).updateData({
+              await Firestore.instance.collection('imageTmp').document(globals.uid).setData({
                 'imageURL': 'https://ciat.cgiar.org/wp-content/uploads/image-not-found.png',
               });
               dialogAddInCatergory();
@@ -692,7 +692,7 @@ class _ManageCategoryState extends State<ManageCategory> {
                       );
                     },
                     onLongPress: () async{
-                      await Firestore.instance.collection('imageTmp').document(globals.uid).updateData({
+                      await Firestore.instance.collection('imageTmp').document(globals.uid).setData({
                         'imageURL': categoryInfo['imageURL'],
                       });
                       dialogEditInCatergory(categoryInfo['name'], categoryInfo['imageURL']);

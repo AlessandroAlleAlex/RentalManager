@@ -38,7 +38,7 @@ class _SecondTabState extends State<SecondTab> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
+    getList();
     secondTabContext = context;
   }
 

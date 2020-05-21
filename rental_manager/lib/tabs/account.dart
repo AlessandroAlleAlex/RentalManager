@@ -23,7 +23,7 @@ Future<List<globals.ReservationItem>> setData() async{
   List<globals.ReservationItem> itemList = new List();
 
   final QuerySnapshot result =
-  await Firestore.instance.collection(returnReservationCollection()).getDocuments();
+  await Firestore.instance.collection(returnReservationCollection()).where('uid', isEqualTo: globals.uid).getDocuments();
   final List<DocumentSnapshot> documents = result.documents;
   List<globals.ReservationItem> reservationList = new List();
   int count = 0;
@@ -134,7 +134,30 @@ class FourthTab extends StatelessWidget {
                     await pr.show();
 
                     var mylist = await setData();
-                    globals.itemList = mylist;
+
+
+
+                    List<globals.ReservationItem> sort_list = [];
+                    mylist.forEach((element) {
+                      sort_list.add(element);
+                    });
+
+                    for (int i = 0; i < sort_list.length - 1; i++) {
+                      for (int j = 0; j < sort_list.length - i - 1; j++) {
+                        var a = sort_list[j].startTime, b = sort_list[j + 1].startTime;
+                        if (a == null || b == null) {
+                          continue;
+                        }
+
+                        if (isEarly(a, b)) {
+                          var swap = sort_list[j];
+                          sort_list[j] =sort_list[j + 1];
+                          sort_list[j + 1] = swap;
+                        }
+                      }
+                    }
+                    globals.itemList = sort_list;
+
                     pr.hide();
                     print(mylist.length.toString());
                     Navigator.push(context, MaterialPageRoute(builder: (context) => HistoryReservation()));

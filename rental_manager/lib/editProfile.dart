@@ -35,8 +35,8 @@ void getData() async {
         .then((DocumentSnapshot ds) {
       // use ds as a snapshot
       var doc = ds.data;
-      globals.studentID = doc["StudentID"];
-      globals.username = doc["name"];
+      globals.studentID = doc[globals.rentalIDDatabase];
+      globals.username = doc[globals.nameDababase];
       globals.UserImageUrl = doc["imageURL"];
 
       if (doc["imageURL"] == null || doc["imageURL"].length == 0) {
@@ -110,9 +110,9 @@ class _EditProfileState extends State<EditProfile> {
             .collection(returnUserCollection())
             .document(globals.uid)
             .updateData({
-          'name': fullName,
-          'email': globals.email,
-          'StudentID': globals.studentID,
+            globals.nameDababase: fullName,
+          'Email': globals.email,
+          globals.rentalIDDatabase: globals.studentID,
           'PhoneNumber': globals.phoneNumber,
           'Sex': globals.sex,
           'imageURL': globals.UserImageUrl,
@@ -423,13 +423,14 @@ class EditProfileScreenState extends State<EditProfileScreen> {
           globals.UserImageUrl =
           "https://images.unsplash.com/photo-1581660545544-83b8812f9516?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80";
         }
+        print("Start upoloading....");
         await databaseReference
             .collection(returnUserCollection())
             .document(globals.uid)
             .updateData({
-          'name': fullName,
-          'email': globals.email,
-          'StudentID': globals.studentID,
+          globals.nameDababase: fullName,
+          'Email': globals.email,
+          globals.rentalIDDatabase: globals.studentID,
           'PhoneNumber': globals.phoneNumber,
           'Sex': globals.sex,
           'imageURL': globals.UserImageUrl,

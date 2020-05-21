@@ -28,6 +28,8 @@ String documentItemIDInManageView;
 String selectOrg = "Choose your organization";
 bool isAdmin = false;
 bool isDeveloper = false;
+String rentalIDDatabase = "RentalID";
+String nameDababase = "Name";
 
 class Item{
   String itemName;

@@ -116,13 +116,13 @@ Future uploadData(
   // String thiscollectionName = '${organization}_users';
 
   await databaseReference.collection('global_users').document(doc).setData({
-    'name': fullName,
+    'Name': fullName,
     'imageURL':
         "https://images.unsplash.com/photo-1581660545544-83b8812f9516?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80",
     'PhoneNumber': '',
     'Sex': '',
-    'StudentID': '',
-    'email': email,
+    globals.rentalIDDatabase: '',
+    'Email': email,
     'organization': organization,
     'Admin': false,
   });
@@ -510,11 +510,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                               {'name': doc['organization']});
                                     }
                                     try {
-                                      globals.studentID = doc["StudentID"];
-                                      globals.username = doc["name"];
+                                      globals.studentID = doc[globals.rentalIDDatabase];
+                                      globals.username = doc[globals.nameDababase];
                                       globals.UserImageUrl = doc["imageURL"];
                                       globals.phoneNumber = doc["PhoneNumber"];
-                                      globals.email = doc["email"];
+                                      globals.email = doc["Email"];
                                       globals.organization =
                                           doc['organization'];
                                     } catch (e) {
@@ -574,7 +574,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                 Image(
                                   image: NetworkImage(
                                       'https://pluspng.com/img-png/google-logo-png-open-2000.png'),
-                                  height: 30,
+                                  height: 25,
                                 ),
                                 SizedBox(width: 20.0),
                                 Center(
@@ -636,7 +636,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                         // use ds as a snapshot
                                         var doc = ds.data;
                                         globals.UserImageUrl = doc["imageURL"];
-                                        globals.studentID = doc["StudentID"];
+                                        globals.studentID = doc[globals.rentalIDDatabase];
                                         globals.phoneNumber =
                                             doc["PhoneNumber"];
                                         globals.sex = doc["Sex"];
@@ -662,8 +662,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                         .collection(returnUserCollection())
                                         .document(globals.uid)
                                         .setData({
-                                      'name': fullName,
-                                      'email': globals.email,
+                                      'Name': fullName,
+                                      'Email': globals.email,
                                       'imageURL': globals.UserImageUrl,
                                     });
                                     globals.UserImageUrl =

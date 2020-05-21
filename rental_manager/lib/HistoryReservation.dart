@@ -82,14 +82,26 @@ class ItemNameLocation{
 List<ItemNameLocation>myList = [];
 
 
+bool isEarly(String a, String b) {
+  var time_a = DateTime.parse(a), time_b = DateTime.parse(b);
+
+  var difference = time_a.difference(time_b);
+  return difference.isNegative;
+}
+
+
 List<Widget> _getListings(BuildContext context) { // <<<<< Note this change for the return type
   List listings = new List<Widget>();
   var list = globals.itemList;
+
+
+
+
   for (var i = 0; i < list.length; i++) {
     if(list[i].uid != globals.uid){
       continue;
     }
-    print(list[i].status);
+
     if(list[i].status == "Returned"){
 
       var name = list[i].name;

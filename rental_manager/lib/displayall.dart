@@ -363,7 +363,7 @@ class _booksTabState extends State<booksTab> {
                   ds["item"],
                   ds["status"],
                   ds["uid"],
-                  ds["name"],
+                  ds['name'],
                   ds["imageURL"],
                   ds.documentID,
                   ds["UserName"],
@@ -546,9 +546,9 @@ class _peopleTabState extends State<peopleTab> {
                 } else {
                   value = element["LatestReservation"];
                 }
-                var name = element["name"],
-                    StudentID = element["StudentID"],
-                    email = element["email"];
+                var name = element[globals.nameDababase],
+                    StudentID = element[globals.rentalIDDatabase],
+                    email = element["Email"];
                 var imageURL = element["imageURL"],
                     phoneNumber = element["PhoneNumber"],
                     latestTime = value;
@@ -2161,6 +2161,7 @@ class _upLoadCSVState extends State<upLoadCSV> {
             } catch (e) {
               print(e);
             }
+            updateDocumentID = "new";
           }
 
           print("Push");
