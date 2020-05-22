@@ -125,6 +125,7 @@ Future uploadData(
     'Email': email,
     'organization': organization,
     'Admin': false,
+    'LocationManager': '',
   });
 }
 
@@ -235,7 +236,6 @@ class _MyHomePageState extends State<MyHomePage> {
 
     var language = prefs.getString('mylanguage');
 
-    
     if (language != null) {
       if (language == 'English' || language == 'SimplifiedChinese') {
         globals.langaugeSet = language;
@@ -510,8 +510,10 @@ class _MyHomePageState extends State<MyHomePage> {
                                               {'name': doc['organization']});
                                     }
                                     try {
-                                      globals.studentID = doc[globals.rentalIDDatabase];
-                                      globals.username = doc[globals.nameDababase];
+                                      globals.studentID =
+                                          doc[globals.rentalIDDatabase];
+                                      globals.username =
+                                          doc[globals.nameDababase];
                                       globals.UserImageUrl = doc["imageURL"];
                                       globals.phoneNumber = doc["PhoneNumber"];
                                       globals.email = doc["Email"];
@@ -636,7 +638,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                         // use ds as a snapshot
                                         var doc = ds.data;
                                         globals.UserImageUrl = doc["imageURL"];
-                                        globals.studentID = doc[globals.rentalIDDatabase];
+                                        globals.studentID =
+                                            doc[globals.rentalIDDatabase];
                                         globals.phoneNumber =
                                             doc["PhoneNumber"];
                                         globals.sex = doc["Sex"];

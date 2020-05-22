@@ -27,7 +27,6 @@ class _ListPageState extends State<ListPage> {
 
   Future getFirestoreData() async {
     final firestore = Firestore.instance;
-    print('${globals.organization} ---------------------------');
     QuerySnapshot arrayOfLocationDocuments =
         await firestore.collection(returnLocationsCollection()).getDocuments();
     return arrayOfLocationDocuments.documents;

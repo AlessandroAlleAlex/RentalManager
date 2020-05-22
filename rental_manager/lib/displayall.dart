@@ -23,6 +23,8 @@ import 'package:validators/validators.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:io' show Platform;
 
+import 'location_manager.dart';
+
 class Manager extends StatefulWidget {
   @override
   _ManagerState createState() => _ManagerState();
@@ -136,7 +138,7 @@ void pickUpFile(BuildContext context, cater, subCollectionName) async {
     }
   }
 
-  if(popWindow){
+  if (popWindow) {
     pop_window(
         "Warning",
         "The CSV file format is not correct\nEach Row should have at least 2 indexs but at most three indexs : ItemName, Amount, imageURL(optional)",
@@ -635,8 +637,38 @@ class _managepeopleOrdersState extends State<managepeopleOrders> {
     }
   }
 
+  Future _dialog(BuildContext context, String name) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              'Removed Successfully',
+              style:
+                  TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+            ),
+            content: Text('${name} is NOT a manager anymore.',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('Done',
+                      style: TextStyle(fontWeight: FontWeight.bold)))
+            ],
+          );
+        });
+  }
+
+  Future removeLocationManager(String correctUID) {
+    return Firestore.instance
+        .collection('global_users')
+        .document(correctUID)
+        .updateData({'LocationManager': ""});
+  }
+
   Widget build(BuildContext context) {
     var uid = this.widget.uid, name = this.widget.name;
+    String correctUID = 'AppSignInUser' + uid;
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
@@ -647,8 +679,27 @@ class _managepeopleOrdersState extends State<managepeopleOrders> {
             style: TextStyle(color: textcolor())),
         actions: <Widget>[
           IconButton(
-            icon: returnAdminOrnot(),
+            icon: Icon(Icons.delete),
             onPressed: () {
+              removeLocationManager(correctUID).whenComplete(() {
+                _dialog(context, name)
+                    .whenComplete(() => Navigator.pop(context));
+              });
+            },
+          ),
+          IconButton(
+            icon: Icon(Icons.add),
+            onPressed: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    LocationManager(uid: correctUID, name: name),
+              ),
+            ),
+          ),
+          IconButton(
+            icon: returnAdminOrnot(),
+            onPressed: () async {
               String title = "Warning", content = "", actionText = "";
               if (globals.isAdmin) {
                 content =
