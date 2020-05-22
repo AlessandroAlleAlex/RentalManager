@@ -36,13 +36,12 @@ class _reservationCell extends State<reservationCell> {
     String date = DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
     await firestore
         .document(widget.passedFirestoreData.documentID.toString())
-        .updateData(
-        {'status': 'Picked Up',
-          'picked Up time': date,
-        }
-    ).catchError(
-            (error) => print(error));
+        .updateData({
+      'status': 'Picked Up',
+      'picked Up time': date,
+    }).catchError((error) => print(error));
   }
+
   Future timeExpired() async {
     await firestore
         .document(widget.passedFirestoreData.documentID.toString())
@@ -136,6 +135,7 @@ class _reservationCell extends State<reservationCell> {
     } else {
       timeExpired().whenComplete(
         () {
+          incrementItemAmount();
           _showDialog();
           Navigator.pop(context);
         },
@@ -284,7 +284,11 @@ class _reservationCell extends State<reservationCell> {
                     // print(widget.passedFirestoreData.documentID.toString());
 
                     pickedUp();
-                    QuerySnapshot documents = await Firestore.instance.collection(returnReservationCollection()).where('uid', isEqualTo: globals.uid).where('status', isEqualTo: 'Reserved').getDocuments();
+                    QuerySnapshot documents = await Firestore.instance
+                        .collection(returnReservationCollection())
+                        .where('uid', isEqualTo: globals.uid)
+                        .where('status', isEqualTo: 'Reserved')
+                        .getDocuments();
 
                     Navigator.of(context).pop(documents.documents);
                   },
