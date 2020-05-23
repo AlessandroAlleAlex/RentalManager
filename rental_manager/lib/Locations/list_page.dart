@@ -18,12 +18,8 @@ class ListPage extends StatefulWidget {
 class _ListPageState extends State<ListPage> {
   // @override
   // void initState() {
-  //   // TODO: implement initState
   //   super.initState();
-  //   setManager();
   // }
-
-  // Future setManager() {}
 
   Future getFirestoreData() async {
     final firestore = Firestore.instance;
@@ -34,7 +30,6 @@ class _ListPageState extends State<ListPage> {
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
     return Container(
       child: FutureBuilder(
         future: getFirestoreData(),

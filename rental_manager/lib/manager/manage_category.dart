@@ -14,12 +14,13 @@ import 'package:rental_manager/tabs/locations.dart';
 import 'package:rental_manager/globals.dart' as globals;
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'package:rental_manager/SlideDialog/slide_popup_dialog.dart' as slideDialog;
+import 'package:rental_manager/SlideDialog/slide_popup_dialog.dart'
+    as slideDialog;
 import 'package:validators/validators.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class ManageCategory extends StatefulWidget {
-  var  data;
+  var data;
   String documentID;
   ManageCategory({this.data, this.documentID});
 
@@ -30,21 +31,33 @@ class ManageCategory extends StatefulWidget {
 List<String> categoryNameList = [];
 
 class _ManageCategoryState extends State<ManageCategory> {
+  @override
+  void initState() {
+    super.initState();
+    // print(widget.data.toString());
+  }
 
   GlobalKey<FormState> _formKey = new GlobalKey<FormState>();
   Widget popupMenuButton(context) {
     return PopupMenuButton<String>(
         icon: Icon(Icons.add, size: 30.0),
         itemBuilder: (BuildContext context) => <PopupMenuEntry<String>>[
-              PopupMenuItem(child: Text(langaugeSetFunc('add category')), value: 'add category'),
               PopupMenuItem(
-                  child: Text(langaugeSetFunc('upload categories')), value: 'upload categories'),
+                  child: Text(langaugeSetFunc('add category')),
+                  value: 'add category'),
+              PopupMenuItem(
+                  child: Text(langaugeSetFunc('upload categories')),
+                  value: 'upload categories'),
             ],
         onSelected: (val) async {
           switch (val) {
             case 'add category':
-              await Firestore.instance.collection('imageTmp').document(globals.uid).setData({
-                'imageURL': 'https://ciat.cgiar.org/wp-content/uploads/image-not-found.png',
+              await Firestore.instance
+                  .collection('imageTmp')
+                  .document(globals.uid)
+                  .setData({
+                'imageURL':
+                    'https://ciat.cgiar.org/wp-content/uploads/image-not-found.png',
               });
               dialogAddInCatergory();
               break;
@@ -53,7 +66,6 @@ class _ManageCategoryState extends State<ManageCategory> {
           }
         });
   }
-
 
   void dialogAddInCatergory() {
     String modifyName = "",
@@ -65,27 +77,27 @@ class _ManageCategoryState extends State<ManageCategory> {
     void submit() async {
       final form = _formKey.currentState;
       var categoryList = this.widget.data["categories"].toList();
-      List<Map<dynamic, dynamic> > listcater = [];
+      List<Map<dynamic, dynamic>> listcater = [];
 
-      for(int i = 0;  i < categoryList.length; i++){
-          var item = categoryList[i];
-          listcater.add(item);
+      for (int i = 0; i < categoryList.length; i++) {
+        var item = categoryList[i];
+        listcater.add(item);
       }
 
       if (form.validate()) {
-
-
-        if(inputImageURL.isNotEmpty){
+        if (inputImageURL.isNotEmpty) {
           modifyimageURL = inputImageURL;
         }
-
 
         listcater.add({'name': modifyName, 'imageURL': modifyimageURL});
 
         print(listcater[listcater.length - 1]['imageURL']);
-        await Firestore.instance.collection(returnLocationsCollection()).document(this.widget.documentID).updateData({
-          "categories":  listcater,}
-          );
+        await Firestore.instance
+            .collection(returnLocationsCollection())
+            .document(this.widget.documentID)
+            .updateData({
+          "categories": listcater,
+        });
         pop_window('Succeed', "Upload a item Successfully", context);
       }
     }
@@ -103,10 +115,8 @@ class _ManageCategoryState extends State<ManageCategory> {
             try {
               var ds = snapshot.data;
               theurl = ds.data["imageURL"];
-
             } catch (e) {
               print(e.toString());
-
             }
             print(theurl);
             return Container(
@@ -144,10 +154,10 @@ class _ManageCategoryState extends State<ManageCategory> {
                               .ref()
                               .child(imageFile.path.toString());
                           StorageUploadTask uploadTask =
-                          reference.putFile(imageFile);
+                              reference.putFile(imageFile);
 
                           StorageTaskSnapshot downloadUrl =
-                          (await uploadTask.onComplete);
+                              (await uploadTask.onComplete);
 
                           String url = (await downloadUrl.ref.getDownloadURL());
                           prUpdate.update(
@@ -210,7 +220,9 @@ class _ManageCategoryState extends State<ManageCategory> {
                           if (val == null || val.isEmpty) {
                             return null;
                           } else {
-                            if (modifyimageURL != 'https://ciat.cgiar.org/wp-content/uploads/image-not-found.png' && inputImageURL.isNotEmpty) {
+                            if (modifyimageURL !=
+                                    'https://ciat.cgiar.org/wp-content/uploads/image-not-found.png' &&
+                                inputImageURL.isNotEmpty) {
                               return "Cannot use image URL after uploading a new image";
                             }
                             var match = isURL(val, requireTld: true);
@@ -258,17 +270,17 @@ class _ManageCategoryState extends State<ManageCategory> {
                             return 'This Field Cannot Be Empty';
                           }
                           bool flagFound = false;
-                          for(int i = 0; i < categoryNameList.length; i++){
-                            if(categoryNameList[i] == val){
+                          for (int i = 0; i < categoryNameList.length; i++) {
+                            if (categoryNameList[i] == val) {
                               flagFound = true;
                               break;
                             }
                           }
 
-                          if(flagFound){
-                            return langaugeSetFunc("This name has been used. Please try another one");
+                          if (flagFound) {
+                            return langaugeSetFunc(
+                                "This name has been used. Please try another one");
                           }
-
 
                           return null;
                         },
@@ -280,7 +292,6 @@ class _ManageCategoryState extends State<ManageCategory> {
                       ),
                       margin: new EdgeInsets.only(left: 30.0, right: 30.0),
                     ),
-
                     SizedBox(
                       height: 20,
                     ),
@@ -334,42 +345,42 @@ class _ManageCategoryState extends State<ManageCategory> {
   }
 
   void dialogEditInCatergory(name, imageURL) {
-    String modifyName = name,
-        modifyimageURL = imageURL,
-        inputImageURL = "";
+    String modifyName = name, modifyimageURL = imageURL, inputImageURL = "";
     int modifyAmount = 0;
     void submit() async {
       final form = _formKey.currentState;
       var categoryList = this.widget.data['categories'];
-      List<Map<dynamic, dynamic> > listcater = [];
+      List<Map<dynamic, dynamic>> listcater = [];
 
       int count = -1;
-      for(int i = 0;  i < categoryList.length; i++){
+      for (int i = 0; i < categoryList.length; i++) {
         var item = categoryList[i];
-        if(count == -1 && item["name"] == name && item["imageURL"] == imageURL){
+        if (count == -1 &&
+            item["name"] == name &&
+            item["imageURL"] == imageURL) {
           count = i;
         }
         listcater.add(item);
       }
 
-
-
-
       if (form.validate()) {
-
-        if(count >= 0){
+        if (count >= 0) {
           var item = categoryList[count];
-          if(inputImageURL.isNotEmpty){
+          if (inputImageURL.isNotEmpty) {
             modifyimageURL = inputImageURL;
           }
           item['name'] = modifyName;
           item['imageURL'] = modifyimageURL;
         }
 
-        await Firestore.instance.collection(returnLocationsCollection()).document(this.widget.documentID).updateData({
-          "categories": listcater,}
-        );
-        pop_window(langaugeSetFunc('Succeed'), langaugeSetFunc("Upload a item Successfully"), context);
+        await Firestore.instance
+            .collection(returnLocationsCollection())
+            .document(this.widget.documentID)
+            .updateData({
+          "categories": listcater,
+        });
+        pop_window(langaugeSetFunc('Succeed'),
+            langaugeSetFunc("Upload a item Successfully"), context);
       }
     }
 
@@ -386,10 +397,8 @@ class _ManageCategoryState extends State<ManageCategory> {
             try {
               var ds = snapshot.data;
               theurl = ds.data["imageURL"];
-
             } catch (e) {
               print(e.toString());
-
             }
             print(theurl);
             return Container(
@@ -427,10 +436,10 @@ class _ManageCategoryState extends State<ManageCategory> {
                               .ref()
                               .child(imageFile.path.toString());
                           StorageUploadTask uploadTask =
-                          reference.putFile(imageFile);
+                              reference.putFile(imageFile);
 
                           StorageTaskSnapshot downloadUrl =
-                          (await uploadTask.onComplete);
+                              (await uploadTask.onComplete);
 
                           String url = (await downloadUrl.ref.getDownloadURL());
                           prUpdate.update(
@@ -493,9 +502,11 @@ class _ManageCategoryState extends State<ManageCategory> {
                           if (val == null || val.isEmpty) {
                             return null;
                           } else {
-                            if (modifyimageURL != imageURL && inputImageURL.isNotEmpty) {
+                            if (modifyimageURL != imageURL &&
+                                inputImageURL.isNotEmpty) {
                               print(modifyimageURL);
-                              return langaugeSetFunc("Cannot use image URL after uploading a new image");
+                              return langaugeSetFunc(
+                                  "Cannot use image URL after uploading a new image");
                             }
                             var match = isURL(val, requireTld: true);
                             print("Match: " + match.toString());
@@ -510,7 +521,8 @@ class _ManageCategoryState extends State<ManageCategory> {
                           inputImageURL = value;
                         },
                         decoration: new InputDecoration(
-                            hintText: langaugeSetFunc("Leave it empty if this is not used"),
+                            hintText: langaugeSetFunc(
+                                "Leave it empty if this is not used"),
                             border: new UnderlineInputBorder(),
                             contentPadding: new EdgeInsets.all(5.0),
                             hintStyle: new TextStyle(color: Colors.grey)),
@@ -539,20 +551,21 @@ class _ManageCategoryState extends State<ManageCategory> {
                         },
                         validator: (String val) {
                           if (val.isEmpty) {
-                            return langaugeSetFunc('This Field Cannot Be Empty');
+                            return langaugeSetFunc(
+                                'This Field Cannot Be Empty');
                           }
                           bool flagFound = false;
-                          for(int i = 0; i < categoryNameList.length; i++){
-                            if(categoryNameList[i] == val && val != name){
+                          for (int i = 0; i < categoryNameList.length; i++) {
+                            if (categoryNameList[i] == val && val != name) {
                               flagFound = true;
                               break;
                             }
                           }
 
-                          if(flagFound){
-                            return langaugeSetFunc("This name has been used. Please try another one");
+                          if (flagFound) {
+                            return langaugeSetFunc(
+                                "This name has been used. Please try another one");
                           }
-
 
                           return null;
                         },
@@ -564,7 +577,6 @@ class _ManageCategoryState extends State<ManageCategory> {
                       ),
                       margin: new EdgeInsets.only(left: 30.0, right: 30.0),
                     ),
-
                     SizedBox(
                       height: 20,
                     ),
@@ -603,7 +615,6 @@ class _ManageCategoryState extends State<ManageCategory> {
                         disabledTextColor: Colors.black,
                       ),
                     ),
-
                     SizedBox(
                       width: MediaQuery.of(context).size.width / 3 * 2,
                       child: RaisedButton(
@@ -632,9 +643,12 @@ class _ManageCategoryState extends State<ManageCategory> {
                         ),
                         onPressed: () async {
                           String cancel = "Cancel", action = "Delete";
-                          String title = "Warning", content = "Are you sure you want to delete this item?";
-                          categoryDelete(context, cancel, action, title, content, name);
-                          },
+                          String title = "Warning",
+                              content =
+                                  "Are you sure you want to delete this item?";
+                          categoryDelete(
+                              context, cancel, action, title, content, name);
+                        },
                         padding: EdgeInsets.all(7.0),
                         //color: Colors.teal.shade900,
                         disabledColor: Colors.black,
@@ -655,13 +669,13 @@ class _ManageCategoryState extends State<ManageCategory> {
     );
   }
 
-
   navigateToItem(String categorySelected) {
     String LocationName = widget.data["name"];
     Navigator.push(
         context,
         MaterialPageRoute(
-            builder: (context) => ManageDatabase(catergory: categorySelected, locationName: LocationName)));
+            builder: (context) => ManageDatabase(
+                catergory: categorySelected, locationName: LocationName)));
   }
 
   Widget displayGrids(data) {
@@ -691,11 +705,15 @@ class _ManageCategoryState extends State<ManageCategory> {
                         msg: 'Long Press To Edit',
                       );
                     },
-                    onLongPress: () async{
-                      await Firestore.instance.collection('imageTmp').document(globals.uid).setData({
+                    onLongPress: () async {
+                      await Firestore.instance
+                          .collection('imageTmp')
+                          .document(globals.uid)
+                          .setData({
                         'imageURL': categoryInfo['imageURL'],
                       });
-                      dialogEditInCatergory(categoryInfo['name'], categoryInfo['imageURL']);
+                      dialogEditInCatergory(
+                          categoryInfo['name'], categoryInfo['imageURL']);
                     },
                   );
                 },
@@ -710,94 +728,107 @@ class _ManageCategoryState extends State<ManageCategory> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: backgroundcolor(),
-          iconTheme: IconThemeData(
-            color: textcolor(), //change your color here
-          ),
-          title: Text(langaugeSetFunc('Manage category'), style: TextStyle(color: textcolor()),),
-          actions: <Widget>[
-            popupMenuButton(context),
-          ],
+      appBar: AppBar(
+        backgroundColor: backgroundcolor(),
+        iconTheme: IconThemeData(
+          color: textcolor(), //change your color here
         ),
-
-        body: StreamBuilder(
-            stream: Firestore.instance.collection(returnLocationsCollection()).document(this.widget.documentID).snapshots(),
-            builder: (context, snapshot){
-
-              var mydata = snapshot.data;
-              categoryNameList.clear();
-              this.widget.data =  snapshot.data;
-              var lista = [];
-              try{
-                lista = mydata['categories'];
-              }catch(e){
-                print(e);
-              }
-              for(int i = 0; i < lista.length; i++){
-                var item = lista[i];
-                if(item['name'] != null){
-                  if( item['name'].toString().isNotEmpty){
-                    categoryNameList.add(item['name']);
-                  }
-                }
-              }
-              try{
-                if(mydata == null){
-                  return Container();
-                }
-              }catch(e){
-                print(e);
-              }
-
-              return displayGrids(snapshot.data['categories']);
+        title: Text(
+          langaugeSetFunc('Manage category'),
+          style: TextStyle(color: textcolor()),
+        ),
+        actions: <Widget>[
+          popupMenuButton(context),
+        ],
+      ),
+      body: StreamBuilder(
+          stream: Firestore.instance
+              .collection(returnLocationsCollection())
+              .document(this.widget.documentID)
+              .snapshots(),
+          builder: (context, snapshot) {
+            var mydata = snapshot.data;
+            categoryNameList.clear();
+            this.widget.data = snapshot.data;
+            var lista = [];
+            try {
+              lista = mydata['categories'];
+            } catch (e) {
+              print(e);
             }
-        ),
+            for (int i = 0; i < lista.length; i++) {
+              var item = lista[i];
+              if (item['name'] != null) {
+                if (item['name'].toString().isNotEmpty) {
+                  categoryNameList.add(item['name']);
+                }
+              }
+            }
+            try {
+              if (mydata == null) {
+                return Container();
+              }
+            } catch (e) {
+              print(e);
+            }
+
+            return displayGrids(snapshot.data['categories']);
+          }),
     );
   }
 
-  Future<void> categoryDelete(context, cancel, action, title, content, name ) async {
+  Future<void> categoryDelete(
+      context, cancel, action, title, content, name) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
-
         return CupertinoAlertDialog(
           title: Text(title),
           content: Text(content),
           actions: <Widget>[
             CupertinoDialogAction(
-              child: Text(cancel ),
+              child: Text(cancel),
               onPressed: () {
                 print(1);
                 Navigator.of(context).pop(true);
-
               },
             ),
             CupertinoDialogAction(
-              child: Text(action,),
-              onPressed: () async{
-                QuerySnapshot itemList = await Firestore.instance.collection(returnItemCollection()).where('category', isEqualTo: name).where('Location', isEqualTo: this.widget.data["name"]).getDocuments();
-                for(int i = 0; i < itemList.documents.length;i++){
+              child: Text(
+                action,
+              ),
+              onPressed: () async {
+                QuerySnapshot itemList = await Firestore.instance
+                    .collection(returnItemCollection())
+                    .where('category', isEqualTo: name)
+                    .where('Location', isEqualTo: this.widget.data["name"])
+                    .getDocuments();
+                for (int i = 0; i < itemList.documents.length; i++) {
                   var doumentID = itemList.documents[i].documentID;
-                  await Firestore.instance.collection(returnItemCollection()).document(doumentID).delete();
+                  await Firestore.instance
+                      .collection(returnItemCollection())
+                      .document(doumentID)
+                      .delete();
                 }
 
                 var categoryList = this.widget.data['categories'];
-                List<Map<dynamic, dynamic> > listcater = [];
+                List<Map<dynamic, dynamic>> listcater = [];
 
-                for(int i = 0;  i < categoryList.length; i++){
+                for (int i = 0; i < categoryList.length; i++) {
                   var item = categoryList[i];
                   print((item['name'] == name));
-                  if(item['name'] != name){
+                  if (item['name'] != name) {
                     listcater.add(item);
                   }
                 }
 
-                await Firestore.instance.collection(returnLocationsCollection()).document(this.widget.documentID).updateData({
-                  "categories": listcater,}
-                );
-
+                await Firestore.instance
+                    .collection(returnLocationsCollection())
+                    .document(this.widget.documentID)
+                    .updateData({
+                  "categories": listcater,
+                });
 
                 Navigator.of(context).pop(true);
                 FocusScope.of(context).requestFocus(FocusNode());
@@ -809,6 +840,4 @@ class _ManageCategoryState extends State<ManageCategory> {
       },
     );
   }
-
 }
-

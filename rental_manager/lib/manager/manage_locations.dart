@@ -13,7 +13,8 @@ import 'package:rental_manager/tabs/locations.dart';
 import 'package:rental_manager/globals.dart' as globals;
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'package:rental_manager/SlideDialog/slide_popup_dialog.dart' as slideDialog;
+import 'package:rental_manager/SlideDialog/slide_popup_dialog.dart'
+    as slideDialog;
 import 'package:validators/validators.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -36,8 +37,12 @@ class _ManageLocationsState extends State<ManageLocations> {
         onSelected: (val) async {
           switch (val) {
             case 'add location':
-              await Firestore.instance.collection('imageTmp').document(globals.uid).updateData({
-                'imageURL': 'https://ciat.cgiar.org/wp-content/uploads/image-not-found.png',
+              await Firestore.instance
+                  .collection('imageTmp')
+                  .document(globals.uid)
+                  .updateData({
+                'imageURL':
+                    'https://ciat.cgiar.org/wp-content/uploads/image-not-found.png',
               });
               _showDialog2();
               break;
@@ -56,7 +61,7 @@ class _ManageLocationsState extends State<ManageLocations> {
     void submit() async {
       final form = _formKey.currentState;
       if (form.validate()) {
-        if(inputImageURL.isNotEmpty){
+        if (inputImageURL.isNotEmpty) {
           modifyimageURL = inputImageURL;
         }
         await Firestore.instance
@@ -123,10 +128,10 @@ class _ManageLocationsState extends State<ManageLocations> {
                               .ref()
                               .child(imageFile.path.toString());
                           StorageUploadTask uploadTask =
-                          reference.putFile(imageFile);
+                              reference.putFile(imageFile);
 
                           StorageTaskSnapshot downloadUrl =
-                          (await uploadTask.onComplete);
+                              (await uploadTask.onComplete);
 
                           String url = (await downloadUrl.ref.getDownloadURL());
                           prUpdate.update(
@@ -189,7 +194,9 @@ class _ManageLocationsState extends State<ManageLocations> {
                           if (val == null || val.isEmpty) {
                             return null;
                           } else {
-                            if (modifyimageURL != 'https://ciat.cgiar.org/wp-content/uploads/image-not-found.png' && inputImageURL.isNotEmpty) {
+                            if (modifyimageURL !=
+                                    'https://ciat.cgiar.org/wp-content/uploads/image-not-found.png' &&
+                                inputImageURL.isNotEmpty) {
                               return "Cannot use image URL after uploading a new image";
                             }
                             var match = isURL(val, requireTld: true);
@@ -201,9 +208,7 @@ class _ManageLocationsState extends State<ManageLocations> {
                             }
                           }
                         },
-                        onSaved: (value) {
-
-                        },
+                        onSaved: (value) {},
                         decoration: new InputDecoration(
                             hintText: "Leave it empty if this is not used",
                             border: new UnderlineInputBorder(),
@@ -238,13 +243,13 @@ class _ManageLocationsState extends State<ManageLocations> {
                           }
 
                           bool found = false;
-                          for(int i = 0 ; i < locationNameList.length;i++){
-                            if(locationNameList[i] == val){
+                          for (int i = 0; i < locationNameList.length; i++) {
+                            if (locationNameList[i] == val) {
                               found = true;
                               break;
                             }
                           }
-                          if(found){
+                          if (found) {
                             return "This name has already been used in your locations. Please try another one";
                           }
 
@@ -258,7 +263,6 @@ class _ManageLocationsState extends State<ManageLocations> {
                       ),
                       margin: new EdgeInsets.only(left: 30.0, right: 30.0),
                     ),
-
                     SizedBox(
                       height: 20,
                     ),
@@ -312,15 +316,12 @@ class _ManageLocationsState extends State<ManageLocations> {
   }
 
   void _showDialog1(name, imageURL, documentID) {
-    String modifyName = name,
-        modifyimageURL = imageURL,
-        inputImageURL = "";
+    String modifyName = name, modifyimageURL = imageURL, inputImageURL = "";
     int modifyAmount = 0;
     void submit() async {
       final form = _formKey.currentState;
       if (form.validate()) {
-
-        if(inputImageURL.isNotEmpty){
+        if (inputImageURL.isNotEmpty) {
           modifyimageURL = inputImageURL;
         }
 
@@ -386,10 +387,10 @@ class _ManageLocationsState extends State<ManageLocations> {
                               .ref()
                               .child(imageFile.path.toString());
                           StorageUploadTask uploadTask =
-                          reference.putFile(imageFile);
+                              reference.putFile(imageFile);
 
                           StorageTaskSnapshot downloadUrl =
-                          (await uploadTask.onComplete);
+                              (await uploadTask.onComplete);
 
                           String url = (await downloadUrl.ref.getDownloadURL());
                           prUpdate.update(
@@ -421,7 +422,7 @@ class _ManageLocationsState extends State<ManageLocations> {
                         child: CircleAvatar(
                           radius: 50,
                           backgroundColor: Colors.teal,
-                          backgroundImage:   NetworkImage(theurl),
+                          backgroundImage: NetworkImage(theurl),
                         ),
                       ),
                     ),
@@ -449,8 +450,10 @@ class _ManageLocationsState extends State<ManageLocations> {
                           if (val == null || val.isEmpty) {
                             return null;
                           } else {
-                            if (modifyimageURL != imageURL && inputImageURL.isNotEmpty) {
-                              return langaugeSetFunc("Cannot use image URL after uploading a new image");
+                            if (modifyimageURL != imageURL &&
+                                inputImageURL.isNotEmpty) {
+                              return langaugeSetFunc(
+                                  "Cannot use image URL after uploading a new image");
                             }
                             var match = isURL(val, requireTld: true);
                             print("Match: " + match.toString());
@@ -506,7 +509,6 @@ class _ManageLocationsState extends State<ManageLocations> {
                       ),
                       margin: new EdgeInsets.only(left: 30.0, right: 30.0),
                     ),
-
                     SizedBox(
                       height: 20,
                     ),
@@ -573,17 +575,24 @@ class _ManageLocationsState extends State<ManageLocations> {
                         ),
                         onPressed: () async {
                           String cancel = "Cancel", action = "Delete";
-                          String title = "Warning", content = "Are you sure you want to delete this item";
-                          String locationName= "";
-                          await Firestore.instance.collection(returnLocationsCollection()).document(documentID).get().then((DocumentSnapshot a) {
-                            try{
+                          String title = "Warning",
+                              content =
+                                  "Are you sure you want to delete this item";
+                          String locationName = "";
+                          await Firestore.instance
+                              .collection(returnLocationsCollection())
+                              .document(documentID)
+                              .get()
+                              .then((DocumentSnapshot a) {
+                            try {
                               locationName = a["name"];
                               print(a["name"]);
-                            }catch(e){
+                            } catch (e) {
                               print(e.toString());
                             }
                           });
-                          locationDeleteDialog(context, cancel, action, title, content, locationName, documentID);
+                          locationDeleteDialog(context, cancel, action, title,
+                              content, locationName, documentID);
                         },
                         padding: EdgeInsets.all(7.0),
                         //color: Colors.teal.shade900,
@@ -606,12 +615,14 @@ class _ManageLocationsState extends State<ManageLocations> {
   }
 
   void navToMangerCategory(data, BuildContext context, documentID) {
-    Navigator.push(context,
-        MaterialPageRoute(builder: (context) => ManageCategory(data: data, documentID: documentID)));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                ManageCategory(data: data, documentID: documentID)));
   }
 
   Widget managerLocationCard(data, context, documentID) {
-
     return InkWell(
       onTap: () {
         Fluttertoast.showToast(
@@ -619,18 +630,17 @@ class _ManageLocationsState extends State<ManageLocations> {
         );
         print(data);
         navToMangerCategory(data, context, documentID);
-
       },
-      onLongPress: () async{
-        print("123");
-
-
+      onLongPress: () async {
         String name = data["name"], imageURL = data["imageURL"];
-        await Firestore.instance.collection('imageTmp').document(globals.uid).updateData({
+        await Firestore.instance
+            .collection('imageTmp')
+            .document(globals.uid)
+            .updateData({
           'imageURL': imageURL,
         });
         _showDialog1(name, imageURL, documentID);
-        },
+      },
       child: Container(
         // padding: const EdgeInsets.fromLTRB(0, 0, 0, 18),
         height: 100,
@@ -730,7 +740,8 @@ class _ManageLocationsState extends State<ManageLocations> {
     // TODO: implement initState
     super.initState();
   }
-  List<String>locationNameList = [];
+
+  List<String> locationNameList = [];
 
   @override
   Widget build(BuildContext context) {
@@ -739,7 +750,10 @@ class _ManageLocationsState extends State<ManageLocations> {
         iconTheme: IconThemeData(
           color: textcolor(), //change your color here
         ),
-        title: Text(langaugeSetFunc('Manage Locations'), style: TextStyle(color: textcolor()),),
+        title: Text(
+          langaugeSetFunc('Manage Locations'),
+          style: TextStyle(color: textcolor()),
+        ),
         backgroundColor: backgroundcolor(),
         actions: <Widget>[
           popupMenuButton(),
@@ -761,18 +775,17 @@ class _ManageLocationsState extends State<ManageLocations> {
                   itemBuilder: (BuildContext context, int index) {
                     var documentID = snapshot.data.documents[index].documentID;
                     locationNameList.clear();
-                    for(int i = 0; i < snapshot.data.documents.length; i++){
+                    for (int i = 0; i < snapshot.data.documents.length; i++) {
                       var item = snapshot.data.documents[i];
                       locationNameList.add(item["name"]);
                     }
-
 
                     return
                         // ListTile(
                         //     title: Text('${snapshot.data.documents.length}'));
                         // print(snapshot.data.documents.length);
-                        managerLocationCard(
-                            snapshot.data.documents[index].data, context, documentID);
+                        managerLocationCard(snapshot.data.documents[index].data,
+                            context, documentID);
                   });
             }
           },
@@ -781,36 +794,44 @@ class _ManageLocationsState extends State<ManageLocations> {
     );
   }
 
-  Future<void> locationDeleteDialog(context, cancel, action, title, content, locationName, locationDocID) async {
+  Future<void> locationDeleteDialog(context, cancel, action, title, content,
+      locationName, locationDocID) async {
     return showDialog<void>(
       context: context,
       barrierDismissible: false, // user must tap button!
       builder: (BuildContext context) {
-
         return CupertinoAlertDialog(
           title: Text(title),
           content: Text(content),
           actions: <Widget>[
             CupertinoDialogAction(
-              child: Text(cancel ),
+              child: Text(cancel),
               onPressed: () {
                 print(1);
                 Navigator.of(context).pop(true);
-
               },
             ),
             CupertinoDialogAction(
-              child: Text(action,),
-              onPressed: () async{
-
-                QuerySnapshot itemList = await Firestore.instance.collection(returnItemCollection()).where('Location', isEqualTo: locationName).getDocuments();
-                for(int i = 0; i < itemList.documents.length;i++){
+              child: Text(
+                action,
+              ),
+              onPressed: () async {
+                QuerySnapshot itemList = await Firestore.instance
+                    .collection(returnItemCollection())
+                    .where('Location', isEqualTo: locationName)
+                    .getDocuments();
+                for (int i = 0; i < itemList.documents.length; i++) {
                   var doumentID = itemList.documents[i].documentID;
-                  await Firestore.instance.collection(returnItemCollection()).document(doumentID).delete();
+                  await Firestore.instance
+                      .collection(returnItemCollection())
+                      .document(doumentID)
+                      .delete();
                 }
 
-                await Firestore.instance.collection(returnLocationsCollection()).document(locationDocID).delete();
-
+                await Firestore.instance
+                    .collection(returnLocationsCollection())
+                    .document(locationDocID)
+                    .delete();
 
                 Navigator.of(context).pop(true);
                 FocusScope.of(context).requestFocus(FocusNode());
@@ -822,6 +843,4 @@ class _ManageLocationsState extends State<ManageLocations> {
       },
     );
   }
-
-
 }

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:rental_manager/Locations/show_all.dart';
 import 'package:rental_manager/displayall.dart';
 import 'package:rental_manager/language.dart';
+import 'package:rental_manager/manager/manage_category.dart';
 import 'package:rental_manager/search.dart';
 import 'package:rental_manager/uploadCSV.dart';
 import 'package:file_picker/file_picker.dart';
@@ -21,7 +22,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:rental_manager/PlatformWidget/platform_alert_dialog.dart';
 import 'package:rental_manager/PlatformWidget/strings.dart';
 import 'package:rental_manager/SlideDialog/slide_popup_dialog.dart'
-as slideDialog;
+    as slideDialog;
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart'; //For creating the SMTP Server
 import '../globals.dart';
@@ -64,7 +65,7 @@ class ThirdTab extends StatefulWidget {
 
 class _ThirdTabState extends State<ThirdTab> {
   SpeedDialChild returnManagerWidget() {
-    if (!globals.isAdmin) {
+    if (globals.isAdmin) {
       return SpeedDialChild(
         child: Icon(Icons.receipt, color: Colors.white),
         backgroundColor: Colors.green,
@@ -75,6 +76,21 @@ class _ThirdTabState extends State<ThirdTab> {
           print(contents);
         },
         label: langaugeSetFunc('Manager View'),
+        labelStyle: TextStyle(fontWeight: FontWeight.w500),
+        labelBackgroundColor: Colors.green,
+      );
+    } else if (!globals.isAdmin && globals.locationManager != "") {
+      return SpeedDialChild(
+        child: Icon(Icons.receipt, color: Colors.white),
+        backgroundColor: Colors.green,
+        onTap: () {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Manager()));
+          //pickUpFile(context);
+          print(contents);
+        },
+        label: langaugeSetFunc('Location Manager') +
+            ': ${globals.locationManager}',
         labelStyle: TextStyle(fontWeight: FontWeight.w500),
         labelBackgroundColor: Colors.green,
       );
@@ -253,7 +269,7 @@ class _ThirdTabState extends State<ThirdTab> {
                     ),
                     labelText: langaugeSetFunc('Text'),
                     prefixIcon:
-                    const Icon(Icons.content_paste, color: Colors.black),
+                        const Icon(Icons.content_paste, color: Colors.black),
                     // labelStyle:
                     // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
                     contentPadding: const EdgeInsets.symmetric(
@@ -368,16 +384,17 @@ class _ThirdTabState extends State<ThirdTab> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text(langaugeSetFunc("FAQ & Guides"), style: TextStyle(color: textcolor()),),
+          title: Text(
+            langaugeSetFunc("FAQ & Guides"),
+            style: TextStyle(color: textcolor()),
+          ),
           backgroundColor: backgroundcolor(),
           centerTitle: true,
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.add),
-              onPressed: (){
-                setState(() {
-
-                });
+              onPressed: () {
+                setState(() {});
               },
             ),
           ],
@@ -391,8 +408,6 @@ class _ThirdTabState extends State<ThirdTab> {
       ),
     );
   }
-
-
 }
 
 void pop_window(a, b, context) {

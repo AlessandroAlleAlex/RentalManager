@@ -64,7 +64,7 @@ class ThirdTab extends StatefulWidget {
 
 class _ThirdTabState extends State<ThirdTab> {
   SpeedDialChild returnManagerWidget() {
-    if (!globals.isAdmin) {
+    if (globals.isAdmin) {
       return SpeedDialChild(
         child: Icon(Icons.receipt, color: Colors.white),
         backgroundColor: Colors.green,
@@ -253,7 +253,7 @@ class _ThirdTabState extends State<ThirdTab> {
                     ),
                     labelText: langaugeSetFunc('Text'),
                     prefixIcon:
-                    const Icon(Icons.content_paste, color: Colors.black),
+                        const Icon(Icons.content_paste, color: Colors.black),
                     // labelStyle:
                     // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
                     contentPadding: const EdgeInsets.symmetric(
@@ -367,7 +367,10 @@ class _ThirdTabState extends State<ThirdTab> {
     //globals.AppBarheight = AppBar().preferredSize.height;
     return Scaffold(
       appBar: AppBar(
-        title: Text(langaugeSetFunc("Help"), style: TextStyle(color: textcolor()),),
+        title: Text(
+          langaugeSetFunc("Help"),
+          style: TextStyle(color: textcolor()),
+        ),
         backgroundColor: backgroundcolor(),
         centerTitle: true,
       ),

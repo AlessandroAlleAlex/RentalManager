@@ -24,6 +24,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:io' show Platform;
 
 import 'location_manager.dart';
+import 'manager/manage_category.dart';
 
 class Manager extends StatefulWidget {
   @override
@@ -31,6 +32,22 @@ class Manager extends StatefulWidget {
 }
 
 class _ManagerState extends State<Manager> {
+  Future findLocationOfManager(BuildContext context) {
+    return Firestore.instance
+        .collection(returnLocationsCollection())
+        .where('name', isEqualTo: globals.locationManager)
+        .getDocuments()
+        .then((doc) {
+      doc.documents.forEach((element) {
+        return Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) => ManageCategory(
+                    data: element.data, documentID: element.documentID)));
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -46,9 +63,15 @@ class _ManagerState extends State<Manager> {
                 Icons.assessment,
                 color: textcolor(),
               ),
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => ManageLocations()));
+              onPressed: () async {
+                if (globals.isAdmin) {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => ManageLocations()));
+                } else {
+                  findLocationOfManager(context);
+                }
               },
             ),
           ],
@@ -350,6 +373,11 @@ class _booksTabState extends State<booksTab> {
     return Scaffold(
       backgroundColor: backgroundcolor(),
       body: StreamBuilder(
+          // stream: globals.isAdmin ? Firestore.instance
+          //     .collection(returnReservationCollection())
+          //     .snapshots() : globals.locationManager != "" ? globals.isAdmin ? Firestore.instance
+          //     .collection(returnReservationCollection()).where() // we need to add location to reservations on Firestore
+          //     .snapshots() : Container(),
           stream: Firestore.instance
               .collection(returnReservationCollection())
               .snapshots(),
@@ -637,7 +665,10 @@ class _managepeopleOrdersState extends State<managepeopleOrders> {
     }
   }
 
-  Future _dialog(BuildContext context, String name) {
+  Future _dialogrem(
+    BuildContext context,
+    String name,
+  ) {
     return showDialog(
         context: context,
         builder: (context) {
@@ -647,8 +678,38 @@ class _managepeopleOrdersState extends State<managepeopleOrders> {
               style:
                   TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
             ),
-            content: Text('${name} is NOT a manager anymore.',
+            content: Text('$name is NOT a manager anymore.',
                 style: TextStyle(fontWeight: FontWeight.bold)),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: Text('Done',
+                      style: TextStyle(fontWeight: FontWeight.bold)))
+            ],
+          );
+        });
+  }
+
+  Future _dialog(BuildContext context, String name, int index) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: index == 1
+                ? Text(
+                    'Removed Successfully',
+                    style: TextStyle(
+                        color: Colors.green, fontWeight: FontWeight.bold),
+                  )
+                : Text(
+                    'Added Successfully',
+                    style: TextStyle(
+                        color: Colors.green, fontWeight: FontWeight.bold),
+                  ),
+            content: index == 1
+                ? Text('$name is NOT a manager anymore.',
+                    style: TextStyle(fontWeight: FontWeight.bold))
+                : Text('$name is now ${globals.locationManager}\'s manager'),
             actions: <Widget>[
               FlatButton(
                   onPressed: () => Navigator.of(context).pop(),
@@ -666,9 +727,17 @@ class _managepeopleOrdersState extends State<managepeopleOrders> {
         .updateData({'LocationManager': ""});
   }
 
+  Future locationManagerAdd(String correctUID) {
+    return Firestore.instance
+        .collection('global_users')
+        .document(correctUID)
+        .updateData({'LocationManager': globals.locationManager});
+  }
+
   Widget build(BuildContext context) {
     var uid = this.widget.uid, name = this.widget.name;
     String correctUID = 'AppSignInUser' + uid;
+    print(correctUID);
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
@@ -678,46 +747,55 @@ class _managepeopleOrdersState extends State<managepeopleOrders> {
         title: Text('$name \'s ' + langaugeSetFunc('Orders'),
             style: TextStyle(color: textcolor())),
         actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.delete),
-            onPressed: () {
-              removeLocationManager(correctUID).whenComplete(() {
-                _dialog(context, name)
-                    .whenComplete(() => Navigator.pop(context));
-              });
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.add),
-            onPressed: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) =>
-                    LocationManager(uid: correctUID, name: name),
-              ),
-            ),
-          ),
-          IconButton(
-            icon: returnAdminOrnot(),
-            onPressed: () async {
-              String title = "Warning", content = "", actionText = "";
-              if (globals.isAdmin) {
-                content =
-                    "$name is a admin. Do you want to lock his access and let him become a user";
-                actionText = "Lock";
-              } else {
-                content =
-                    "$name is a user. Do you want to un-lock his access and let him become a admin";
-                actionText = "Unlock";
-              }
-              PlatformAlertDialog(
-                title: title,
-                content: content,
-                cancelActionText: "Cancel",
-                defaultActionText: actionText,
-              ).show(context);
-            },
-          ),
+          globals.locationManager != ""
+              ? FlatButton.icon(
+                  icon: Icon(Icons.delete),
+                  label: Text('${globals.locationManager}'),
+                  onPressed: () {
+                    removeLocationManager(correctUID).whenComplete(() {
+                      globals.locationManager = "";
+                      _dialog(context, name, 1)
+                          .whenComplete(() => Navigator.pop(context));
+                    });
+                  },
+                )
+              : FlatButton.icon(
+                  icon: Icon(Icons.add),
+                  label: Text('As Manager'),
+                  onPressed: () => globals.isAdmin
+                      ? Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) =>
+                                LocationManager(uid: correctUID, name: name),
+                          ),
+                        )
+                      : globals.locationManager != ""
+                          ? locationManagerAdd(correctUID)
+                              .whenComplete(() => _dialog(context, name, 2))
+                          : Container(),
+                ),
+          // IconButton(
+          //   icon: returnAdminOrnot(),
+          //   onPressed: () async {
+          //     String title = "Warning", content = "", actionText = "";
+          //     if (globals.isAdmin) {
+          //       content =
+          //           "$name is a admin. Do you want to lock his access and let him become a user";
+          //       actionText = "Lock";
+          //     } else {
+          //       content =
+          //           "$name is a user. Do you want to un-lock his access and let him become a admin";
+          //       actionText = "Unlock";
+          //     }
+          //     PlatformAlertDialog(
+          //       title: title,
+          //       content: content,
+          //       cancelActionText: "Cancel",
+          //       defaultActionText: actionText,
+          //     ).show(context);
+          //   },
+          // ),
         ],
       ),
       backgroundColor: backgroundcolor(),

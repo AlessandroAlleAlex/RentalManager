@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
+import 'globals.dart' as globals;
 import 'Locations/show_all.dart';
 import 'language.dart';
 
@@ -50,8 +50,11 @@ class _LocationManagerState extends State<LocationManager> {
           // navigateToCategory(snapshot.data[index], context);
           // print(snapshot.data[index]['name']);
           setLocationManager(snapshot.data[index]['name']).whenComplete(() {
-            _dialog(context, snapshot.data[index]['name'])
-                .whenComplete(() => Navigator.pop(context));
+            globals.locationManager = snapshot.data[index]['name'];
+            _dialog(context, snapshot.data[index]['name']).whenComplete(() {
+              Navigator.pop(context);
+              Navigator.pop(context);
+            });
           });
         },
         child: Container(

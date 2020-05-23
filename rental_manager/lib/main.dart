@@ -47,6 +47,7 @@ Future getData() async {
     }
     globals.phoneNumber = doc["PhoneNumber"];
     globals.organization = doc['organization'];
+    globals.locationManager = doc['LocationManager'];
   });
 }
 
@@ -263,21 +264,25 @@ class _MyHomePageState extends State<MyHomePage> {
           globals.organization = list[7];
         }
 
-        if (globals.organization == null || globals.organization.isEmpty) {
-          await Firestore.instance
-              .collection(returnUserCollection())
-              .document(globals.uid)
-              .get()
-              .then((DocumentSnapshot ds) {
-            // use ds as a snapshot
-            var doc = ds.data;
-            try {
-              globals.organization = doc['organization'];
-            } catch (e) {
-              print(e);
-            }
-          });
-        }
+        // if (globals.organization == null || globals.organization.isEmpty) {
+        await Firestore.instance
+            .collection(returnUserCollection())
+            .document(globals.uid)
+            .get()
+            .then((DocumentSnapshot ds) {
+          // use ds as a snapshot
+          var doc = ds.data;
+          // try {
+          globals.organization = doc['organization'];
+          globals.locationManager = doc['LocationManager'];
+          if (doc['Admin']) {
+            globals.isAdmin = true;
+          }
+          // } catch (e) {
+          //   print(e);
+          // }
+        });
+        // }
         Navigator.of(context).pushReplacementNamed('/MainViewScreen');
       }
     } catch (e) {
@@ -512,6 +517,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                     try {
                                       globals.studentID =
                                           doc[globals.rentalIDDatabase];
+                                      globals.locationManager =
+                                          doc['LocationManager'];
                                       globals.username =
                                           doc[globals.nameDababase];
                                       globals.UserImageUrl = doc["imageURL"];
@@ -519,6 +526,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                       globals.email = doc["Email"];
                                       globals.organization =
                                           doc['organization'];
+                                      if (doc['Admin']) {
+                                        globals.isAdmin = true;
+                                      }
                                     } catch (e) {
                                       print(e);
                                     }
@@ -628,7 +638,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                   }
                                   print(userExist == true);
                                   if (userExist) {
-                                    print("UserExists\n");
                                     try {
                                       await Firestore.instance
                                           .collection(returnUserCollection())
@@ -1014,8 +1023,6 @@ class _resetPasswordState extends State<resetPassword> {
                               prForgetPassword.hide();
                             });
                           });
-
-                          print('Founding');
                         } else {
                           String a = 'Warning',
                               b = 'Email Adress Not Found in Records';

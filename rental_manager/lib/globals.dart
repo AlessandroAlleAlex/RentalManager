@@ -1,4 +1,5 @@
 library my_prj.globals;
+
 import 'dart:collection';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -16,11 +17,11 @@ String UserImageUrl = '';
 FirebaseUser mygoogleuser;
 BuildContext mycontext;
 String CancelledItemDocID = "";
-String  collectionName = 'TestModeNew';
+String collectionName = 'TestModeNew';
 List<DocumentSnapshot> myds;
 String langaugeSet = "SimplifiedChinese";
 String organization = "";
-bool dark= false;
+bool dark = false;
 int userSelectTheme = -1;
 BuildContext contextInManageOneItemView;
 BuildContext contextInManageItemView;
@@ -30,8 +31,9 @@ bool isAdmin = false;
 bool isDeveloper = false;
 String rentalIDDatabase = "RentalID";
 String nameDababase = "Name";
+String locationManager = "";
 
-class Item{
+class Item {
   String itemName;
   String itemLocation;
   bool isStock;
@@ -39,7 +41,7 @@ class Item{
   String imageURL;
 }
 
-class ItemNameLocation{
+class ItemNameLocation {
   String itemName;
   String imageURL;
 }
@@ -47,7 +49,7 @@ class ItemNameLocation{
 BuildContext ContextInOrder;
 var itemValueMap = new HashMap();
 
-class ReservationItem{
+class ReservationItem {
   String name;
   String imageURL;
   String amount;
@@ -58,9 +60,10 @@ class ReservationItem{
   String uid;
   String documentID;
   //ReservationItem(this.amount, this.startTime, this.endTime, this.itemDocID, this.status, this.uid, this.name, this.imageURL);
-  ReservationItem(this.amount, this.startTime, this.endTime, this.itemDocID, this.status, this.uid, this.name, this.imageURL, this.documentID);
+  ReservationItem(this.amount, this.startTime, this.endTime, this.itemDocID,
+      this.status, this.uid, this.name, this.imageURL, this.documentID);
 }
 
 List<ReservationItem> itemList = new List();
-List<String>returnDOCIDList = [];
+List<String> returnDOCIDList = [];
 List<Item> detailList = [];

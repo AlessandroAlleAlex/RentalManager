@@ -105,6 +105,7 @@ Map<String, String> EnglishToSimplifiedChinese = {
   'Enter your Password': '请输入密码',
   "Send Verification Email": "发送确认短信",
   'Reset PassWord': '忘记密码',
+  'Location Manager': '位置经理',
 };
 
 Map<String, String> EnglishToTranditionalChinese = {
