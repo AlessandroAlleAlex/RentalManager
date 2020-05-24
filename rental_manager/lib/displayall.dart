@@ -378,9 +378,15 @@ class _booksTabState extends State<booksTab> {
           //     .snapshots() : globals.locationManager != "" ? globals.isAdmin ? Firestore.instance
           //     .collection(returnReservationCollection()).where() // we need to add location to reservations on Firestore
           //     .snapshots() : Container(),
-          stream: Firestore.instance
-              .collection(returnReservationCollection())
-              .snapshots(),
+          stream: globals.isAdmin
+              ? Firestore.instance
+                  .collection(returnReservationCollection())
+                  // .where(field) //
+                  .snapshots()
+              : Firestore.instance
+                  .collection(returnReservationCollection())
+                  .where('location', isEqualTo: globals.locationManager) //
+                  .snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) return const Text('loading...');
             List<String> userNameList = [];
@@ -615,23 +621,14 @@ class _peopleTabState extends State<peopleTab> {
                           subtitle: new Text(cutEmail(peopleList[i].email),
                               style: TextStyle(color: textcolor())),
                           onTap: () {
-                            if (returnLatestTime(peopleList[i].latestTime)
-                                .contains("Non")) {
-                              pop_window(
-                                  "Sorry",
-                                  "It appears that no reservations exist in this account",
-                                  context);
-                            } else {
-                              var uid = peopleList[i].email;
-                              var name = peopleList[i].name;
-                              var locationManager =
-                                  peopleList[i].locationManager;
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => managepeopleOrders(
-                                          uid, name, locationManager)));
-                            }
+                            var uid = peopleList[i].email;
+                            var name = peopleList[i].name;
+                            var locationManager = peopleList[i].locationManager;
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => managepeopleOrders(
+                                        uid, name, locationManager)));
                           },
                         ),
                       ),
