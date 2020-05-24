@@ -1,8 +1,8 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:rental_manager/Locations/show_all.dart';
 import 'package:rental_manager/displayall.dart';
 import 'package:rental_manager/language.dart';
-import 'package:rental_manager/manager/manage_category.dart';
 import 'package:rental_manager/search.dart';
 import 'package:rental_manager/uploadCSV.dart';
 import 'package:file_picker/file_picker.dart';
@@ -22,7 +22,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:rental_manager/PlatformWidget/platform_alert_dialog.dart';
 import 'package:rental_manager/PlatformWidget/strings.dart';
 import 'package:rental_manager/SlideDialog/slide_popup_dialog.dart'
-    as slideDialog;
+as slideDialog;
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart'; //For creating the SMTP Server
 import '../globals.dart';
@@ -65,7 +65,7 @@ class ThirdTab extends StatefulWidget {
 
 class _ThirdTabState extends State<ThirdTab> {
   SpeedDialChild returnManagerWidget() {
-    if (globals.isAdmin) {
+    if (!globals.isAdmin) {
       return SpeedDialChild(
         child: Icon(Icons.receipt, color: Colors.white),
         backgroundColor: Colors.green,
@@ -76,21 +76,6 @@ class _ThirdTabState extends State<ThirdTab> {
           print(contents);
         },
         label: langaugeSetFunc('Manager View'),
-        labelStyle: TextStyle(fontWeight: FontWeight.w500),
-        labelBackgroundColor: Colors.green,
-      );
-    } else if (!globals.isAdmin && globals.locationManager != "") {
-      return SpeedDialChild(
-        child: Icon(Icons.receipt, color: Colors.white),
-        backgroundColor: Colors.green,
-        onTap: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Manager()));
-          //pickUpFile(context);
-          print(contents);
-        },
-        label: langaugeSetFunc('Location Manager') +
-            ': ${globals.locationManager}',
         labelStyle: TextStyle(fontWeight: FontWeight.w500),
         labelBackgroundColor: Colors.green,
       );
@@ -269,7 +254,7 @@ class _ThirdTabState extends State<ThirdTab> {
                     ),
                     labelText: langaugeSetFunc('Text'),
                     prefixIcon:
-                        const Icon(Icons.content_paste, color: Colors.black),
+                    const Icon(Icons.content_paste, color: Colors.black),
                     // labelStyle:
                     // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
                     contentPadding: const EdgeInsets.symmetric(
@@ -334,6 +319,7 @@ class _ThirdTabState extends State<ThirdTab> {
     SpeedDial buildSpeedDial() {
       double height = MediaQuery.of(context).size.height;
       return SpeedDial(
+
         marginRight: 10,
         marginBottom: height / 3,
         animatedIcon: AnimatedIcons.menu_close,
@@ -361,7 +347,7 @@ class _ThirdTabState extends State<ThirdTab> {
               color: Colors.blue,
               margin: EdgeInsets.only(right: 10),
               padding: EdgeInsets.all(6),
-              child: Text(langaugeSetFunc('Bring us your ideas')),
+              child: Text(langaugeSetFunc('Contact us')),
             ),
           ),
           SpeedDialChild(
@@ -381,33 +367,129 @@ class _ThirdTabState extends State<ThirdTab> {
     }
 
     //globals.AppBarheight = AppBar().preferredSize.height;
+    List<String> helpList = ["Manager View", "Track items' usage", "Lost and found", "Contact us"];
+
+    Widget returnListTile(String name){
+      if(name == helpList[0]){
+        return Column(
+          children: <Widget>[
+            Container(
+              decoration: new BoxDecoration (
+                  color: BoxBackground(),
+              ),
+              child: ListTile(
+                leading: Icon(CupertinoIcons.person_solid,color: textcolor(),),
+                title: Text(langaugeSetFunc(name), style: TextStyle(color: textcolor()),),
+                trailing: Icon(CupertinoIcons.right_chevron,color: textcolor(),),
+                onTap: (){
+                  Navigator.push(
+                      context, MaterialPageRoute(builder: (context) => Manager()));
+                },
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+          ],
+        );
+      }else if(name == helpList[1]){
+        return Container(
+          decoration: new BoxDecoration (
+            color: BoxBackground(),
+          ),
+          child: ListTile(
+            leading: Icon(CupertinoIcons.search, color: textcolor(),),
+            title: Text(langaugeSetFunc(name),style: TextStyle(color: textcolor()),),
+            trailing: Icon(CupertinoIcons.right_chevron,color: textcolor(),),
+            onTap: () {
+              Navigator.push(
+                  context, MaterialPageRoute(builder: (context) => track()));
+            },
+          ),
+        );
+      }else if(name == helpList[3]){
+        return Container(
+          decoration: new BoxDecoration (
+            color: BoxBackground(),
+          ),
+          child: ListTile(
+            leading: Icon(CupertinoIcons.pencil,color: textcolor(),),
+            title: Text(langaugeSetFunc(name),style: TextStyle(color: textcolor()),),
+            trailing: Icon(CupertinoIcons.right_chevron,color: textcolor(),),
+            onTap: (){
+              _showDialog("Write down your ideas");
+            },
+          ),
+        );
+      }else{
+        return Container(
+          decoration: new BoxDecoration (
+            color: BoxBackground(),
+          ),
+          child: ListTile(
+            leading: Icon(CupertinoIcons.info,color: textcolor(),),
+            title: Text(langaugeSetFunc(name),style: TextStyle(color: textcolor()),),
+            trailing: Icon(CupertinoIcons.right_chevron,color: textcolor(),),
+            onTap: (){
+              _showDialog("Describe the item and leave your contact");
+            },
+          ),
+        );
+      }
+
+    }
+
+    if(globals.isiOS){
+      return MaterialApp(
+        home: Scaffold(
+          appBar: CupertinoNavigationBar(
+            heroTag: "tab31",
+            transitionBetweenRoutes: false,
+            middle: Text(
+              langaugeSetFunc('Help'),
+              style: TextStyle(color: textcolor()),
+            ),
+            backgroundColor: backgroundcolor(),
+          ),
+          backgroundColor: backgroundcolor(),
+          body: ListView.builder(
+            itemBuilder: (BuildContext context, int index) =>
+            returnListTile(helpList[index]),
+            itemCount: helpList.length,
+          ),
+        ),
+      );
+    }
+
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text(
-            langaugeSetFunc("FAQ & Guides"),
-            style: TextStyle(color: textcolor()),
-          ),
+          title: Text(langaugeSetFunc("FAQ & Guides"), style: TextStyle(color: textcolor()),),
           backgroundColor: backgroundcolor(),
           centerTitle: true,
           actions: <Widget>[
             IconButton(
               icon: Icon(Icons.add),
-              onPressed: () {
-                setState(() {});
+              onPressed: (){
+                setState(() {
+
+                });
               },
             ),
           ],
         ),
+        backgroundColor: backgroundcolor(),
         floatingActionButton: buildSpeedDial(),
-        body: ListView.builder(
+        body:  ListView.builder(
           itemBuilder: (BuildContext context, int index) =>
-              EntryItem(data[index]),
-          itemCount: data.length,
+              returnListTile(helpList[index]),
+          itemCount: helpList.length,
         ),
       ),
     );
   }
+
+
 }
 
 void pop_window(a, b, context) {
@@ -457,6 +539,12 @@ void pickUpFile(BuildContext context) async {
 
   print(contents);
 }
+
+class itemInformation{
+
+}
+
+
 
 class Entry {
   Entry(this.title, [this.children = const <Entry>[]]);
@@ -517,6 +605,7 @@ class EntryItem extends StatelessWidget {
       key: PageStorageKey<Entry>(root),
       title: Text(root.title),
       children: root.children.map(_buildTiles).toList(),
+
     );
   }
 
