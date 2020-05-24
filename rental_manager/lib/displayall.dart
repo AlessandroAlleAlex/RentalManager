@@ -465,8 +465,9 @@ class personInfo {
   String imageURL;
   String phoneNumber;
   String latestTime;
+  String locationManager;
   personInfo(this.name, this.StudentID, this.email, this.imageURL,
-      this.phoneNumber, this.latestTime);
+      this.phoneNumber, this.latestTime, this.locationManager);
 }
 
 class startAndUid {
@@ -585,7 +586,7 @@ class _peopleTabState extends State<peopleTab> {
                 if (name == null) {
                 } else {
                   var tmp = personInfo(name, StudentID, email, imageURL,
-                      phoneNumber, latestTime);
+                      phoneNumber, latestTime, element["LocationManager"]);
                   if (tmp != null) {
                     peopleList.add(tmp);
                   } else {}
@@ -623,11 +624,13 @@ class _peopleTabState extends State<peopleTab> {
                             } else {
                               var uid = peopleList[i].email;
                               var name = peopleList[i].name;
+                              var locationManager =
+                                  peopleList[i].locationManager;
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          managepeopleOrders(uid, name)));
+                                      builder: (context) => managepeopleOrders(
+                                          uid, name, locationManager)));
                             }
                           },
                         ),
@@ -644,10 +647,10 @@ class _peopleTabState extends State<peopleTab> {
 }
 
 class managepeopleOrders extends StatefulWidget {
-  @override
   String uid;
   String name;
-  managepeopleOrders(this.uid, this.name);
+  String locationManager;
+  managepeopleOrders(this.uid, this.name, this.locationManager);
   _managepeopleOrdersState createState() => _managepeopleOrdersState();
 }
 
@@ -656,7 +659,6 @@ void test(DocumentSnapshot ds, uid) {
 }
 
 class _managepeopleOrdersState extends State<managepeopleOrders> {
-  @override
   Icon returnAdminOrnot() {
     if (globals.isAdmin) {
       return Icon(Icons.lock_open);
@@ -712,7 +714,35 @@ class _managepeopleOrdersState extends State<managepeopleOrders> {
                 : Text('$name is now ${globals.locationManager}\'s manager'),
             actions: <Widget>[
               FlatButton(
-                  onPressed: () => Navigator.of(context).pop(),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    Navigator.of(context).pop();
+                  },
+                  child: Text('Done',
+                      style: TextStyle(fontWeight: FontWeight.bold)))
+            ],
+          );
+        });
+  }
+
+  Future _dialogSelfDelete(BuildContext context, String name) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: Text(
+              'Removed Successfully',
+              style:
+                  TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
+            ),
+            content: Text('$name is NOT a manager anymore.',
+                style: TextStyle(fontWeight: FontWeight.bold)),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () {
+                    Navigator.of(context)
+                        .pushReplacementNamed('/MainViewScreen');
+                  },
                   child: Text('Done',
                       style: TextStyle(fontWeight: FontWeight.bold)))
             ],
@@ -735,9 +765,10 @@ class _managepeopleOrdersState extends State<managepeopleOrders> {
   }
 
   Widget build(BuildContext context) {
-    var uid = this.widget.uid, name = this.widget.name;
+    String uid = this.widget.uid,
+        name = this.widget.name,
+        userLocationManager = widget.locationManager;
     String correctUID = 'AppSignInUser' + uid;
-    print(correctUID);
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
@@ -747,15 +778,18 @@ class _managepeopleOrdersState extends State<managepeopleOrders> {
         title: Text('$name \'s ' + langaugeSetFunc('Orders'),
             style: TextStyle(color: textcolor())),
         actions: <Widget>[
-          globals.locationManager != ""
+          userLocationManager != ""
               ? FlatButton.icon(
                   icon: Icon(Icons.delete),
-                  label: Text('${globals.locationManager}'),
+                  label: Text('$userLocationManager'),
                   onPressed: () {
                     removeLocationManager(correctUID).whenComplete(() {
-                      globals.locationManager = "";
-                      _dialog(context, name, 1)
-                          .whenComplete(() => Navigator.pop(context));
+                      if (globals.uid == correctUID) {
+                        globals.locationManager = "";
+                        _dialogSelfDelete(context, name);
+                      } else {
+                        _dialog(context, name, 1);
+                      }
                     });
                   },
                 )
