@@ -28,17 +28,21 @@ class LocationPage extends StatefulWidget {
 
 Color backgroundcolor() {
   if (globals.dark == false) {
-    return Colors.grey[200];
+    return Color.fromRGBO(237, 237, 237, 1);
   } else {
-    return Colors.black;
+    return Color.fromRGBO(25, 25, 25, 1);
   }
+}
+
+Color BoxBackground() {
+  return globals.dark == false ? Colors.white : Color.fromRGBO(35, 35, 35, 1);
 }
 
 Color textcolor() {
   if (globals.dark == false) {
     return Colors.black;
   } else {
-    return Colors.white;
+    return Color.fromRGBO(211, 211, 211, 1);
   }
 }
 

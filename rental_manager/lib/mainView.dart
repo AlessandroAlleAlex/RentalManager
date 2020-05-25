@@ -9,12 +9,12 @@ import 'package:rental_manager/tabs/help.dart';
 import 'package:rental_manager/tabs/account.dart';
 import 'package:flutter/foundation.dart' as foundation;
 import 'globals.dart' as globals;
-bool get isIos => foundation.defaultTargetPlatform == foundation.TargetPlatform.iOS;
 
+bool get isIos =>
+    foundation.defaultTargetPlatform == foundation.TargetPlatform.iOS;
 
 class MyHome1 extends StatefulWidget {
   @override
-
   MyHomeState createState() => MyHomeState();
 }
 
@@ -40,26 +40,46 @@ class MyHomeState extends State<MyHome1> with SingleTickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-
-
-
-    if(isIos){
+    if (true) {
       return CupertinoTabScaffold(
-        backgroundColor: backgroundcolor(),
-          tabBar:CupertinoTabBar(
-            backgroundColor: backgroundcolor(),
-              items: [
+          backgroundColor: backgroundcolor(),
+          tabBar: CupertinoTabBar(backgroundColor: backgroundcolor(), items: [
             BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.location, color: textcolor()), title: Text(langaugeSetFunc("Locations"), style: TextStyle(color: textcolor()),)),
+                icon: Icon(CupertinoIcons.location, color: textcolor()),
+                title: Text(
+                  langaugeSetFunc("Locations"),
+                  style: TextStyle(color: textcolor()),
+                )),
             BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.bookmark, color: textcolor(),), title: Text(langaugeSetFunc("Reservation"), style: TextStyle(color: textcolor()),)),
+                icon: Icon(
+                  CupertinoIcons.bookmark,
+                  color: textcolor(),
+                ),
+                title: Text(
+                  langaugeSetFunc("Reservation"),
+                  style: TextStyle(color: textcolor()),
+                )),
             BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.search,  color: textcolor(),), title: Text(langaugeSetFunc("Help"), style: TextStyle(color: textcolor()),)),
+                icon: Icon(
+                  CupertinoIcons.search,
+                  color: textcolor(),
+                ),
+                title: Text(
+                  langaugeSetFunc("Help"),
+                  style: TextStyle(color: textcolor()),
+                )),
             BottomNavigationBarItem(
-                icon: Icon(CupertinoIcons.person, color: textcolor(),), title: Text(langaugeSetFunc("User Info"), style: TextStyle(color: textcolor()),))
+                icon: Icon(
+                  CupertinoIcons.person,
+                  color: textcolor(),
+                ),
+                title: Text(
+                  langaugeSetFunc("User Info"),
+                  style: TextStyle(color: textcolor()),
+                ))
           ]),
-        tabBuilder: (context, index){
-            switch(index){
+          tabBuilder: (context, index) {
+            switch (index) {
               case 0:
                 return FirstTab();
               case 1:
@@ -71,12 +91,9 @@ class MyHomeState extends State<MyHome1> with SingleTickerProviderStateMixin {
               default:
                 return FirstTab();
             }
-        }
-
-      );
-    }else{
+          });
+    } else {
       return Scaffold(
-
         body: TabBarView(
           // Add tabs as widgets
           physics: NeverScrollableScrollPhysics(),
@@ -84,30 +101,35 @@ class MyHomeState extends State<MyHome1> with SingleTickerProviderStateMixin {
           // set the controller
           controller: controller,
         ),
-
         bottomNavigationBar: Material(
-
           color: backgroundcolor(),
           child: TabBar(
             indicatorColor: Colors.black,
             labelColor: textcolor(),
             tabs: <Tab>[
-              Tab(icon: Icon(Icons.location_city, color: textcolor(),), text: langaugeSetFunc('Locations'),),
-              Tab(icon: Icon(Icons.book, color: textcolor() ), text:  langaugeSetFunc('Reservation')),
-              Tab(icon: Icon(Icons.help,color: textcolor() ), text: langaugeSetFunc('Help'),),
-              Tab(icon: Icon(Icons.account_circle,color: textcolor() ), text: langaugeSetFunc('Account'),),
+              Tab(
+                icon: Icon(
+                  Icons.location_city,
+                  color: textcolor(),
+                ),
+                text: langaugeSetFunc('Locations'),
+              ),
+              Tab(
+                  icon: Icon(Icons.book, color: textcolor()),
+                  text: langaugeSetFunc('Reservation')),
+              Tab(
+                icon: Icon(Icons.help, color: textcolor()),
+                text: langaugeSetFunc('Help'),
+              ),
+              Tab(
+                icon: Icon(Icons.account_circle, color: textcolor()),
+                text: langaugeSetFunc('Account'),
+              ),
             ],
             controller: controller,
           ),
         ),
-
-
       );
     }
-
-
   }
 }
-
-
-

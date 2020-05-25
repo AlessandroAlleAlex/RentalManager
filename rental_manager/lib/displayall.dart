@@ -777,8 +777,9 @@ class _managepeopleOrdersState extends State<managepeopleOrders> {
         actions: <Widget>[
           userLocationManager != ""
               ? FlatButton.icon(
-                  icon: Icon(Icons.delete),
-                  label: Text('$userLocationManager'),
+                  icon: Icon(Icons.delete, color: textcolor()),
+                  label: Text('$userLocationManager',
+                      style: TextStyle(color: textcolor())),
                   onPressed: () {
                     removeLocationManager(correctUID).whenComplete(() {
                       if (globals.uid == correctUID) {
@@ -791,8 +792,9 @@ class _managepeopleOrdersState extends State<managepeopleOrders> {
                   },
                 )
               : FlatButton.icon(
-                  icon: Icon(Icons.add),
-                  label: Text('As Manager'),
+                  icon: Icon(Icons.add, color: textcolor()),
+                  label:
+                      Text('As Manager', style: TextStyle(color: textcolor())),
                   onPressed: () => globals.isAdmin
                       ? Navigator.push(
                           context,
