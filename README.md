@@ -11,7 +11,7 @@
  
 if you need tech support while using our iOS App “FindRentalManager” on App Store
 
-To Contact us:
+# To Contact us:
 
 Abudureheman Adila aadila@ucdavis.edu
 
