@@ -1,4 +1,14 @@
-# RentalManager
+# FindRentalManager
+# What is FindRentalManager?
+  This is the APP can help  UCD students to have the online reservations  in the arc and library and  this app can support manager view
+  This app will help users to do the reservations and keep track of different items' usage 
+# How to reserve on FindRentalManager?
+  The first tab-> select an location -> select an category -> select an item-> to reserve.
+# How to check your reservation?
+  The second tab->swap the block where locates the top app bar. 
+# How to pick up an item/ return item?
+  The second tab-> Edit-> Select the item->Pick up/Return
+ 
 if you need tech support while using our iOS App “FindRentalManager” on App Store
 
 To Contact us:
