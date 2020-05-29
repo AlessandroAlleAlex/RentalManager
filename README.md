@@ -10,6 +10,8 @@
   The second tab-> Edit-> Select the item->Pick up/Return
  
 if you need tech support while using our iOS App “FindRentalManager” on App Store
+# As a Admin/Manager, how can I add/delete/edit a location/catgory/item?
+The thrid tab->Manager view->click the pen icon->Long press the location/catgory image then you would see the pop_up and feel free to edit.
 
 # To Contact us:
 
