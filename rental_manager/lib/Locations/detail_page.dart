@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:numberpicker/numberpicker.dart';
@@ -59,7 +60,7 @@ class _DetailPage extends State<DetailPage> {
   Widget reserveButton() {
     return _currentResAmount < 1 || _itemTotalAmount < 1
         ? Text(
-            'The item you have selected is currently not available.',
+            langaugeSetFunc('The item you have selected is currently not available.'),
             style: TextStyle(
               color: Colors.red,
               fontSize: 22,
@@ -76,7 +77,12 @@ class _DetailPage extends State<DetailPage> {
                 borderRadius: new BorderRadius.circular(40.0),
               ),
               onPressed: () {
-                testingReservations(widget.itemSelected.documentID);
+                if (globals.username == "anonymous") {
+                  pop_window("Sorry", "anonymous cannot make a reservation", context);
+                }else{
+                  testingReservations(widget.itemSelected.documentID);
+
+                }
               },
               icon: Icon(
                 Icons.bookmark,
@@ -133,7 +139,7 @@ class _DetailPage extends State<DetailPage> {
                       _showNumberPickerDialog();
                     },
                     child: Text(
-                      'click to edit reservation amount',
+                      langaugeSetFunc('click to edit reservation amount'),
                       style: TextStyle(
                           decoration: TextDecoration.underline,
                           color: Colors.red,
@@ -151,6 +157,36 @@ class _DetailPage extends State<DetailPage> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+
+    if (globals.isiOS) {
+      return Scaffold(
+        appBar: CupertinoNavigationBar(
+          heroTag: "tab14",
+          transitionBetweenRoutes: false,
+            middle: Text(
+              widget.itemSelected.data['name'],
+              style: TextStyle(color: textcolor()),
+            ),
+            backgroundColor: backgroundcolor(),
+        ),
+        backgroundColor: backgroundcolor(),
+        body: SingleChildScrollView(
+          child: Container(
+            padding: EdgeInsets.symmetric(vertical: 30.0, horizontal: 30.0),
+            child: Column(
+              children: <Widget>[
+                picture(),
+                SizedBox(height: 20.0),
+                bottom3Widgets(),
+                // SizedBox(height: 20.0),
+                // reserveButton(),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
@@ -183,7 +219,7 @@ class _DetailPage extends State<DetailPage> {
     // print(globals.uid);
     var now = new DateTime.now();
     var time = DateFormat("yyyy-MM-dd HH:mm:ss").format(now);
-    String itemName;
+    String itemName, locationName = "NULL", catergoryName = "NULL";
     await Firestore.instance
         .collection(returnItemCollection())
         .document(itemID)
@@ -191,6 +227,8 @@ class _DetailPage extends State<DetailPage> {
         .then((DocumentSnapshot ds) {
       try {
         itemName = ds["name"];
+        locationName = ds["Location"];
+        catergoryName = ds["category"];
       } catch (e) {
         print(e);
       }
@@ -201,10 +239,10 @@ class _DetailPage extends State<DetailPage> {
         context);
     // print("Reservation pickup before time: " +
     //     DateFormat("yyyy-MM-dd HH:mm:ss").format(pickUpBefore));
-    uploadData(itemID, globals.uid, time);
+    uploadData(itemID, globals.uid, time, locationName, catergoryName);
   }
 
-  void uploadData(itemID, uid, dateTime) async {
+  void uploadData(itemID, uid, dateTime,locationName, catergoryName) async {
     String itemName, imageURL;
     final databaseReference = Firestore.instance;
     await Firestore.instance
@@ -256,6 +294,8 @@ class _DetailPage extends State<DetailPage> {
       'return time': 'NULL',
       'endTime': "TBD",
       'UserName': globals.username,
+      'location': locationName,
+      'category': catergoryName,
     });
     await databaseReference
         .collection(returnUserCollection())
