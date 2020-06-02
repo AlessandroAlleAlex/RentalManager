@@ -35,12 +35,14 @@ class _OrganizationSelectionState extends State<OrganizationSelection> {
               MaterialButton(
                 color: Colors.blue,
                 onPressed: () {
-                  String noSpaceInput =
-                      inputText.text.trim().replaceAll(' ', '');
-                  String compateInput = noSpaceInput.toLowerCase();
+                  // String noSpaceInput =
+                  //     inputText.text.trim().replaceAll(' ', '');
+                  String noSpaceInput = inputText.text.trim();
+                  String compateInput =
+                      noSpaceInput.toLowerCase().trim().replaceAll(' ', '');
                   List<String> toLowerList = [];
                   for (String s in globals.existingOrganizations) {
-                    toLowerList.add(s.toLowerCase());
+                    toLowerList.add(s.toLowerCase().trim().replaceAll(' ', ''));
                   }
                   if (!toLowerList.contains(compateInput)) {
                     Navigator.of(context).pop(noSpaceInput);
@@ -119,6 +121,10 @@ class _OrganizationSelectionState extends State<OrganizationSelection> {
               return Center(
                 child: Text('Loading...'),
               );
+            globals.existingOrganizations.clear();
+            snapshot.data.documents.forEach((doc) {
+              globals.existingOrganizations.add(doc['name']);
+            });
 
             return ListView.builder(
               itemCount: snapshot.data.documents.length,

@@ -290,21 +290,22 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  Future getExistingOrganizations() async {
-    await Firestore.instance
-        .collection('organizations')
-        .getDocuments()
-        .then((organization) {
-      organization.documents
-          .forEach((org) => globals.existingOrganizations.add(org['name']));
-    });
-  }
+  // Future getExistingOrganizations() async {
+  //   await Firestore.instance
+  //       .collection('organizations')
+  //       .getDocuments()
+  //       .then((organization) {
+  //     organization.documents
+  //         .forEach((org) => globals.existingOrganizations.add(org['name']));
+  //   });
+  //   print(globals.existingOrganizations.toString());
+  // }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getExistingOrganizations();
+    // getExistingOrganizations();
   }
 
   @override
