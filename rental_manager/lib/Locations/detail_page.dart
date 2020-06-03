@@ -30,6 +30,7 @@ class _DetailPage extends State<DetailPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+
     _itemTotalAmount = widget.itemSelected.data['# of items'];
   }
 
@@ -60,7 +61,8 @@ class _DetailPage extends State<DetailPage> {
   Widget reserveButton() {
     return _currentResAmount < 1 || _itemTotalAmount < 1
         ? Text(
-            langaugeSetFunc('The item you have selected is currently not available.'),
+            langaugeSetFunc(
+                'The item you have selected is currently not available.'),
             style: TextStyle(
               color: Colors.red,
               fontSize: 22,
@@ -78,11 +80,12 @@ class _DetailPage extends State<DetailPage> {
               ),
               onPressed: () {
                 if (globals.username == "anonymous") {
-                  pop_window("Sorry", "anonymous cannot make a reservation", context);
-                }else{
+                  pop_window(
+                      "Sorry", "anonymous cannot make a reservation", context);
+                } else {
                   testingReservations(widget.itemSelected.documentID);
-
                 }
+                // Navigator.pop(context);
               },
               icon: Icon(
                 Icons.bookmark,
@@ -163,11 +166,11 @@ class _DetailPage extends State<DetailPage> {
         appBar: CupertinoNavigationBar(
           heroTag: "tab14",
           transitionBetweenRoutes: false,
-            middle: Text(
-              widget.itemSelected.data['name'],
-              style: TextStyle(color: textcolor()),
-            ),
-            backgroundColor: backgroundcolor(),
+          middle: Text(
+            widget.itemSelected.data['name'],
+            style: TextStyle(color: textcolor()),
+          ),
+          backgroundColor: backgroundcolor(),
         ),
         backgroundColor: backgroundcolor(),
         body: SingleChildScrollView(
@@ -215,6 +218,25 @@ class _DetailPage extends State<DetailPage> {
     );
   }
 
+  void _showSuccessDialog() {
+    showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Reserved!'),
+            content: Text(
+                'Please pick up your item/s within 10 mins.\nYou will soon receive a confirmation email.'),
+            actions: <Widget>[
+              FlatButton(
+                  onPressed: () async {
+                    Navigator.pop(context);
+                  },
+                  child: Text('Ok'))
+            ],
+          );
+        });
+  }
+
   testingReservations(String itemID) async {
     // print(globals.uid);
     var now = new DateTime.now();
@@ -242,7 +264,7 @@ class _DetailPage extends State<DetailPage> {
     uploadData(itemID, globals.uid, time, locationName, catergoryName);
   }
 
-  void uploadData(itemID, uid, dateTime,locationName, catergoryName) async {
+  void uploadData(itemID, uid, dateTime, locationName, catergoryName) async {
     String itemName, imageURL;
     final databaseReference = Firestore.instance;
     await Firestore.instance
@@ -305,13 +327,15 @@ class _DetailPage extends State<DetailPage> {
     });
 
     await decrementItemAmount();
+    _showSuccessDialog();
+    Navigator.pop(context);
 
-    PlatformAlertDialog(
-      title: 'Your item has placed',
-      content:
-          'Your reservation is successful confirmed, please pick it up on time\n You will soon receieved the confirmation email',
-      defaultActionText: Strings.ok,
-    ).show(context);
+    // PlatformAlertDialog(
+    //   title: 'Your item has placed',
+    //   content:
+    //       'Your reservation is successful confirmed, please pick it up on time\n You will soon receieved the confirmation email',
+    //   defaultActionText: Strings.ok,
+    // ).show(context);
     print("success!");
   }
 }

@@ -67,7 +67,7 @@ class _reservationCell extends State<reservationCell> {
     await firestore
         .document(widget.passedFirestoreData.documentID.toString())
         .updateData({'status': 'Returned'}).catchError((error) => print(error));
-    incrementItemAmount();
+    await incrementItemAmount();
     // await Firestore.instance.collection(returnItemCollection()).document(itemID).setData({'# of items': +itemAmount});
   }
 
@@ -78,10 +78,13 @@ class _reservationCell extends State<reservationCell> {
           return AlertDialog(
             title: Text('Reservation Cancelled!'),
             content: Text(
-                'this reservation\'s record is being saved in your history\'s list.'),
+                'The reservation\'s record is being saved in your history\'s list.'),
             actions: <Widget>[
               FlatButton(
-                  onPressed: () => Navigator.pop(context), child: Text('Close'))
+                  onPressed: () async {
+                    Navigator.pop(context);
+                  },
+                  child: Text('Close'))
             ],
           );
         });
@@ -94,10 +97,13 @@ class _reservationCell extends State<reservationCell> {
           return AlertDialog(
             title: Text('Time Expired!'),
             content: Text(
-                'this reservation\'s record is being saved in your history\'s list.'),
+                'The reservation\'s record is being saved in your history\'s list.'),
             actions: <Widget>[
               FlatButton(
-                  onPressed: () => Navigator.pop(context), child: Text('Close'))
+                  onPressed: () async {
+                    Navigator.pop(context);
+                  },
+                  child: Text('Close'))
             ],
           );
         });
@@ -109,8 +115,18 @@ class _reservationCell extends State<reservationCell> {
     super.initState();
     itemID = widget.passedFirestoreData.data['item'];
     itemAmount = int.parse(widget.passedFirestoreData.data['amount']);
+    // pickedUp();
+    // Firestore.instance
+    //     .collection(returnReservationCollection())
+    //     .where('uid', isEqualTo: globals.uid)
+    //     .where('status', isEqualTo: 'Reserved')
+    //     .getDocuments()
+    //     .then((doc) => Navigator.of(context).pop(doc.documents));
+    // _showDialog();
+
+    // Navigator.pushAndRemoveUntil(context, newRoute, (route) => false);
     startTimer();
-    if (displayRemainingTime >= -1) {
+    if (displayRemainingTime > -1) {
       _timer = Timer.periodic(Duration(seconds: 60), (Timer t) => startTimer());
     }
   }
@@ -119,7 +135,9 @@ class _reservationCell extends State<reservationCell> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    _timer.cancel(); // cancel the timer when you go to another view
+    if (_timer != null) {
+      _timer.cancel(); // cancel the timer when you go to another view
+    }
   }
 
   void startTimer() {
@@ -128,16 +146,22 @@ class _reservationCell extends State<reservationCell> {
 
     final remainingTime = endTime.difference(DateTime.now()).inMinutes;
     displayRemainingTime = remainingTime;
-    if (remainingTime >= -1) {
+    if (remainingTime > -1) {
       setState(() {
         displayRemainingTime = remainingTime;
       });
     } else {
       timeExpired().whenComplete(
-        () {
-          incrementItemAmount();
-          _showDialog();
-          Navigator.pop(context);
+        () async {
+          await incrementItemAmount().whenComplete(() async {
+            await Firestore.instance
+                .collection(returnReservationCollection())
+                .where('uid', isEqualTo: globals.uid)
+                .where('status', isEqualTo: 'Reserved')
+                .getDocuments()
+                .then((doc) => Navigator.of(context).pop(doc.documents));
+            _showDialog();
+          });
         },
       );
     }
@@ -289,7 +313,6 @@ class _reservationCell extends State<reservationCell> {
                         .where('uid', isEqualTo: globals.uid)
                         .where('status', isEqualTo: 'Reserved')
                         .getDocuments();
-
                     Navigator.of(context).pop(documents.documents);
                   },
                   icon: Icon(Icons.insert_emoticon, size: 30.0),
@@ -311,9 +334,15 @@ class _reservationCell extends State<reservationCell> {
                     borderRadius: new BorderRadius.circular(40.0),
                   ),
                   onPressed: () async {
-                    cancelReservation();
-                    _showCancelDialog();
-                    Navigator.pop(context);
+                    await cancelReservation().whenComplete(() async {
+                      QuerySnapshot documents = await Firestore.instance
+                          .collection(returnReservationCollection())
+                          .where('uid', isEqualTo: globals.uid)
+                          .where('status', isEqualTo: 'Reserved')
+                          .getDocuments();
+                      Navigator.of(context).pop(documents.documents);
+                      _showCancelDialog();
+                    });
                   },
                   icon: Icon(
                     Icons.cancel,

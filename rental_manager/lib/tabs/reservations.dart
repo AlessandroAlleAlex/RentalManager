@@ -539,7 +539,8 @@ class _SecondTabState extends State<SecondTab> {
                                 ),
                                 onPressed: () async {
                                   context = secondTabContext;
-                                  print("here" + copyReturnList.length.toString());
+                                  print("here" +
+                                      copyReturnList.length.toString());
                                   copyReturnList.forEach((element) {
                                     Firestore.instance
                                         .collection(
@@ -611,7 +612,7 @@ List<DocumentSnapshot> PickUpList = [];
 List<DocumentSnapshot> ReturnList = [];
 String getAMPM(String time_str) {
   time_str = parseTime(time_str);
-  return time_str.substring(10);
+  return time_str.substring(time_str.indexOf(' '));
 }
 
 Widget checkBox(bool check) {

@@ -20,7 +20,7 @@ BuildContext mycontext;
 String CancelledItemDocID = "";
 String collectionName = 'TestModeNew';
 List<DocumentSnapshot> myds;
-String langaugeSet = "SimplifiedChinese";
+String langaugeSet = "English";
 String organization = "";
 bool dark = false;
 int userSelectTheme = -1;
