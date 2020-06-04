@@ -30,11 +30,25 @@ This is an app for keeping track of inventory for shared physical items and mana
 
 ## Functionaliies
 - **Sign in**:
-  * **Google Sign in**:
+  * **Google Sign in**: lib/main.dart See on [Github](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/main.dart#L151-L165)
    
-  ``` 
-  flutter devices  
-  ```
+   ``` 
+  Future<FirebaseUser> _myGoogleSignIn() async {
+    GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+    GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+    final FirebaseUser user =
+        (await _auth.signInWithCredential(credential)).user;
+
+    print("signed in " + user.displayName);
+    print("signed in " + user.email);
+
+    return user;
+  }
+   ```
   * **Firebase Sign in** abc
  
   
