@@ -49,7 +49,7 @@ This is an app for keeping track of inventory for shared physical items and mana
      return user;
   }
    ```
-  * **[Firebase Sign in]((https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/main.dart#L446))**: lib/main.dart Line 446
+  * **[Firebase Sign in](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/main.dart#L446))**: lib/main.dart Line 446)
    ``` 
    var authHandler = newAuth
    var e = await authHandler.signIn(username, password);
