@@ -54,8 +54,8 @@ This is an app for keeping track of inventory for shared physical items and mana
    var authHandler = newAuth
    var e = await authHandler.signIn(username, password);
    ```
-- **Sign in**:
-  * **[Google Sign in](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/main.dart#L151-L165)**: lib/main.dart Line 151-Line 165
+- **Second Tab View**:
+  * **[iOS Sliding Segmented Control](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/main.dart#L276-L290)**: lib/main.dart Line 276-Line 290
    
    ``` 
   Future<FirebaseUser> _myGoogleSignIn() async {
