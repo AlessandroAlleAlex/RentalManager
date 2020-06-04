@@ -25,10 +25,11 @@ flutter run
 ## Overview
 
 This is an app for keeping track of inventory for shared physical items and manager-friendly fo uploading items.
+
 **Please Note**: This app is a firebase based app so most functionaliies need to be done while devices are connected with the Internet. Please make sure you are not off-line while your are developing this app.
 
-## Terms
- Scaffold class: Scaffold is a class in flutter which provides many widgets or we can say APIs like Drawer, SnackBar, BottomNavigationBar, FloatingActionButton, AppBar etc. See more [here](https://api.flutter.dev/flutter/material/Scaffold-class.html)
+## Functionaliies
+ -**Sign in**:
  
-
+  
 
