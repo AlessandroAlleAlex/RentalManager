@@ -29,7 +29,9 @@ This is an app for keeping track of inventory for shared physical items and mana
 **Please Note**: This app is a firebase based app so most functionaliies need to be done while devices are connected with the Internet. Please make sure you are not off-line while your are developing this app.
 
 ## Functionaliies
- -**Sign in**:
+ - **Sign in**:
+  - **Google Sign in**:
+  - **Firebase Sign in**
  
   
 
