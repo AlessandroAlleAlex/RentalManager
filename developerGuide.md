@@ -30,8 +30,8 @@ This is an app for keeping track of inventory for shared physical items and mana
 
 ## Functionaliies
  - **Sign in**:
-  - **Google Sign in**:
-  - **Firebase Sign in**
+  -- **Google Sign in**:
+  -- **Firebase Sign in**
  
   
 
