@@ -11,7 +11,7 @@ Download the zip file or use Git clone and set up the platform [iOS](https://flu
 
 For IDE (such as Andriod Stdio) users, please just press "Run" Button after selecting the platrform(iOS simulator or Andriod emulator)
 
-Otherwise, please use following commands in your terminal:
+Otherwise, please use the following commands in your terminal to run our app:
  
  ``` 
 flutter devices 
