@@ -58,21 +58,21 @@ This is an app for keeping track of inventory for shared physical items and mana
   * **[iOS Sliding Segmented Control](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/main.dart#L276-L290)**: lib/main.dart Line 276-Line 290
    
    ``` 
-  Future<FirebaseUser> _myGoogleSignIn() async {
-     GoogleSignInAccount googleUser = await _googleSignIn.signIn();
-     GoogleSignInAuthentication googleAuth = await googleUser.authentication;
-     final AuthCredential credential = GoogleAuthProvider.getCredential(
-       accessToken: googleAuth.accessToken,
-       idToken: googleAuth.idToken,
-     );
-     final FirebaseUser user =
-         (await _auth.signInWithCredential(credential)).user;
+  CupertinoSlidingSegmentedControl(
 
-     print("signed in " + user.displayName);
-     print("signed in " + user.email);
-
-     return user;
-  }
+        padding: EdgeInsets.all(2.0),
+        backgroundColor: Colors.grey,
+        thumbColor: backgroundcolor(),
+        groupValue: theriGroupVakue,
+        onValueChanged: (changeFromGroupValue) {
+         setState(() {
+            rightButton = "Edit";
+            theriGroupVakue = changeFromGroupValue;
+            view = theriGroupVakue + 1;
+          });
+        },
+         children: logoWidgets,
+  )
    ```
   * **[Firebase Sign in](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/main.dart#L446)**: lib/main.dart Line 446)
    ``` 
