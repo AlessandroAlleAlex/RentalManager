@@ -1,9 +1,11 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flappy_search_bar/flappy_search_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/widgets.dart';
 import 'package:intl/intl.dart';
 import 'package:progress_dialog/progress_dialog.dart';
 import 'package:rental_manager/CurrentReservation.dart';
@@ -13,6 +15,8 @@ import 'package:rental_manager/PlatformWidget/platform_alert_dialog.dart';
 import 'package:rental_manager/chatview/login.dart';
 import 'package:rental_manager/language.dart';
 import 'package:rental_manager/manager/manage_locations.dart';
+import 'package:flutter_cupertino_data_picker/flutter_cupertino_data_picker.dart';
+import 'package:rental_manager/tabs/account.dart';
 import 'package:rental_manager/tabs/locations.dart';
 import 'globals.dart' as globals;
 import "package:http/http.dart" as http;
@@ -22,35 +26,29 @@ import 'package:image_picker/image_picker.dart';
 import 'package:validators/validators.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'dart:io' show Platform;
-
-import 'location_manager.dart';
+import 'managebooksHelper.dart';
 import 'manager/manage_category.dart';
-
 class Manager extends StatefulWidget {
   @override
   _ManagerState createState() => _ManagerState();
 }
+List<DocumentSnapshot> booksReservationList = [];
+List<personInfo> tabPeopleList =[];
+int view = 0;
+
 
 class _ManagerState extends State<Manager> {
-  Future findLocationOfManager(BuildContext context) {
-    return Firestore.instance
-        .collection(returnLocationsCollection())
-        .where('name', isEqualTo: globals.locationManager)
-        .getDocuments()
-        .then((doc) {
-      doc.documents.forEach((element) {
-        return Navigator.push(
-            context,
-            MaterialPageRoute(
-                builder: (context) => ManageCategory(
-                    data: element.data, documentID: element.documentID)));
-      });
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
+
+    bool isAdminOrManager = false;
+    isAdminOrManager = ((globals.isAdmin == true) || (globals.locationManager.isNotEmpty));
+    if(isAdminOrManager == false){
+      print(false);
+    }else{
+      print(true);
+    }
+    return isAdminOrManager? DefaultTabController(
       length: 2,
       child: Scaffold(
         appBar: AppBar(
@@ -58,22 +56,75 @@ class _ManagerState extends State<Manager> {
             color: textcolor(), //change your color here
           ),
           actions: <Widget>[
-            IconButton(
+            globals.isiOS? IconButton(
+              icon: Icon(
+                CupertinoIcons.pen,
+                color: textcolor(),
+              ),
+              onPressed: () async{
+                Firestore.instance.collection(returnUserCollection()).document(globals.uid).get().then((value){
+                  globals.isAdmin = value["Admin"];
+                  globals.locationManager = value["LocationManager"];
+                });
+                isAdminOrManager = ((globals.isAdmin == true) || (globals.locationManager.isNotEmpty));
+                if( isAdminOrManager == false){
+                  print("Not");
+                  pop_window("Warning", "You are no longer a Admin/Manager.\nYou cannot view this page as a guest", context);
+                }else if(globals.isAdmin){
+                 Navigator.push(context,
+                     MaterialPageRoute(builder: (context) => ManageLocations()));
+               }else{
+                 var a = await Firestore.instance.collection(returnLocationsCollection()).where('name', isEqualTo: globals.locationManager).getDocuments();
+                 if(a.documents.length == 1){
+                   Navigator.push(context,
+                       MaterialPageRoute(builder: (context) => ManageCategory(data: a.documents[0], documentID: a.documents[0].documentID)));
+                 }
+               }
+
+
+              },
+            ): IconButton(
               icon: Icon(
                 Icons.assessment,
                 color: textcolor(),
               ),
-              onPressed: () async {
-                if (globals.isAdmin) {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ManageLocations()));
-                } else {
-                  findLocationOfManager(context);
-                }
+              onPressed: () {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => ManageLocations())
+                );
               },
             ),
+            IconButton(
+              icon: Icon(
+                CupertinoIcons.search,
+                color: textcolor(),
+              ),
+              onPressed: ()async{
+                 Firestore.instance.collection(returnUserCollection()).document(globals.uid).get().then((value){
+                   globals.isAdmin = value["Admin"];
+                   globals.locationManager = value["LocationManager"];
+                 });
+                 isAdminOrManager = ((globals.isAdmin == true) || (globals.locationManager.isNotEmpty));
+                 if(isAdminOrManager == false){
+                   print("Not");
+                   pop_window("Warning", "You are no longer a Admin/Manager.\nYou cannot view this page as a guest", context);
+                 }else{
+                   if(view == 1){
+                     print(booksReservationList.length);
+                     //searchReservation
+                     Navigator.push(context,
+                         MaterialPageRoute(builder: (context) => searchReservation(booksReservationList))
+                     );
+                   }else if(view == 2){
+                     print(tabPeopleList.length);
+                     //searchPeople
+                     Navigator.push(context,
+                         MaterialPageRoute(builder: (context) =>searchPeople(tabPeopleList) )
+                     );
+                   }
+                 }
+              },
+            )
           ],
           title: Text(
             langaugeSetFunc('Manage'),
@@ -103,7 +154,73 @@ class _ManagerState extends State<Manager> {
           ],
         ),
       ),
+    ) : Scaffold(
+      appBar:CupertinoNavigationBar(
+        heroTag: "tab3119dja0PeopleOrder",
+        transitionBetweenRoutes: false,
+        middle: Text("Recent orders"),
+        backgroundColor: backgroundcolor(),
+      ),
+      backgroundColor: backgroundcolor(),
+      body: StreamBuilder(
+          stream: Firestore.instance
+              .collection(returnReservationCollection())
+              .snapshots(),
+          builder: (context, snapshot) {
+
+            List<DocumentSnapshot> documents = [];
+            try {
+              documents = snapshot.data.documents;
+            } catch (e) {
+              print(e.toString());
+            }
+
+
+
+            return ListView.builder(
+                itemCount: documents.length,
+                itemBuilder: (context, i){
+                  return Column(
+                    children: <Widget>[
+                      ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage: NetworkImage(documents[i]["imageURL"]),
+                        ),
+                        title: Text(documents[i]["name"], style: TextStyle(color: textcolor())),
+                        subtitle: Text( getSubtitle(documents[i]["reserved time"], documents[i]["picked Up time"], documents[i]["return time"],
+                            documents[i]["status"]
+                        ), style: TextStyle(color: textcolor()) ),
+
+                      ),
+                      Divider(
+                        height: 2.0,
+                      ),
+                    ],
+                  );
+                }
+            );
+
+
+            return Container();
+
+
+          }),
     );
+
+  }
+  String getSubtitle(String reservedTime, String pickupTime, String returnTime, String status){
+    reservedTime = parseTime(reservedTime);
+    pickupTime = parseTime(pickupTime);
+    returnTime = parseTime(returnTime);
+    if(status == "Reserved"){
+      return status + " at " + parseTime(reservedTime);
+    }else if(status ==  "Picked Up"){
+      return status + " at " + parseTime(pickupTime);
+
+    }else if(status ==  "Returned"){
+      return status + " at " + parseTime(returnTime);
+      return pickupTime + status;
+    }
   }
 }
 
@@ -161,112 +278,113 @@ void pickUpFile(BuildContext context, cater, subCollectionName) async {
     }
   }
 
-  if (popWindow) {
+  if(popWindow){
     pop_window(
         "Warning",
         "The CSV file format is not correct\nEach Row should have at least 2 indexs but at most three indexs : ItemName, Amount, imageURL(optional)",
         context);
-  }
+    return;
+  }else{
+    List<List<String>> ListOfItemInfor = [];
 
-  List<List<String>> ListOfItemInfor = [];
+    contentsList.forEach((element) {
+      List<String> temp = element.split(',');
+      ListOfItemInfor.add(temp);
+    });
 
-  contentsList.forEach((element) {
-    List<String> temp = element.split(',');
-    ListOfItemInfor.add(temp);
-  });
+    List<CSVItem> CSVItemList = [];
+    bool isadded = true;
+    String errorName = "";
+    for (int i = 0; i < ListOfItemInfor.length; i++) {
+      var element = ListOfItemInfor[i];
+      int amount = 0;
+      String name = "",
+          imageURL =
+              'https://ciat.cgiar.org/wp-content/uploads/image-not-found.png';
 
-  List<CSVItem> CSVItemList = [];
-  bool isadded = true;
-  String errorName = "";
-  for (int i = 0; i < ListOfItemInfor.length; i++) {
-    var element = ListOfItemInfor[i];
-    int amount = 0;
-    String name = "",
-        imageURL =
-            'https://ciat.cgiar.org/wp-content/uploads/image-not-found.png';
-
-    if (element.length == 2) {
-      name = element[0];
-      if (isDigit(element[1])) {
-        amount = int.parse(element[1]);
-      } else {
-        errorName = element[1];
-        isadded = false;
-        break;
+      if (element.length == 2) {
+        name = element[0];
+        if (isDigit(element[1])) {
+          amount = int.parse(element[1]);
+        } else {
+          errorName = element[1];
+          isadded = false;
+          break;
+        }
+      } else if (element.length == 3) {
+        name = element[0];
+        if (isDigit(element[1])) {
+          amount = int.parse(element[1]);
+        } else {
+          errorName = element[1];
+          isadded = false;
+          break;
+        }
+        imageURL = element[2];
       }
-    } else if (element.length == 3) {
-      name = element[0];
-      if (isDigit(element[1])) {
-        amount = int.parse(element[1]);
-      } else {
-        errorName = element[1];
-        isadded = false;
-        break;
-      }
-      imageURL = element[2];
+      CSVItemList.add(CSVItem(name, amount, imageURL));
     }
-    CSVItemList.add(CSVItem(name, amount, imageURL));
-  }
 
-  if (isadded) {
-    var map = {};
-
-    for (int i = 0; i < CSVItemList.length; i++) {
-      map[i] = "New";
-    }
-    QuerySnapshot list = await Firestore.instance
-        .collection('TempItemCollectionHold')
-        .document(subCollectionName)
-        .collection('item')
-        .getDocuments();
-    for (int i = 0; i < list.documents.length; i++) {
-      var ds = list.documents[i];
+    if (isadded) {
+      var map = {};
 
       for (int i = 0; i < CSVItemList.length; i++) {
-        try {
-          if (CSVItemList[i].name == ds["name"]) {
-            map[i] = ds.documentID;
-            break;
+        map[i] = "New";
+      }
+      QuerySnapshot list = await Firestore.instance
+          .collection('TempItemCollectionHold')
+          .document(subCollectionName)
+          .collection('item')
+          .getDocuments();
+      for (int i = 0; i < list.documents.length; i++) {
+        var ds = list.documents[i];
+
+        for (int i = 0; i < CSVItemList.length; i++) {
+          try {
+            if (CSVItemList[i].name == ds["name"]) {
+              map[i] = ds.documentID;
+              break;
+            }
+          } catch (e) {
+            print(e);
           }
-        } catch (e) {
-          print(e);
         }
       }
-    }
 
-    for (int i = 0; i < CSVItemList.length; i++) {
-      if (map[i] == "New") {
-        await Firestore.instance
-            .collection('TempItemCollectionHold')
-            .document(subCollectionName)
-            .collection('item')
-            .document()
-            .setData({
-          'name': CSVItemList[i].name,
-          'status': 'Hold',
-          'imageURL': CSVItemList[i].imageURL,
-          'amount': CSVItemList[i].amount,
-        });
-      } else {
-        await Firestore.instance
-            .collection('TempItemCollectionHold')
-            .document(subCollectionName)
-            .collection('item')
-            .document(map[i])
-            .updateData({
-          'name': CSVItemList[i].name,
-          'status': 'Hold',
-          'imageURL': CSVItemList[i].imageURL,
-          'amount': CSVItemList[i].amount,
-        });
+      for (int i = 0; i < CSVItemList.length; i++) {
+        if (map[i] == "New") {
+          await Firestore.instance
+              .collection('TempItemCollectionHold')
+              .document(subCollectionName)
+              .collection('item')
+              .document()
+              .setData({
+            'name': CSVItemList[i].name,
+            'status': 'Hold',
+            'imageURL': CSVItemList[i].imageURL,
+            'amount': CSVItemList[i].amount,
+          });
+        } else {
+          await Firestore.instance
+              .collection('TempItemCollectionHold')
+              .document(subCollectionName)
+              .collection('item')
+              .document(map[i])
+              .updateData({
+            'name': CSVItemList[i].name,
+            'status': 'Hold',
+            'imageURL': CSVItemList[i].imageURL,
+            'amount': CSVItemList[i].amount,
+          });
+        }
       }
+    } else {
+      pop_window(
+          langaugeSetFunc('Warning'),
+          langaugeSetFunc(
+              'The item $errorName\'s amount must be an integer. Please double check with that'),
+          context);
     }
-  } else {
-    pop_window(
-        langaugeSetFunc('Warning'),
-        langaugeSetFunc(
-            'The item $errorName\'s amount must be an integer. Please double check with that'),
-        context);
   }
 }
 
@@ -313,8 +431,7 @@ class manageItemInfor {
 
 class _booksTabState extends State<booksTab> {
   @override
-  String returnDifferenceTime(
-      String reservationTime, String pickUpTime, String returnTime) {
+  String returnDifferenceTime(String reservationTime, String pickUpTime, String returnTime) {
     if (returnTime != null && returnTime.isNotEmpty) {
       if (returnTime != "NULL") {
         reservationTime = returnTime;
@@ -362,7 +479,12 @@ class _booksTabState extends State<booksTab> {
     return ans;
   }
 
+
+
   Widget build(BuildContext context) {
+
+
+
     bool isEarly(String a, String b) {
       var time_a = DateTime.parse(a), time_b = DateTime.parse(b);
 
@@ -370,82 +492,66 @@ class _booksTabState extends State<booksTab> {
       return !difference.isNegative;
     }
 
+    int isEarlyInSort(String a, String b) {
+      var time_a = DateTime.parse(a), time_b = DateTime.parse(b);
+
+      var difference = time_a.difference(time_b);
+      if(!difference.isNegative){
+        return -1;
+      }
+      return 1;
+    }
+    String get(DocumentSnapshot ds){
+      try{
+        if(ds["UserName"] != null && ds["status"] != null){
+          return ds['status'] + " by " + ds["UserName"];
+        }
+      }catch(e){
+        print(e.toString());
+      }
+      return "Error in geting name";
+    }
+
     return Scaffold(
       backgroundColor: backgroundcolor(),
       body: StreamBuilder(
-          // stream: globals.isAdmin ? Firestore.instance
-          //     .collection(returnReservationCollection())
-          //     .snapshots() : globals.locationManager != "" ? globals.isAdmin ? Firestore.instance
-          //     .collection(returnReservationCollection()).where() // we need to add location to reservations on Firestore
-          //     .snapshots() : Container(),
-          stream: globals.isAdmin
-              ? Firestore.instance
-                  .collection(returnReservationCollection())
-                  // .where(field) //
-                  .snapshots()
-              : Firestore.instance
-                  .collection(returnReservationCollection())
-                  .where('location', isEqualTo: globals.locationManager) //
-                  .snapshots(),
+          stream: globals.isAdmin? Firestore.instance
+              .collection(returnReservationCollection()).orderBy('startTime',descending:true)
+              .snapshots(): Firestore.instance.collection(returnReservationCollection()).where('location', isEqualTo: globals.locationManager).orderBy('startTime', descending:true).snapshots(),
           builder: (context, snapshot) {
-            if (!snapshot.hasData) return const Text('loading...');
+
+            if (!snapshot.hasData) return Container(child: Center(child: CupertinoActivityIndicator()));
             List<String> userNameList = [];
-            final List<DocumentSnapshot> documents = snapshot.data.documents;
-            List<manageItemInfor> itemList = new List();
-            documents.forEach((ds) => itemList.add(manageItemInfor(
-                  ds["amount"],
-                  ds["startTime"],
-                  ds["endTime"],
-                  ds["item"],
-                  ds["status"],
-                  ds["uid"],
-                  ds['name'],
-                  ds["imageURL"],
-                  ds.documentID,
-                  ds["UserName"],
-                  ds["return time"],
-                  ds["picked Up time"],
-                )));
-
-            for (int i = 0; i < itemList.length - 1; i++) {
-              for (int j = 0; j < itemList.length - i - 1; j++) {
-                var a = itemList[j].startTime, b = itemList[j + 1].startTime;
-                if (a == null || b == null) {
-                  continue;
-                }
-
-                if (isEarly(a, b) == false) {
-                  var swap = itemList[j];
-                  itemList[j] = itemList[j + 1];
-                  itemList[j + 1] = swap;
-                }
-              }
-            }
-
+            List<DocumentSnapshot> documents = snapshot.data.documents;
+            booksReservationList = documents;
+            view = 1;
             return ListView.builder(
-                itemCount: itemList.length,
+                itemCount:  documents.length,
                 itemBuilder: (context, i) {
                   return Column(
                     children: <Widget>[
+
                       Container(
                         child: ListTile(
                           leading: CircleAvatar(
-                            backgroundImage: NetworkImage(itemList[i].imageURL),
+                            backgroundImage: NetworkImage( documents[i]['imageURL']),
                           ),
                           trailing: new Text(
                               returnDifferenceTime(
-                                  itemList[i].startTime,
-                                  itemList[i].pickUpTime,
-                                  itemList[i].returnTime),
+                                documents[i]['startTime'],
+                                documents[i]['picked Up time'],
+                                documents[i]["return time"],
+                              ),
                               style: TextStyle(color: textcolor())),
-                          title: new Text(itemList[i].name,
+                          title: new Text(documents[i]['name'],
                               style: TextStyle(color: textcolor())),
-                          subtitle: new Text(
-                              itemList[i].status +
-                                  " by " +
-                                  itemList[i].userName,
+                          subtitle: new Text( get(documents[i]),
                               style: TextStyle(color: textcolor())),
-                          onTap: () {},
+                          onTap: () {
+                            Navigator.push(context,
+                                MaterialPageRoute(builder: (context) => Ticket(documents[i]))
+                            );
+                          },
                         ),
                       ),
                       Divider(
@@ -457,6 +563,8 @@ class _booksTabState extends State<booksTab> {
           }),
     );
   }
+
+
 }
 
 class peopleTab extends StatefulWidget {
@@ -471,9 +579,15 @@ class personInfo {
   String imageURL;
   String phoneNumber;
   String latestTime;
-  String locationManager;
+  String documentID;
   personInfo(this.name, this.StudentID, this.email, this.imageURL,
-      this.phoneNumber, this.latestTime, this.locationManager);
+      this.phoneNumber, this.latestTime, this.documentID);
+}
+
+class personRoot{
+  bool isAdmin;
+  String locationManager;
+  personRoot(this.isAdmin, this.locationManager);
 }
 
 class startAndUid {
@@ -553,7 +667,7 @@ class _peopleTabState extends State<peopleTab> {
   void setUidList() async {}
 
   String returnLatestTime(String latestTime) {
-    print("latestTime: " + latestTime);
+
 
     if (latestTime != null && latestTime.length > 0) {
       return returnDifferenceTime(latestTime);
@@ -562,8 +676,255 @@ class _peopleTabState extends State<peopleTab> {
     return "Non-Active";
   }
 
+  String getTitle(String name, personRoot root){
+    String firstName = "";
+    for(int i = 0; i < name.length; i++){
+      if(name[i] != ' '){
+        firstName += name[i];
+      }else{
+        break;
+      }
+    }
+    if(root.isAdmin){
+      firstName += '(Admin)';
+    }else{
+      if(root.locationManager.isNotEmpty) {
+        firstName += '(${root.locationManager}' + 'Manager)';
+      }
+    }
+    if(firstName.contains('Admin') == false && firstName.contains('Manager') == false){
+      firstName = name;
+    }
+
+    return firstName;
+
+  }
+
+
   Widget build(BuildContext context) {
     setUidList();
+
+    if(globals.isiOS){
+
+      return Scaffold(
+        backgroundColor: backgroundcolor(),
+        body: StreamBuilder(
+            stream:
+            Firestore.instance.collection(returnUserCollection()).where('organization', isEqualTo: globals.organization).snapshots(),
+            builder: (context, snapshot) {
+              if (!snapshot.hasData) return const Text('loading...');
+              view = 2;
+
+              List<DocumentSnapshot> documents = snapshot.data.documents;
+
+              List<personInfo> peopleList = [];
+              List<personRoot>peopleRootList = [];
+              try {
+                peopleList.clear();
+                peopleRootList.clear();
+                documents.forEach((element) {
+                  String value;
+                  if (element["LatestReservation"] == null ||
+                      element["LatestReservation"].length == 0) {
+                    value = "";
+                  } else {
+                    value = element["LatestReservation"];
+                  }
+                  var name = element[globals.nameDababase],
+                      StudentID = element[globals.rentalIDDatabase],
+                      email = element["Email"];
+                  var imageURL = element["imageURL"],
+                      phoneNumber = element["PhoneNumber"],
+                      latestTime = value;
+                  var myisAdmin = false;
+                  myisAdmin = element['Admin'];
+                  var mylocationManager = "";
+                  mylocationManager = element['LocationManager'];
+                  var documentID = "";
+                  documentID = element.documentID;
+                  if (name == null) {
+                  } else {
+                    var tmp = personInfo(name, StudentID, email, imageURL,
+                        phoneNumber, latestTime, documentID);
+                    var temp = personRoot(myisAdmin, mylocationManager);
+                    if (tmp != null ) {
+                      peopleList.add(tmp);
+                      if(temp != null) {
+                        peopleRootList.add(temp);
+                      }else{
+                        peopleRootList.add(personRoot(false, ""));
+                      }
+                    } else {}
+
+                  }
+                });
+              } catch (e) {
+                print("a: " + e.toString());
+              }
+              //setUidList();
+              List<personInfo>peopleList2 = [];
+              peopleList.forEach((element) {
+                peopleList2.add(element);
+              });
+              List<int>adminList = [];
+              List<int>managerList = [];
+              int count = 0;
+
+              peopleRootList.forEach((element) {
+                if(element.isAdmin){
+                  adminList.add(count);
+                }else if(element.locationManager.isNotEmpty){
+                  managerList.add(count);
+                }
+                count += 1;
+              });
+              count = 0;
+              List<personInfo> copy_peopleList = [];
+
+              adminList.forEach((element) {
+                copy_peopleList.add(peopleList[element]);
+
+                copy_peopleList[copy_peopleList.length - 1].name =getTitle(peopleList[element].name, peopleRootList[element]);
+              });
+
+              managerList.forEach((element) {
+                copy_peopleList.add(peopleList[element]);
+
+                copy_peopleList[copy_peopleList.length - 1].name =getTitle(peopleList[element].name, peopleRootList[element]);
+              });
+
+              Map<int, int> map1 = new Map.fromIterable(adminList,
+                  key: (item) => item,
+                  value: (item) => item * item);
+
+              Map<int, int> map2 = new Map.fromIterable(managerList,
+                  key: (item) => item,
+                  value: (item) => item * item);
+              count = 0;
+              List<personInfo> tmpList = [];
+
+              tmpList.clear();
+              peopleList.forEach((element) {
+                if(map1[count] == null && map2[count] == null){
+                  tmpList.add(element);
+                }
+                count += 1;
+              });
+              tmpList.sort((a,b)=> a.name.compareTo(b.name));
+              tmpList.forEach((element) {
+                copy_peopleList.add(element);
+              });
+
+              peopleList.clear();
+              peopleList.addAll(copy_peopleList);
+              int index = 0;
+              bool leftbracket = false;
+
+              for(int i = 0; i < peopleList.length; i++){
+                if(peopleList[i].email == globals.email ){
+                  String name = 'You: ', fullname = peopleList[i].name;
+
+                  for(int j = 0; j < fullname.length; j++){
+                    if(leftbracket && j < fullname.length - 1){
+                      name += fullname[j];
+                    }else{
+                      if(fullname[j] == '('){
+                        leftbracket = true;
+                      }
+                    }
+                    peopleList[i].name = name;
+                  }
+                  index = i;
+                  break;
+                }
+              }
+
+              personInfo tmp = peopleList[index];
+              peopleList.removeAt(index);
+              peopleList.insert(0, tmp);
+
+              tabPeopleList = peopleList;
+
+
+              print("MyAdmin: " + globals.isAdmin.toString());
+
+              try{
+                var fullname = peopleList[0].name;
+                if(fullname.contains("Admin") || fullname.contains("Manager")){
+                  if(fullname.contains("Admin")){
+                    globals.isAdmin = true;
+                  }else{
+                    int found = -1;
+                    for(int i = 0; i < peopleList2.length;i++){
+                      if(peopleList2[i].email == globals.email){
+                        found = i;
+                        break;
+                      }
+                    }
+                    if(found != -1){
+                      globals.locationManager = peopleRootList[found].locationManager;
+                    }
+                  }
+                }else{
+                  print("Non admins/location manager");
+                  globals.isAdmin = false;
+                  globals.locationManager = "";
+                  return Container(child: Center(child: CupertinoActivityIndicator()));
+                }
+              }catch(e){
+                print(e.toString());
+              }
+
+
+
+
+              return ListView.builder(
+                  itemCount: peopleList.length,
+                  itemBuilder: (context, i) {
+                    return Column(
+                      children: <Widget>[
+                        Container(
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage: getImage(peopleList[i].imageURL),
+                            ),
+                            trailing: new Text(
+                                returnLatestTime(peopleList[i].latestTime),
+                                style: TextStyle(color: textcolor())),
+                            title: new Text(getTitle(peopleList[i].name, personRoot(false,"")),
+                                style: TextStyle(color: textcolor())),
+                            subtitle: new Text(cutEmail(peopleList[i].email),
+                                style: TextStyle(color: textcolor())),
+                            onTap: () {
+                                var uid = peopleList[i].documentID;
+                                var name = peopleList[i].name;
+                                if(i > 0){
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              managepeopleOrders(uid, name)));
+                                }else{
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              managepeopleOrders(uid, 'You')));
+                                }
+
+                            },
+                          ),
+                        ),
+                        Divider(
+                          height: 2.0,
+                        ),
+                      ],
+                    );
+                  });
+            }),
+      );
+    }
+
     return Scaffold(
       backgroundColor: backgroundcolor(),
       body: StreamBuilder(
@@ -589,10 +950,12 @@ class _peopleTabState extends State<peopleTab> {
                 var imageURL = element["imageURL"],
                     phoneNumber = element["PhoneNumber"],
                     latestTime = value;
+                var documentID = "";
+                documentID = element.documentID;
                 if (name == null) {
                 } else {
                   var tmp = personInfo(name, StudentID, email, imageURL,
-                      phoneNumber, latestTime, element["LocationManager"]);
+                      phoneNumber, latestTime, documentID);
                   if (tmp != null) {
                     peopleList.add(tmp);
                   } else {}
@@ -621,14 +984,21 @@ class _peopleTabState extends State<peopleTab> {
                           subtitle: new Text(cutEmail(peopleList[i].email),
                               style: TextStyle(color: textcolor())),
                           onTap: () {
-                            var uid = peopleList[i].email;
-                            var name = peopleList[i].name;
-                            var locationManager = peopleList[i].locationManager;
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => managepeopleOrders(
-                                        uid, name, locationManager)));
+                            if (returnLatestTime(peopleList[i].latestTime)
+                                .contains("Non")) {
+                              pop_window(
+                                  "Sorry",
+                                  "It appears that no reservations exist in this account",
+                                  context);
+                            } else {
+                              var uid = peopleList[i].email;
+                              var name = peopleList[i].name;
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          managepeopleOrders(uid, name)));
+                            }
                           },
                         ),
                       ),
@@ -644,10 +1014,10 @@ class _peopleTabState extends State<peopleTab> {
 }
 
 class managepeopleOrders extends StatefulWidget {
+  @override
   String uid;
   String name;
-  String locationManager;
-  managepeopleOrders(this.uid, this.name, this.locationManager);
+  managepeopleOrders(this.uid, this.name);
   _managepeopleOrdersState createState() => _managepeopleOrdersState();
 }
 
@@ -656,6 +1026,7 @@ void test(DocumentSnapshot ds, uid) {
 }
 
 class _managepeopleOrdersState extends State<managepeopleOrders> {
+  @override
   Icon returnAdminOrnot() {
     if (globals.isAdmin) {
       return Icon(Icons.lock_open);
@@ -664,108 +1035,127 @@ class _managepeopleOrdersState extends State<managepeopleOrders> {
     }
   }
 
-  Future _dialogrem(
-    BuildContext context,
-    String name,
-  ) {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(
-              'Removed Successfully',
-              style:
-                  TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
-            ),
-            content: Text('$name is NOT a manager anymore.',
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            actions: <Widget>[
-              FlatButton(
-                  onPressed: () => Navigator.of(context).pop(),
-                  child: Text('Done',
-                      style: TextStyle(fontWeight: FontWeight.bold)))
-            ],
-          );
-        });
-  }
-
-  Future _dialog(BuildContext context, String name, int index) {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: index == 1
-                ? Text(
-                    'Removed Successfully',
-                    style: TextStyle(
-                        color: Colors.green, fontWeight: FontWeight.bold),
-                  )
-                : Text(
-                    'Added Successfully',
-                    style: TextStyle(
-                        color: Colors.green, fontWeight: FontWeight.bold),
-                  ),
-            content: index == 1
-                ? Text('$name is NOT a manager anymore.',
-                    style: TextStyle(fontWeight: FontWeight.bold))
-                : Text('$name is now ${globals.locationManager}\'s manager'),
-            actions: <Widget>[
-              FlatButton(
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
-                  },
-                  child: Text('Done',
-                      style: TextStyle(fontWeight: FontWeight.bold)))
-            ],
-          );
-        });
-  }
-
-  Future _dialogSelfDelete(BuildContext context, String name) {
-    return showDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(
-              'Removed Successfully',
-              style:
-                  TextStyle(color: Colors.green, fontWeight: FontWeight.bold),
-            ),
-            content: Text('$name is NOT a manager anymore.',
-                style: TextStyle(fontWeight: FontWeight.bold)),
-            actions: <Widget>[
-              FlatButton(
-                  onPressed: () {
-                    Navigator.of(context)
-                        .pushReplacementNamed('/MainViewScreen');
-                  },
-                  child: Text('Done',
-                      style: TextStyle(fontWeight: FontWeight.bold)))
-            ],
-          );
-        });
-  }
-
-  Future removeLocationManager(String correctUID) {
-    return Firestore.instance
-        .collection('global_users')
-        .document(correctUID)
-        .updateData({'LocationManager': ""});
-  }
-
-  Future locationManagerAdd(String correctUID) {
-    return Firestore.instance
-        .collection('global_users')
-        .document(correctUID)
-        .updateData({'LocationManager': globals.locationManager});
-  }
-
   Widget build(BuildContext context) {
-    String uid = this.widget.uid,
-        name = this.widget.name,
-        userLocationManager = widget.locationManager;
-    String correctUID = 'AppSignInUser' + uid;
+    var uid = this.widget.uid, name = this.widget.name;
+
+    if(globals.isiOS){
+
+      return Scaffold(
+        appBar:CupertinoNavigationBar(
+          heroTag: "tab3119dja0PeopleOrder",
+          transitionBetweenRoutes: false,
+          middle: Text(name == 'You'? 'Your'  + langaugeSetFunc(' Orders') :' $name \'s ' + langaugeSetFunc('Orders'), style: TextStyle(color: textcolor())),
+          backgroundColor: backgroundcolor(),
+          trailing: name != 'You' ?GestureDetector(
+            child: Icon(
+              CupertinoIcons.padlock_solid,
+                  color:  textcolor(),
+            ),
+            onTap: () async{
+              bool personisAdmin = name.contains("Admin");
+              bool personisLocationManager = name.contains("Manager");
+              String locationManagername = "";
+              await Firestore.instance.collection(returnUserCollection()).document(uid).get().then((value){
+                personisAdmin = value['Admin'];
+                personisLocationManager = value['LocationManager'].toString().isNotEmpty;
+                locationManagername = value['LocationManager'];
+              });
+
+              if(globals.isAdmin == false && personisAdmin){
+                pop_window("Warning", langaugeSetFunc("Location Managers are not granted to change the access control of Admins"), context);
+              }else if(globals.isAdmin == false && personisLocationManager){
+                pop_window("Warning", langaugeSetFunc("Location Managers are not granted to change the access control of other Managers"), context);
+              }else if((personisLocationManager == false && personisAdmin == false) || globals.isAdmin){
+                final QuerySnapshot result = await Firestore.instance.collection(returnLocationsCollection()).getDocuments();
+                var docList = result.documents;
+                List<String>strList = [];
+                List<String>copy_strList = [];
+
+                if(globals.isAdmin){
+                  copy_strList.add('Admin');
+                }
+                if(personisAdmin){
+                  strList.add('Current Role: Admin');
+                }else if(personisLocationManager){
+                  if(locationManagername[locationManagername.length - 1] != ' '){
+                    strList.add('Current Role: $locationManagername' + " Manager");
+                  }else{
+                    strList.add('Current Role: $locationManagername' + "Manager");
+                  }
+                }else{
+                  strList.add('Current Role: Guest');
+                }
+
+                docList.forEach((element) {
+                  String name = element['name'];
+                  if( globals.isAdmin == false && name == globals.locationManager) {
+                    copy_strList.add('${element['name']}');
+                  }
+
+                  if(globals.isAdmin){
+                    copy_strList.add('${element['name']}');
+                  }
+                });
+                copy_strList.sort();
+                strList.addAll(copy_strList);
+                _showDataPicker(strList, uid);
+              }
+            },
+          ) : null,
+        ),
+        backgroundColor: backgroundcolor(),
+        body: StreamBuilder(
+            stream: Firestore.instance
+                .collection(returnReservationCollection()).where('uid', isEqualTo: uid).orderBy("startTime", descending: true)
+                .snapshots(),
+            builder: (context, snapshot) {
+
+              List<DocumentSnapshot> documents = [];
+              try {
+                documents = snapshot.data.documents;
+              } catch (e) {
+                print(e.toString());
+              }
+
+
+
+              return ListView.builder(
+                  itemCount: documents.length,
+                  itemBuilder: (context, i){
+                    return Column(
+                      children: <Widget>[
+                        ListTile(
+                          leading: CircleAvatar(
+                            backgroundImage: getImage(documents[i]["imageURL"]),
+                          ),
+                          title: Text(documents[i]["name"], style: TextStyle(color: textcolor())),
+                          subtitle: Text( getSubtitle(documents[i]["reserved time"], documents[i]["picked Up time"], documents[i]["return time"],
+                              documents[i]["status"]
+                          ), style: TextStyle(color: textcolor()) ),
+                          trailing: Icon(CupertinoIcons.right_chevron, color: textcolor(),),
+                          onTap: (){
+                            Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Ticket(documents[i])));
+                          },
+                        ),
+                        Divider(
+                          height: 2.0,
+                        ),
+                      ],
+                    );
+                  }
+              );
+
+
+              return Container();
+
+
+            }),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
@@ -775,60 +1165,27 @@ class _managepeopleOrdersState extends State<managepeopleOrders> {
         title: Text('$name \'s ' + langaugeSetFunc('Orders'),
             style: TextStyle(color: textcolor())),
         actions: <Widget>[
-          userLocationManager != ""
-              ? FlatButton.icon(
-                  icon: Icon(Icons.delete, color: textcolor()),
-                  label: Text('$userLocationManager',
-                      style: TextStyle(color: textcolor())),
-                  onPressed: () {
-                    removeLocationManager(correctUID).whenComplete(() {
-                      if (globals.uid == correctUID) {
-                        globals.locationManager = "";
-                        _dialogSelfDelete(context, name);
-                      } else {
-                        _dialog(context, name, 1);
-                      }
-                    });
-                  },
-                )
-              : FlatButton.icon(
-                  icon: Icon(Icons.add, color: textcolor()),
-                  label:
-                      Text('As Manager', style: TextStyle(color: textcolor())),
-                  onPressed: () => globals.isAdmin
-                      ? Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) =>
-                                LocationManager(uid: correctUID, name: name),
-                          ),
-                        )
-                      : globals.locationManager != ""
-                          ? locationManagerAdd(correctUID)
-                              .whenComplete(() => _dialog(context, name, 2))
-                          : Container(),
-                ),
-          // IconButton(
-          //   icon: returnAdminOrnot(),
-          //   onPressed: () async {
-          //     String title = "Warning", content = "", actionText = "";
-          //     if (globals.isAdmin) {
-          //       content =
-          //           "$name is a admin. Do you want to lock his access and let him become a user";
-          //       actionText = "Lock";
-          //     } else {
-          //       content =
-          //           "$name is a user. Do you want to un-lock his access and let him become a admin";
-          //       actionText = "Unlock";
-          //     }
-          //     PlatformAlertDialog(
-          //       title: title,
-          //       content: content,
-          //       cancelActionText: "Cancel",
-          //       defaultActionText: actionText,
-          //     ).show(context);
-          //   },
-          // ),
+          IconButton(
+            icon: returnAdminOrnot(),
+            onPressed: () {
+              String title = "Warning", content = "", actionText = "";
+              if (globals.isAdmin) {
+                content =
+                    "$name is a admin. Do you want to lock his access and let him become a user";
+                actionText = "Lock";
+              } else {
+                content =
+                    "$name is a user. Do you want to un-lock his access and let him become a admin";
+                actionText = "Unlock";
+              }
+              PlatformAlertDialog(
+                title: title,
+                content: content,
+                cancelActionText: "Cancel",
+                defaultActionText: actionText,
+              ).show(context);
+            },
+          ),
         ],
       ),
       backgroundColor: backgroundcolor(),
@@ -908,10 +1265,7 @@ class _managepeopleOrdersState extends State<managepeopleOrders> {
                                 uid,
                                 docuementID);
 
-//                            Navigator.push(
-//                                context,
-//                                MaterialPageRoute(
-//                                    builder: (context) => Ticket(theitem)));
+//
                           },
                         ),
                       ),
@@ -923,6 +1277,176 @@ class _managepeopleOrdersState extends State<managepeopleOrders> {
                 });
           }),
     );
+
+
+
+  }
+
+  void _showDataPicker(List<String> list, String uid) {
+    final bool showTitleActions = true;
+
+    String firstName = '', name = this.widget.name;
+    for(int i = 0; i < this.widget.name.length;i++){
+      if(name[i] != ' '){
+        firstName += name[i];
+      }else{
+        break;
+      }
+    }
+    name = firstName;
+    firstName = '';
+    for(int i = 0; i < name.length; i++){
+      if(name[i] != '('){
+        firstName += name[i];
+      }else{
+        break;
+      }
+    }
+
+    List<String>copy_list = [];
+    list.forEach((element) {
+      if(element.contains("Current") == false && element.contains("Admin") == false){
+        if(element[element.length - 1] == ' '){
+          copy_list.add(element + 'Manager');
+        }else{
+          copy_list.add(element + ' Manager');
+        }
+      }else{
+        copy_list.add(element);
+      }
+    });
+    copy_list.add('Guest');
+    DataPicker.showDatePicker(
+      context,
+      showTitleActions: showTitleActions,
+      locale: globals.langaugeSet == 'English'? 'en' : 'zh',
+      datas: copy_list,
+      title: 'Select the role',
+      onChanged: (data) {
+        print('onChanged date: $data');
+      },
+      onConfirm: (data) async{
+        if(data == "Admin"){
+
+          await Firestore.instance.collection(returnUserCollection()).document(uid).updateData({
+            'Admin':true,
+          });
+
+          setState(() {
+            this.widget.name = firstName + '(Admin)';
+          });
+        }else if(data != copy_list[0] && data != 'Guest'){
+          int index = -1;
+          for(int i = 0; i < copy_list.length; i++){
+            if(copy_list[i] == data){
+              index = i;
+              break;
+            }
+          }
+          if(index != -1){
+            await Firestore.instance.collection(returnUserCollection()).document(uid).updateData({
+              'Admin':false,
+            });
+            await Firestore.instance.collection(returnUserCollection()).document(uid).updateData({
+              'LocationManager': list[index],
+            });
+          }
+          setState(() {
+            this.widget.name = firstName + '(' + data + ')';
+          });
+        }else if(data == "Guest"){
+          await Firestore.instance.collection(returnUserCollection()).document(uid).updateData({
+            'Admin':false,
+          });
+          await Firestore.instance.collection(returnUserCollection()).document(uid).updateData({
+            'LocationManager': '',
+          });
+          setState(() {
+            this.widget.name = firstName;
+          });
+        }
+
+
+      },
+    );
+  }
+
+  Future<void> _handleClickMeAccessChangeUser(String uid, String name) async {
+
+    return showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return CupertinoActionSheet(
+          title: Text(
+            'Title',
+            style: TextStyle(color: Colors.black),
+          ),
+          actions: <Widget>[
+            CupertinoActionSheetAction(
+              isDefaultAction: true,
+              child: Text(
+                'Assign $name as a Admin',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () async {
+                await Firestore.instance.collection(returnUserCollection()).document(uid).updateData({
+                  'Admin': true,
+                });
+                Navigator.pop(context);
+              },
+            ),
+            CupertinoActionSheetAction(
+              isDefaultAction: true,
+              child: Text(
+                'Assign $name as a Manager',
+                style: TextStyle(color: Colors.red),
+              ),
+              onPressed: () async {
+              },
+            ),
+          ],
+          cancelButton: CupertinoActionSheetAction(
+            isDefaultAction: true,
+            child: Text('Cancel'),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
+        );
+      },
+    );
+  }
+  int isEarlyInSort(String a, String b) {
+    var time_a = DateTime.parse(a), time_b = DateTime.parse(b);
+
+    var difference = time_a.difference(time_b);
+    if(!difference.isNegative){
+      return -1;
+    }
+    return 1;
+  }
+  NetworkImage getImage(String url) {
+    if (url == null || url.length == 0) {
+      return NetworkImage(
+          'https://images.unsplash.com/photo-1588342188135-ead0d7aa393e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1050&q=80');
+    } else {
+      return NetworkImage(url);
+    }
+  }
+
+  String getSubtitle(String reservedTime, String pickupTime, String returnTime, String status){
+    reservedTime = parseTime(reservedTime);
+    pickupTime = parseTime(pickupTime);
+    returnTime = parseTime(returnTime);
+    if(status == "Reserved"){
+      return status + " at " + parseTime(reservedTime);
+    }else if(status ==  "Picked Up"){
+      return status + " at " + parseTime(pickupTime);
+
+    }else if(status ==  "Returned"){
+      return status + " at " + parseTime(returnTime);
+      return pickupTime + status;
+    }
   }
 }
 
@@ -988,6 +1512,16 @@ class _ManageDatabaseState extends State<ManageDatabase> {
           'name': modifyName,
           'category': widget.catergory,
         });
+
+        var a = await Firestore.instance.collection(returnReservationCollection()).where('item', isEqualTo: documentID).getDocuments();
+        print("DOc" +  documentID);
+        for(int i = 0 ; i < a.documents.length; i++){
+          print(a.documents[i]["name"]);
+          await Firestore.instance.collection(returnReservationCollection()).document(a.documents[i].documentID).updateData({
+            'name': modifyName,
+            'imageURL': modifyimageURL,
+          });
+        }
 
         pop_window(
             "Succeed", "You should see the change on the list soon", context);
@@ -1334,7 +1868,7 @@ class _ManageDatabaseState extends State<ManageDatabase> {
 
         await Firestore.instance
             .collection(returnItemCollection())
-            .document("123")
+            .document()
             .setData({
           '# of items': modifyAmount,
           'category': widget.catergory,
@@ -1646,6 +2180,165 @@ class _ManageDatabaseState extends State<ManageDatabase> {
     globals.contextInManageItemView = context;
     List<String> _locations = ['A', 'B', 'C', 'D']; // Option 2
     String _selectedLocation; // Option 2
+    var manageDatabaseContext = context;
+
+    Future<void> _handleClickMeEdit() async {
+      return showCupertinoModalPopup<void>(
+        context: context,
+        builder: (BuildContext context) {
+          return CupertinoActionSheet(
+            title: Text(
+              langaugeSetFunc("Please choose ONE of the options below to add items:"),
+              style: TextStyle(color: Colors.black),
+            ),
+            actions: <Widget>[
+              CupertinoActionSheetAction(
+                isDefaultAction: true,
+                child: Text(
+                  langaugeSetFunc('Manually'),
+                  style: TextStyle(color: Colors.red),
+                ),
+                onPressed: () async {
+                  Navigator.pop(context);
+                  await Firestore.instance
+                      .collection('imageTmp')
+                      .document(globals.uid)
+                      .setData({
+                    'imageURL':
+                    'https://ciat.cgiar.org/wp-content/uploads/image-not-found.png',
+                  });
+                  _showDialog2();
+
+                },
+              ),
+              CupertinoActionSheetAction(
+                isDefaultAction: true,
+                child: Text(
+                  langaugeSetFunc('Upload CSV'),
+                  style: TextStyle(color: Colors.red),
+                ),
+                onPressed: () async {
+                  Navigator.pop(context);
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (manageDatabaseContext) => upLoadCSV(this.widget.catergory,
+                              this.widget.locationName)));
+
+                },
+              ),
+            ],
+            cancelButton: CupertinoActionSheetAction(
+              isDefaultAction: true,
+              child: Text('Cancel'),
+              onPressed: () {
+                Navigator.pop(context);
+              },
+            ),
+          );
+        },
+      );
+    }
+
+
+
+    if(globals.isiOS){
+      return Scaffold(
+        appBar: CupertinoNavigationBar(
+          heroTag: "Tab311de1eManage your Database",
+          transitionBetweenRoutes: false,
+          middle: Text(
+            langaugeSetFunc("Manage your Database"),
+            style: TextStyle(color: textcolor()),
+          ),
+          trailing: GestureDetector(
+            onTap: ()async{
+              _handleClickMeEdit();
+            },
+            child: Icon(
+              CupertinoIcons.add,
+              color: textcolor(),
+            ),
+          ),
+          backgroundColor: backgroundcolor(),
+        ),
+        backgroundColor: backgroundcolor(),
+        body: StreamBuilder(
+            stream: Firestore.instance
+                .collection(returnItemCollection())
+                .where('category', isEqualTo: this.widget.catergory)
+                .where('Location', isEqualTo: this.widget.locationName)
+                .snapshots(),
+            builder: (context, snapshot) {
+              List<ItemInformation> itemList = new List();
+
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(
+                  child: Text(
+                    langaugeSetFunc('Loading...'),
+                    style: TextStyle(color: textcolor()),
+                  ),
+                );
+              } else {
+                try {
+                  final List<DocumentSnapshot> documents =
+                      snapshot.data.documents;
+                  itemNameList.clear();
+                  documents.forEach((element) {
+                    itemNameList.add(element['name']);
+                    itemList.add(ItemInformation(
+                        element['name'],
+                        element['# of items'],
+                        element['imageURL'],
+                        element.documentID));
+                  });
+                } catch (e) {
+                  print(e.toString());
+                }
+              }
+
+              return ListView.builder(
+                  itemCount: itemList.length,
+                  itemBuilder: (context, i) {
+                    return Column(
+                      children: <Widget>[
+                        Container(
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage: NetworkImage(itemList[i].imageURL),
+                            ),
+                            trailing: new Icon(
+                              Icons.chevron_right,
+                              color: textcolor(),
+                            ),
+                            title: new Text(itemList[i].name,
+                                style: TextStyle(color: textcolor())),
+                            subtitle: new Text(
+                                langaugeSetFunc('Amount:') +
+                                    itemList[i].amount.toString(),
+                                style: TextStyle(color: textcolor())),
+                            onTap: () async {
+                              String imageURL = itemList[i].imageURL;
+                              await Firestore.instance
+                                  .collection('imageTmp')
+                                  .document(globals.uid)
+                                  .setData({
+                                'imageURL': '$imageURL',
+                              });
+                              _showDialog(itemList[i]);
+                            },
+                          ),
+                        ),
+                        Divider(
+                          height: 2.0,
+                        ),
+                      ],
+                    );
+                  });
+            }),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
@@ -2194,7 +2887,7 @@ class _upLoadCSVState extends State<upLoadCSV> {
         padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width / 8, 0,
             MediaQuery.of(context).size.width / 8, 0),
         color: Colors.green,
-        child: Text(langaugeSetFunc("Wake Up All")),
+        child: Text(langaugeSetFunc("Select All")),
         onPressed: () async {
           QuerySnapshot list = await Firestore.instance
               .collection('TempItemCollectionHold')
@@ -2226,7 +2919,7 @@ class _upLoadCSVState extends State<upLoadCSV> {
         padding: EdgeInsets.fromLTRB(MediaQuery.of(context).size.width / 7, 0,
             MediaQuery.of(context).size.width / 7, 0),
         color: Colors.red,
-        child: Text(langaugeSetFunc("Sleep All")),
+        child: Text(langaugeSetFunc("Unselect All")),
         onPressed: () async {
           QuerySnapshot list = await Firestore.instance
               .collection('TempItemCollectionHold')
@@ -2400,6 +3093,133 @@ class _upLoadCSVState extends State<upLoadCSV> {
   Widget build(BuildContext context) {
     maincontxt = context;
     subCollectionName = this.widget.locationName + this.widget.cater;
+
+    if(globals.isiOS){
+      return Scaffold(
+        appBar: CupertinoNavigationBar(
+          heroTag: "Tab313e1OnHold items",
+          transitionBetweenRoutes: false,
+          middle:Text(
+            langaugeSetFunc("OnHold items"),
+            style: TextStyle(color: textcolor()),
+          ),
+          trailing:  Row(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              GestureDetector(
+                onTap: (){
+                  pickUpFile(context, this.widget.cater, subCollectionName);
+                },
+                child: Icon(
+                  CupertinoIcons.folder_open,
+                  color: textcolor(),
+                ),
+              ),
+              GestureDetector(
+                onTap: (){
+                  setState(() {
+                    oneMore = !oneMore;
+                  });
+                },
+                child: Icon(
+                  CupertinoIcons.create_solid,
+                  color: textcolor(),
+                ),
+              ),
+            ],
+          ),
+          backgroundColor: backgroundcolor(),
+        ),
+        backgroundColor: backgroundcolor(),
+        body: StreamBuilder(
+            stream: Firestore.instance
+                .collection('TempItemCollectionHold')
+                .document(subCollectionName)
+                .collection('item')
+                .snapshots(),
+            builder: (context, snapshot) {
+              List<OnHoldItems> OnHoldItemsList = [];
+
+              try {
+                var documents = snapshot.data.documents;
+                for (int i = 0; i < documents.length; i++) {
+                  String name = "NoName", status = "hide";
+                  String imageURL =
+                      'https://ciat.cgiar.org/wp-content/uploads/image-not-found.png';
+                  String documentID = documents[i].documentID;
+                  int amount = 0;
+
+                  try {
+                    name = documents[i]["name"];
+                    status = documents[i]["status"];
+                    imageURL = documents[i]["imageURL"];
+                    amount = documents[i]["amount"];
+                  } catch (e) {
+                    print(e);
+                  }
+                  var value =
+                  OnHoldItems(name, amount, imageURL, status, documentID);
+                  OnHoldItemsList.add(value);
+                }
+              } catch (e) {
+                print(e.toString());
+              }
+
+              return ListView.builder(
+                  itemCount: OnHoldItemsList.length,
+                  itemBuilder: (context, i) {
+                    return Column(
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            ButtonCancelAll(i),
+                            ButtonSelectAll(i),
+                          ],
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: <Widget>[
+                            Submit(OnHoldItemsList, i),
+                            Delete(OnHoldItemsList, i),
+                          ],
+                        ),
+                        Container(
+                          margin: EdgeInsets.fromLTRB(15.0, 0, 0, 0),
+                          child: ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage:
+                              NetworkImage(OnHoldItemsList[i].imageURL),
+                            ),
+                            trailing: switchButton(
+                                OnHoldItemsList[i], subCollectionName),
+                            title: new Text(OnHoldItemsList[i].name,
+                                style: TextStyle(color: textcolor())),
+                            subtitle: new Text(
+                                langaugeSetFunc('Amount:') +
+                                    '${OnHoldItemsList[i].amount}',
+                                style: TextStyle(color: textcolor())),
+                            onTap: () {
+                              Fluttertoast.showToast(
+                                msg: 'Long Press To Edit',
+                              );
+                            },
+                            onLongPress: () {
+                              _showDialog(OnHoldItemsList[i]);
+                              print(1);
+                            },
+                          ),
+                        ),
+                        Divider(
+                          height: 2.0,
+                        ),
+                      ],
+                    );
+                  });
+            }),
+      );
+    }
+
     return Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
