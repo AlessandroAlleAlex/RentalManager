@@ -55,7 +55,7 @@ This is an app for keeping track of inventory for shared physical items and mana
    var e = await authHandler.signIn(username, password);
    ```
 - **Second Tab View**:
-  * **[iOS Sliding Segmented Control](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/main.dart#L276-L290)**: lib/main.dart Line 276-Line 290
+  * **[iOS Sliding Segmented Control](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/tabs/reservations.dart#L276-L290)**: lib/tabs/reservations.dart Line 276-Line 290
    
    ``` 
   CupertinoSlidingSegmentedControl(
@@ -65,7 +65,7 @@ This is an app for keeping track of inventory for shared physical items and mana
         thumbColor: backgroundcolor(),
         groupValue: theriGroupVakue,
         onValueChanged: (changeFromGroupValue) {
-         setState(() {
+         setState(() { // this is to change the Edit to Button words from "Edit" to "Done"
             rightButton = "Edit";
             theriGroupVakue = changeFromGroupValue;
             view = theriGroupVakue + 1;
@@ -74,10 +74,9 @@ This is an app for keeping track of inventory for shared physical items and mana
          children: logoWidgets,
   )
    ```
-  * **[Firebase Sign in](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/main.dart#L446)**: lib/main.dart Line 446)
+  * **[Generate List View ](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/tabs/reservations.dart#L45-L242)**: lib/main.dart Line45- Line 242)
    ``` 
-   var authHandler = newAuth
-   var e = await authHandler.signIn(username, password);
+   ListView.builder(.....)
    ```
 
 
