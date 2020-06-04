@@ -39,7 +39,6 @@ class _SecondTabState extends State<SecondTab> {
     // TODO: implement initState
     super.initState();
     getList();
-    secondTabContext = context;
   }
 
   Widget giveCenter(String yourText, [List<DocumentSnapshot> resetList]) {
@@ -82,7 +81,6 @@ class _SecondTabState extends State<SecondTab> {
                                     passedFirestoreData:
                                         reservationList[index])))
                             .then((value) {
-                          print(value.length);
                           setState(() {
                             var mylist = reservationList;
                             try {
@@ -90,6 +88,8 @@ class _SecondTabState extends State<SecondTab> {
                                 if (reservationList.length != value.length) {
                                   reservationList = value;
                                 }
+                              }else{
+                                reservationList.clear();
                               }
                             } catch (e) {
                               print(e);
@@ -106,6 +106,7 @@ class _SecondTabState extends State<SecondTab> {
               );
             });
       } else {
+        secondTabContext = context;
         return ListView.builder(
             itemCount: inUseList.length,
             itemBuilder: (context, index) {
@@ -248,11 +249,11 @@ class _SecondTabState extends State<SecondTab> {
 
     Map<int, Widget> logoWidgets = <int, Widget>{
       0: Text(
-        "Reserved",
+        langaugeSetFunc("Reserved"),
         style: TextStyle(color: textcolor(), fontSize: 15),
       ),
       1: Text(
-        "In Use",
+        langaugeSetFunc("In Use"),
         style: TextStyle(color: textcolor(), fontSize: 15),
       ),
     };
@@ -264,47 +265,52 @@ class _SecondTabState extends State<SecondTab> {
     return Scaffold(
       body: bodies[theriGroupVakue],
       backgroundColor: backgroundcolor(),
-      appBar: AppBar(
-        elevation: 2.0,
-        leading: leadingIcon(),
+      appBar:CupertinoNavigationBar(
+        heroTag: "Tab21",
+        transitionBetweenRoutes: false,
         backgroundColor: backgroundcolor(),
-        centerTitle: true,
-        title: CupertinoSlidingSegmentedControl(
-          backgroundColor: Colors.grey,
-          thumbColor: backgroundcolor(),
-          groupValue: theriGroupVakue,
-          onValueChanged: (changeFromGroupValue) {
-            setState(() {
-              rightButton = "Edit";
-              theriGroupVakue = changeFromGroupValue;
-              view = theriGroupVakue + 1;
-            });
-          },
-          children: logoWidgets,
-        ),
-        actions: <Widget>[
-          CupertinoButton(
-            child: Text((langaugeSetFunc(rightButton))),
-            onPressed: () {
+        leading:leadingLeftButton(),
+        middle: Container(
+          height: 50,
+          width: 160,
+          child: CupertinoSlidingSegmentedControl(
+
+            padding: EdgeInsets.all(2.0),
+            backgroundColor: Colors.grey,
+            thumbColor: backgroundcolor(),
+            groupValue: theriGroupVakue,
+            onValueChanged: (changeFromGroupValue) {
               setState(() {
-                if (rightButton == "Edit") {
-                  rightButton = "Done";
-                  print(rightButton);
-                } else {
-                  rightButton = "Edit";
-                }
-                reservationMap = [];
-                inUseMap = [];
-                for (int i = 0; i < reservationList.length; i++) {
-                  reservationMap.add(false);
-                }
-                for (int i = 0; i < inUseList.length; i++) {
-                  inUseMap.add(false);
-                }
+                rightButton = "Edit";
+                theriGroupVakue = changeFromGroupValue;
+                view = theriGroupVakue + 1;
               });
             },
+            children: logoWidgets,
           ),
-        ],
+        ),
+        trailing: CupertinoButton(
+          padding: EdgeInsets.all(0.0),
+          child: Text((langaugeSetFunc(rightButton))),
+          onPressed: () {
+            setState(() {
+              if (rightButton == "Edit") {
+                rightButton = "Done";
+                print(rightButton);
+              } else {
+                rightButton = "Edit";
+              }
+              reservationMap = [];
+              inUseMap = [];
+              for (int i = 0; i < reservationList.length; i++) {
+                reservationMap.add(false);
+              }
+              for (int i = 0; i < inUseList.length; i++) {
+                inUseMap.add(false);
+              }
+            });
+          },
+        ),
       ),
     );
   }
@@ -336,6 +342,39 @@ class _SecondTabState extends State<SecondTab> {
       return PickUpList.isEmpty;
     } else {
       return ReturnList.isEmpty;
+    }
+  }
+
+  Widget leadingLeftButton() {
+    if (rightButton != "Edit" && view == 1) {
+      return CupertinoButton(
+        padding: EdgeInsets.all(0.0),
+        child: Text(langaugeSetFunc('Pickup')),
+        onPressed: checkPickOrReturn()
+            ? () {
+          Fluttertoast.showToast(
+            msg: 'Please select item(s)',
+          );
+        }
+            : () {
+          _handleClickMePickUP();
+        },
+      );
+    }
+    if(rightButton != "Edit" && view == 2){
+      return CupertinoButton(
+        padding: EdgeInsets.all(0.0),
+        child: Text(langaugeSetFunc("Return")),
+        onPressed: checkPickOrReturn()
+            ? () {
+          Fluttertoast.showToast(
+            msg: 'Please select item(s)',
+          );
+        }
+            : () {
+          _handleClickMePickUP();
+        },
+      );
     }
   }
 
@@ -394,7 +433,7 @@ class _SecondTabState extends State<SecondTab> {
               ),
               onPressed: () async {
                 var time =
-                    DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
+                DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
                 var copyReturnList = [];
                 ReturnList.forEach((value) {
                   copyReturnList.add(value);
@@ -496,7 +535,7 @@ class _SecondTabState extends State<SecondTab> {
                                 allowHalfRating: true,
                                 itemCount: 5,
                                 itemPadding:
-                                    EdgeInsets.symmetric(horizontal: 4.0),
+                                EdgeInsets.symmetric(horizontal: 4.0),
                                 itemBuilder: (context, _) => Icon(
                                   Icons.star,
                                   color: Colors.amber,
@@ -520,7 +559,7 @@ class _SecondTabState extends State<SecondTab> {
                                 color: Colors.green,
                                 shape: RoundedRectangleBorder(
                                     borderRadius:
-                                        new BorderRadius.circular(30.0)),
+                                    new BorderRadius.circular(30.0)),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
@@ -538,23 +577,22 @@ class _SecondTabState extends State<SecondTab> {
                                   ],
                                 ),
                                 onPressed: () async {
-                                  context = secondTabContext;
-                                  print("here" +
-                                      copyReturnList.length.toString());
+
+                                  print("here" + copyReturnList.length.toString());
                                   copyReturnList.forEach((element) {
                                     Firestore.instance
                                         .collection(
-                                            returnReservationCollection())
+                                        returnReservationCollection())
                                         .document(element.documentID)
                                         .updateData({
                                       'rate': rate,
                                     });
                                   });
-                                  FocusScope.of(context)
+                                  FocusScope.of(  secondTabContext)
                                       .requestFocus(FocusNode());
-                                  Navigator.pop(context, false);
+                                  //Navigator.pop(  secondTabContext, false);
                                   pop_window('Awesome',
-                                      "Thanks for your review!", context);
+                                      "Thanks for your review!",   secondTabContext);
                                   //await ReturnOrdersPopWindow2(globals.ContextInOrder, '','OK',"Thanks for your review","We appreciate your evaluation!\nYour review will be used in the Help- track Page");
                                 },
                                 padding: EdgeInsets.all(7.0),
@@ -603,6 +641,7 @@ class reservationPage extends StatefulWidget {
 
 int view = 1;
 String rightButton = "Edit";
+String leftButton = "Pick Up";
 List<DocumentSnapshot> reservationList = [];
 List<DocumentSnapshot> inUseList = [];
 List<String> namelist = [];
@@ -655,8 +694,11 @@ class _reservationPageState extends State<reservationPage> {
   }
 
   Widget giveCenter(String yourText, [List<DocumentSnapshot> resetList]) {
+
     if (rightButton == "Edit") {
       if (yourText == "Reserved Page") {
+
+
         return ListView.builder(
             itemCount: reservationList.length,
             itemBuilder: (context, index) {
@@ -864,50 +906,52 @@ class _reservationPageState extends State<reservationPage> {
       giveCenter("Reserved Page"),
       giveCenter("Using Page"),
     ];
-    return Scaffold(
-      body: bodies[theriGroupVakue],
-      backgroundColor: backgroundcolor(),
-      appBar: AppBar(
-        elevation: 2.0,
-        leading: leadingIcon(),
+    return MaterialApp(
+      home: Scaffold(
+        body: bodies[theriGroupVakue],
         backgroundColor: backgroundcolor(),
-        centerTitle: true,
-        title: CupertinoSlidingSegmentedControl(
-          backgroundColor: Colors.grey,
-          thumbColor: backgroundcolor(),
-          groupValue: theriGroupVakue,
-          onValueChanged: (changeFromGroupValue) {
-            setState(() {
-              rightButton = "Edit";
-              theriGroupVakue = changeFromGroupValue;
-              view = theriGroupVakue + 1;
-            });
-          },
-          children: logoWidgets,
-        ),
-        actions: <Widget>[
-          CupertinoButton(
-            child: Text((langaugeSetFunc(rightButton))),
-            onPressed: () {
+        appBar: AppBar(
+          elevation: 2.0,
+          leading: leadingIcon(),
+          backgroundColor: backgroundcolor(),
+          centerTitle: true,
+          title: CupertinoSlidingSegmentedControl(
+            backgroundColor: Colors.grey,
+            thumbColor: backgroundcolor(),
+            groupValue: theriGroupVakue,
+            onValueChanged: (changeFromGroupValue) {
               setState(() {
-                if (rightButton == "Edit") {
-                  rightButton = "Done";
-                  print(rightButton);
-                } else {
-                  rightButton = "Edit";
-                }
-                reservationMap = [];
-                inUseMap = [];
-                for (int i = 0; i < reservationList.length; i++) {
-                  reservationMap.add(false);
-                }
-                for (int i = 0; i < inUseList.length; i++) {
-                  inUseMap.add(false);
-                }
+                rightButton = "Edit";
+                theriGroupVakue = changeFromGroupValue;
+                view = theriGroupVakue + 1;
               });
             },
+            children: logoWidgets,
           ),
-        ],
+          actions: <Widget>[
+            CupertinoButton(
+              child: Text((langaugeSetFunc(rightButton))),
+              onPressed: () {
+                setState(() {
+                  if (rightButton == "Edit") {
+                    rightButton = "Done";
+                    print(rightButton);
+                  } else {
+                    rightButton = "Edit";
+                  }
+                  reservationMap = [];
+                  inUseMap = [];
+                  for (int i = 0; i < reservationList.length; i++) {
+                    reservationMap.add(false);
+                  }
+                  for (int i = 0; i < inUseList.length; i++) {
+                    inUseMap.add(false);
+                  }
+                });
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -1142,11 +1186,9 @@ class _reservationPageState extends State<reservationPage> {
                                       'rate': rate,
                                     });
                                   });
-                                  FocusScope.of(context)
-                                      .requestFocus(FocusNode());
-                                  Navigator.pop(context, false);
-                                  pop_window('Awesome',
-                                      "Thanks for your review!", context);
+
+                                  Confirm(context, "cancel", "OK", 'Awesome', "Thanks for your review!");
+
                                   //await ReturnOrdersPopWindow2(globals.ContextInOrder, '','OK',"Thanks for your review","We appreciate your evaluation!\nYour review will be used in the Help- track Page");
                                 },
                                 padding: EdgeInsets.all(7.0),
@@ -1181,4 +1223,30 @@ class _reservationPageState extends State<reservationPage> {
       },
     );
   }
+}
+
+Future<void> Confirm(context, cancel, action, title, content) async {
+  return showDialog<void>(
+    context: context,
+    barrierDismissible: false, // user must tap button!
+    builder: (BuildContext context) {
+      return CupertinoAlertDialog(
+        title: Text(title),
+        content: Text(content),
+        actions: <Widget>[
+          CupertinoDialogAction(
+            child: Text(
+              action,
+            ),
+            onPressed: () async {
+
+              Navigator.of(context).pop(true);
+              FocusScope.of(context).requestFocus(FocusNode());
+              Navigator.pop(context, false);
+            },
+          ),
+        ],
+      );
+    },
+  );
 }
