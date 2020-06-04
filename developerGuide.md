@@ -50,6 +50,9 @@ This is an app for keeping track of inventory for shared physical items and mana
   }
    ```
   * **Firebase Sign in** abc
- 
+   ``` 
+   var authHandler = newAuth
+   var e = await authHandler.signIn(username, password);
+   ```
   
 
