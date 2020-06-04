@@ -74,7 +74,7 @@ This is an app for keeping track of inventory for shared physical items and mana
          children: logoWidgets,
   )
    ```
-  * **[Generate List View ](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/tabs/reservations.dart#L45-L242)**: lib/main.dart Line45- Line 242)
+  * **[Generate List View ](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/tabs/reservations.dart#L45-L242)**:  lib/tabs/reservations.dart Line45- Line 242)
    ``` 
    ListView.builder(.....)
    ```
