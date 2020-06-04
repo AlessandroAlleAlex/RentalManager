@@ -54,8 +54,10 @@ This is an app for keeping track of inventory for shared physical items and mana
    var authHandler = newAuth
    var e = await authHandler.signIn(username, password);
    ```
- - **[Second Tab(iOS View)](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/tabs/reservations.dart#L265-L309): lib/tabs/reservations.tab
- 
+ - **[Second Tab(iOS View)**](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/tabs/reservations.dart#L265-L309): lib/tabs/reservations.tab Line265-L309
+   ``` 
+   appBar:CupertinoNavigationBar().....
+   ```
  
   
 
