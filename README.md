@@ -77,15 +77,6 @@ Finally, enter the following command to run the application:
 flutter run
 ```
 
-### Views
-
-This directory contains all the application level constants. A separate file is created for each type as shown in example below:
-
-```
-views/
-|- 
-```
-
 ### Created & Maintained By
 
 > Team Cowculator
