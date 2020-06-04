@@ -25,7 +25,7 @@ Please see the screenshots of iOS app here: https://photos.app.goo.gl/4jebWVzzVU
 Privacy Policy: https://github.com/AlessandroAlleAlex/RentalManager/blob/master/Privacy%20Policy
 # RentalManagerAdmin Repository Link: https://github.com/aadila6/RentalManagerAdmin.git
 
-# RentalAdmin
+# FindRentalManager
 
 This is a cross-platform Flutter application.
 
