@@ -1,12 +1,10 @@
 library my_prj.globals;
-
 import 'dart:collection';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/foundation.dart' as foundation;
-
+import 'dart:io' show Platform;
 List<String> existingOrganizations = [];
 String uid = '';
 String username = 'Xu Liu';
@@ -18,11 +16,11 @@ String UserImageUrl = '';
 FirebaseUser mygoogleuser;
 BuildContext mycontext;
 String CancelledItemDocID = "";
-String collectionName = 'TestModeNew';
+String  collectionName = 'TestModeNew';
 List<DocumentSnapshot> myds;
 String langaugeSet = "English";
 String organization = "";
-bool dark = false;
+bool dark= false;
 int userSelectTheme = -1;
 BuildContext contextInManageOneItemView;
 BuildContext contextInManageItemView;
@@ -33,9 +31,11 @@ bool isDeveloper = false;
 String rentalIDDatabase = "RentalID";
 String nameDababase = "Name";
 String locationManager = "";
-bool isiOS = foundation.defaultTargetPlatform == foundation.TargetPlatform.iOS;
+bool isiOS =  true;
+List<DocumentSnapshot> locationList = [];
+String location = "";
 
-class Item {
+class Item{
   String itemName;
   String itemLocation;
   bool isStock;
@@ -43,7 +43,7 @@ class Item {
   String imageURL;
 }
 
-class ItemNameLocation {
+class ItemNameLocation{
   String itemName;
   String imageURL;
 }
@@ -51,7 +51,7 @@ class ItemNameLocation {
 BuildContext ContextInOrder;
 var itemValueMap = new HashMap();
 
-class ReservationItem {
+class ReservationItem{
   String name;
   String imageURL;
   String amount;
@@ -62,10 +62,9 @@ class ReservationItem {
   String uid;
   String documentID;
   //ReservationItem(this.amount, this.startTime, this.endTime, this.itemDocID, this.status, this.uid, this.name, this.imageURL);
-  ReservationItem(this.amount, this.startTime, this.endTime, this.itemDocID,
-      this.status, this.uid, this.name, this.imageURL, this.documentID);
+  ReservationItem(this.amount, this.startTime, this.endTime, this.itemDocID, this.status, this.uid, this.name, this.imageURL, this.documentID);
 }
 
 List<ReservationItem> itemList = new List();
-List<String> returnDOCIDList = [];
+List<String>returnDOCIDList = [];
 List<Item> detailList = [];

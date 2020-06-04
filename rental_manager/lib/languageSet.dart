@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rental_manager/language.dart';
 import 'package:rental_manager/tabs/locations.dart';
@@ -120,7 +121,28 @@ class _languageSettingState extends State<languageSetting> {
 
 
   Widget build(BuildContext context) {
+    if(globals.isiOS){
+      return Scaffold(
+          appBar: CupertinoNavigationBar(
+            heroTag: "123dcaLanguage Setting",
+            transitionBetweenRoutes: false,
+            middle: Text(langaugeSetFunc("Language Setting"), style: TextStyle(color: textcolor()),),
+            backgroundColor: backgroundcolor(),
+          ),
 
+          backgroundColor: backgroundcolor(),
+          body:  new SafeArea(
+              child: Container(child: Column(children: <Widget>[
+
+                Expanded(child:  ListView(
+                  padding: const EdgeInsets.all(20.0),
+                  children: _getListings(context), // <<<<< Note this change for the return type
+                ),
+                )
+              ])
+              ))
+      );
+    }
 
     return Scaffold(
         appBar: AppBar(

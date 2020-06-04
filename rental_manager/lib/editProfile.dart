@@ -129,6 +129,17 @@ class _EditProfileState extends State<EditProfile> {
         userinfor.add(globals.sex);
         var prefs = await SharedPreferences.getInstance();
         await prefs.setStringList("user", userinfor);
+
+        var documentList = await Firestore.instance.collection(returnReservationCollection()).where('uid', isEqualTo: globals.uid).getDocuments();
+        var document = documentList.documents;
+
+        for(int i = 0; i < document.length; i++){
+          var ds = document[i].data;
+          await Firestore.instance.collection(returnReservationCollection()).document(document[i].documentID).updateData({
+            'UserName': globals.username,
+          });
+        }
+
         print("OK");
         PlatformAlertDialog(
           title: 'Confirmed',
@@ -136,6 +147,245 @@ class _EditProfileState extends State<EditProfile> {
           defaultActionText: Strings.ok,
         ).show(context);
       }
+    }
+    if(globals.isiOS){
+      return  Scaffold(
+          appBar:CupertinoNavigationBar(
+            heroTag: "Tab4etails12das",
+            transitionBetweenRoutes: false,
+            middle: Text(
+              langaugeSetFunc("Details"), style: TextStyle(color: textcolor()),
+            ),
+
+            backgroundColor: backgroundcolor(),
+          ),
+          backgroundColor: backgroundcolor(),
+          body: GestureDetector(
+            onTap: () {
+              // call this method here to hide soft keyboard
+              FocusScope.of(context).requestFocus(new FocusNode());
+            },
+            child: StreamBuilder(
+                stream: Firestore.instance
+                    .collection(returnUserCollection())
+                    .document(globals.uid)
+                    .snapshots(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) return const Text('loading...');
+                  return ListView(
+                    children: <Widget>[
+                      Form(
+                        key: _formKey,
+                        child: Column(
+                          children: <Widget>[
+                            SizedBox(
+                              height: 20,
+                            ),
+                            InkWell(
+                              child: CircleAvatar(
+                                radius: 50,
+                                backgroundImage:
+                                NetworkImage(globals.UserImageUrl),
+                              ),
+                              onTap: () async {
+                                File image = await ImagePicker.pickImage(
+                                    source: ImageSource.gallery);
+                                if (image != null) {
+                                  await pra.show();
+                                  StorageReference reference = FirebaseStorage
+                                      .instance
+                                      .ref()
+                                      .child(image.path.toString());
+                                  StorageUploadTask uploadTask =
+                                  reference.putFile(image);
+                                  StorageTaskSnapshot downloadUrl =
+                                  (await uploadTask.onComplete);
+                                  String url =
+                                  (await downloadUrl.ref.getDownloadURL());
+                                  globals.UserImageUrl = url;
+                                  var databaseReference = Firestore.instance;
+
+                                  await databaseReference
+                                      .collection(returnUserCollection())
+                                      .document(globals.uid)
+                                      .updateData({
+                                    'imageURL': globals.UserImageUrl,
+                                  });
+                                  await pra.hide();
+                                }
+                              },
+                            ),
+                            new Container(
+                              alignment: Alignment(-1.0, 0.0),
+                              child: new Text(
+                                langaugeSetFunc('Username'),
+                                style: new TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14.0,
+                                    color: textcolor()),
+                              ),
+                              margin: new EdgeInsets.only(
+                                  left: 10.0, bottom: 5.0, top: 10.0),
+                            ),
+                            new Container(
+                              child: new TextFormField(
+                                style: TextStyle(
+                                    color: textcolor()
+                                ),
+                                initialValue: globals.username,
+                                onChanged: (text) {
+                                  UserName = text;
+                                },
+                                validator: (String val) {
+                                  if (val.isEmpty) {
+                                    return 'This Field Cannot Be Empty';
+                                  } else if (CheckInValidName(val) == true) {
+                                    return 'Invalid Name. Try Again';
+                                  }
+                                  return null;
+                                },
+                                onSaved: (value) {
+                                  UserName = value;
+                                  globals.username = UserName;
+                                },
+                                decoration: new InputDecoration(
+
+
+                                    enabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(color: textcolor()),
+                                    ),
+                                    hintText: globals.username,
+                                    border: new UnderlineInputBorder(),
+                                    contentPadding: new EdgeInsets.all(5.0),
+                                    hintStyle: new TextStyle(color: Colors.grey)),
+                              ),
+                              margin:
+                              new EdgeInsets.only(left: 30.0, right: 30.0),
+                            ),
+                            new Container(
+                              alignment: Alignment(-1.0, 0.0),
+                              child: new Text(
+                                langaugeSetFunc('Employer ID'),
+                                style: new TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14.0,
+                                    color: textcolor()),
+                              ),
+                              margin: new EdgeInsets.only(
+                                  left: 10.0, top: 30.0, bottom: 5.0),
+                            ),
+                            new Container(
+                              child: new TextFormField(
+                                style: TextStyle(
+                                    color: textcolor()
+                                ),
+                                initialValue: globals.studentID,
+                                onChanged: (text) {
+                                  StudentID = text;
+                                  if (StudentID != null &&
+                                      StudentID.length == 9) {
+                                    globals.studentID = StudentID;
+                                  }
+                                },
+                                validator: (String num) {
+                                  if (num.isEmpty) {
+                                    return null;
+                                  } else if (CheckInvalidNumber(num) == true) {
+                                    return 'Input Must Be Numbers Only';
+                                  } else if (num.length != 9) {
+                                    return null;
+
+                                  }
+                                  return null;
+                                },
+                                decoration: new InputDecoration(
+                                    enabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(color: textcolor()),
+                                    ),
+                                    hintText: '91xxxxxxx(Optional)',
+                                    border: new UnderlineInputBorder(),
+                                    contentPadding: new EdgeInsets.all(5.0),
+                                    hintStyle: new TextStyle(color: Colors.grey)),
+                                keyboardType: TextInputType.number,
+                              ),
+                              margin:
+                              new EdgeInsets.only(left: 30.0, right: 30.0),
+                            ),
+                            new Container(
+                              alignment: Alignment(-1.0, 0.0),
+                              child: new Text(
+                                langaugeSetFunc('Phone'),
+                                style: new TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 14.0,
+                                    color: textcolor()),
+                              ),
+                              margin: new EdgeInsets.only(
+                                  left: 10.0, top: 30.0, bottom: 5.0),
+                            ),
+                            new Container(
+                              child: new TextFormField(
+                                style: TextStyle(
+                                    color: textcolor()
+                                ),
+                                initialValue: globals.phoneNumber,
+                                onChanged: (text) {
+                                  Phone = text;
+                                  if (Phone != null && Phone.length == 10) {
+                                    globals.phoneNumber = Phone;
+                                  }
+                                },
+                                validator: (String num) {
+                                  if (num.isEmpty) {
+                                    return null;
+                                  } else if (CheckInvalidNumber(num) == true) {
+                                    return 'Input Must Be Numbers Only';
+                                  } else if (num.length != 10) {
+                                    return 'Error! Must be ten digits';
+                                  }
+                                  return null;
+                                },
+                                decoration: new InputDecoration(
+                                    enabledBorder: UnderlineInputBorder(
+                                      borderSide: BorderSide(color: textcolor()),
+                                    ),
+                                    hintText: '530xxxxxxx(Optional)',
+                                    border: new UnderlineInputBorder(),
+                                    contentPadding: new EdgeInsets.all(5.0),
+                                    hintStyle: new TextStyle(color: Colors.grey)),
+                                keyboardType: TextInputType.number,
+                              ),
+                              margin:
+                              new EdgeInsets.only(left: 30.0, right: 30.0),
+                            ),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            Text("Click image to change your photo"),
+                            SizedBox(
+                              height: 30,
+                            ),
+                            Center(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  RaisedButton(
+                                      textColor: Colors.white,
+                                      color: Colors.teal,
+                                      child: Text(langaugeSetFunc('Confirm')),
+                                      onPressed: () async {
+                                        _onSubmit();
+                                      }),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      ),
+                    ],
+                  );
+                }),
+          ));
     }
 
     return new Scaffold(

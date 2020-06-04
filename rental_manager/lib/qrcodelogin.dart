@@ -7,7 +7,7 @@ import 'dart:ui';
 import 'dart:io';
 import 'package:flutter/rendering.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:barcode_scan/barcode_scan.dart';
+//import 'package:barcode_scan/barcode_scan.dart';
 import 'package:rental_manager/PlatformWidget/platform_alert_dialog.dart';
 import 'package:rental_manager/PlatformWidget/strings.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -149,7 +149,7 @@ class GenerateScreenState extends State<GenerateScreen> {
   }
   Future scan() async {
     try {
-      String barcode = await BarcodeScanner.scan();
+      String barcode = '';
       PlatformAlertDialog(
         title: 'QR Code Scanned',
         content: barcode,
@@ -183,181 +183,6 @@ Widget OK(BuildContext context, bool verified){
 
   String email, subject, atext;
   Future.delayed(Duration(seconds: 1)).then((_){
-//    slideDialog.showSlideDialog(
-//      context: context,
-//      child:  Container(
-//        child: Form(
-//          child: Column(
-//            children: <Widget>[
-//
-//              Text(
-//                "OK",
-//                style: TextStyle(
-//                  color: Colors.grey,
-//                ),
-//              ),
-//              SizedBox(
-//                height: 20,
-//                width: MediaQuery.of(context).size.width / 10 * 6.87,
-//                child: Divider(
-//                  color: Colors.grey,
-//                ),
-//              ),
-//              TextFormField(
-//                onChanged:(text){
-//                  print("First text field: $text");
-//                  email = text;
-//                },
-//
-//                cursorColor: Colors.teal.shade900,
-//                scrollPadding:  const EdgeInsets.symmetric(vertical: 20.0,horizontal: 50),
-//                decoration: InputDecoration(
-//                  border: new OutlineInputBorder(
-//                    borderRadius: const BorderRadius.all(
-//                      const Radius.circular(8.0),
-//                    ),
-//                    borderSide: new BorderSide(
-//                      color: Colors.transparent,
-//                      width: 1.0,
-//                    ),
-//                  ),
-//                  labelText: 'Email',
-//                  prefixIcon: const Icon(Icons.email, color: Colors.black),
-//                  // labelStyle:
-//                  // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
-//                  contentPadding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 50),
-//                ),
-//              ),
-//              SizedBox(
-//                height: 10,
-//              ),
-//              TextFormField(
-//                onChanged:(text){
-//                  print("First text field: $text");
-//                  subject = text;
-//                },
-//                validator: (String val){
-//                  if(val.isEmpty){
-//                    var s = "Please fill in the blank";
-//                    return s;
-//                  }
-//                  return null;
-//                },
-//                cursorColor: Colors.teal.shade900,
-//                scrollPadding:  const EdgeInsets.symmetric(vertical: 20.0,horizontal: 50),
-//                decoration: InputDecoration(
-//                  border: new OutlineInputBorder(
-//                    borderRadius: const BorderRadius.all(
-//                      const Radius.circular(8.0),
-//                    ),
-//                    borderSide: new BorderSide(
-//                      color: Colors.transparent,
-//                      width: 1.0,
-//                    ),
-//                  ),
-//                  labelText: 'Subject',
-//                  prefixIcon: const Icon(Icons.title, color: Colors.black),
-//                  // labelStyle:
-//                  // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
-//                  contentPadding: const EdgeInsets.symmetric(vertical: 20.0,horizontal: 50),
-//                ),
-//              ),
-//              SizedBox(
-//                height: 10,
-//              ),
-//              TextFormField(
-//                onChanged:(text){
-//                  print("First text field: $text");
-//                  atext = text;
-//                },
-//                validator: (String val){
-//                  if(val.isEmpty){
-//                    var s = "Please fill in the blank";
-//                    return s;
-//                  }
-//                  return null;
-//                },
-//                keyboardAppearance: Brightness.dark,
-//                keyboardType: TextInputType.multiline,
-//                maxLines: null,
-//                cursorColor: Colors.teal.shade900,
-//                scrollPadding:  const EdgeInsets.symmetric(vertical: 50.0,horizontal: 50),
-//                decoration: InputDecoration(
-//                  border: new OutlineInputBorder(
-//                    borderRadius: const BorderRadius.all(
-//                      const Radius.circular(8.0),
-//                    ),
-//                    borderSide: new BorderSide(
-//                      color: Colors.transparent,
-//                      width: 1.0,
-//                    ),
-//                  ),
-//                  labelText: 'Text',
-//                  prefixIcon: const Icon(Icons.content_paste, color: Colors.black),
-//                  // labelStyle:
-//                  // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
-//                  contentPadding: const EdgeInsets.symmetric(vertical: 50.0,horizontal: 50),
-//                ),
-//              ),
-//              SizedBox(
-//                height: 15,
-//              ),
-//              SizedBox(
-//                width: 200,
-//                child: RaisedButton(
-//                  highlightElevation: 0.0,
-//                  splashColor: Colors.greenAccent,
-//                  highlightColor: Colors.green,
-//                  elevation: 0.0,
-//                  color: Colors.blue,
-//                  shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-//                  child: Row(
-//                    mainAxisAlignment: MainAxisAlignment.center,
-//                    children: <Widget>[
-//                      Center(
-//                        child: Text(
-//                          "Submit",
-//                          style: TextStyle(
-//                            fontSize: 15,
-//                            // backgroundColor:  Colors.teal[50],
-//                            color: Colors.white,
-//                            fontFamily: 'Montserrat',
-//                          ),
-//                        ),
-//                      ),
-//
-//                    ],
-//                  ),
-//                  onPressed: () async{
-//                    //_handleSignIn();
-//
-//
-//                    print("OK");
-//                    //rewriteData();
-//                    //Navigator.of(context).pushReplacementNamed('/MainViewScreen');
-//
-//
-//
-//                  },
-//                  padding: EdgeInsets.all(7.0),
-//                  //color: Colors.teal.shade900,
-//                  disabledColor: Colors.black,
-//                  disabledTextColor: Colors.black,
-//
-//                ),
-//              ),
-//            ],
-//          ),
-//        ),
-//      ),
-//      textField: Container(
-//        child: Column(
-//          children: <Widget>[
-//          ],
-//        ),
-//      ),
-//      barrierColor: Colors.white.withOpacity(0.7),
-//    );
 
 
     if(verified) {
