@@ -11,7 +11,7 @@ Download the zip file or use Git clone and set up the platform [iOS](https://flu
 
 For IDE (such as Andriod Stdio) users, please just press "Run" Button after selecting the platrform(iOS simulator or Andriod emulator)
 
-Otherwise, please use the following commands in your terminal to run our app:
+Otherwise, please use the following commands in your terminal to run this app:
  
  ``` 
 flutter devices 
@@ -21,3 +21,9 @@ flutter devices
 ```
 flutter run
 ```
+
+##Overview
+
+This is an app for keeping track of inventory for shared physical items and manager-friendly fo uploading items.
+
+**Please Note**: This app is a firebase based app so most functionaliies need to be done while devices are connected with the Internet. Please make sure when you are not off-line while your are developing this app.
