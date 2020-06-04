@@ -56,6 +56,22 @@ This is an app for keeping track of inventory for shared physical items and mana
    ```
  - **Second Tab(iOS View)**:
   * [iOS style Sliding Segmented Control](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/tabs/reservations.dart#L276-L290): lib/tabs/reservations.dart L276 - 290
+   ``` 
+   CupertinoSlidingSegmentedControl(
+         padding: EdgeInsets.all(2.0),
+         backgroundColor: Colors.grey,
+         thumbColor: backgroundcolor(),
+         groupValue: theriGroupVakue,
+         onValueChanged: (changeFromGroupValue) {
+            setState(() {
+              rightButton = "Edit";
+              theriGroupVakue = changeFromGroupValue;
+              view = theriGroupVakue + 1;
+             });
+            },
+            children: logoWidgets,
+         ),
+   ```
  
   
 
