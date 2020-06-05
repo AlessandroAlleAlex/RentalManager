@@ -239,7 +239,8 @@ See screenshots of our app [here](https://photos.app.goo.gl/S2nc6pJcTjY9hxj68)
   * **[Pop up input window](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/tabs/help.dart#L132-L325)**: lib/tabs/help.dart Line 132-Line 325
    ``` 
   void _showDialog(String s)
-  This is the widget as a pop up window to get users' input. This widget is used in Contact Us, Lost And Found, Manage Locations, Manage Categories, Manage items. 
+  This is the widget as a pop up window to get users' input. 
+  This widget is used in Contact Us, Lost And Found, Manage Locations, Manage Categories, Manage items. 
   ```
 
   **Fourth Tab View**:
