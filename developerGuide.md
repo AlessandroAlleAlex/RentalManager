@@ -117,6 +117,9 @@ This is an app for keeping track of inventory for shared physical items and mana
   * **[Generate List View ](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/tabs/reservations.dart#L45-L242)**:  lib/tabs/reservations.dart Line45-242)
    ``` 
    ListView.builder(.....)
+   Using listview builder to genterate a list view and set each row as a list tile which 
+   contains leading image conver for reserved items or in use items, their names, the time
+   the time they are reserved.
    ```
 
 - **Third Tab View**:
