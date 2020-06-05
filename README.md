@@ -266,6 +266,6 @@ See screenshots of our app [here](https://photos.app.goo.gl/S2nc6pJcTjY9hxj68)
 ### License
 
     Copyright 2020 Abudureheman Adila, Jiayi Zhang, Jing Gao, Alessandro Liu @ UC Davis 
-
+    Note: You are granted to fork this git repo and develop it. But You may not publish it on App Store or Google Play
 
 
