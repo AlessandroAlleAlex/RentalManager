@@ -39,14 +39,11 @@ This is an app for keeping track of inventory for shared physical items and mana
 
 <table>
   <tr>
-    <td> <img src="1.png"  alt="1" width = 360px height = 640px ></td>
+    <td> <img src="images/1.png"  alt="1" width = 360px height = 640px ></td>
 
-     <td><img src=" 2.png" alt="2" width = 360px height = 640px></td>
    </tr> 
    <tr>
-      <td><img src="3.png" alt="3" width = 360px height = 640px></td>
-
-      <td><img src="4.png" align="right" alt="4" width = 360px height = 640px>
+       <td><img src="images/3.png" alt="3" width = 360px height = 640px></td>
   </td>
   </tr>
 </table>
