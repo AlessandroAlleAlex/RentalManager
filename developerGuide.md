@@ -1,33 +1,45 @@
-# Table of Contents
-- [Getting Started](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/developerGuide.md#getting-started)
-
-- [Overview](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/developerGuide.md#overview)
-
-- [Main Functionaliies](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/developerGuide.md#main-functionaliies)
-
-- [Created & Maintained By](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/developerGuide.md#created--maintained-by)
-
-- [License](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/developerGuide.md#license)
-
 ## Getting Started
+
+Live Demo : [Flutter Rental Manager App Web&Mobile Demo](https://youtu.be/uWN17YViIzk)
+
+## How to Create and Deploy
+Follow the links below to learn more about how to create and deploy applications in Flutter.
+
+* [Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
+
+* [Build and release an iOS app](https://flutter.dev/docs/deployment/ios)
+
+* [Build and release an Android app](https://flutter.dev/docs/deployment/android)
+
+## How to Use 
+
 **Step 1:**
 
-Please make sure you have the environment to run fluter via your terminal or IDE such as(Andriod Stdio). For the environment installation， please see details [here](https://flutter.dev/docs/get-started/install).
+Download or clone this repository into your local machine
 
 **Step 2:**
 
-Download the zip file or use Git clone and set up the platform [iOS](https://flutter.dev/docs/get-started/install/macos#ios-setup) or [Andriod](https://flutter.dev/docs/get-started/install/macos#android-setup) to run our app. 
+Install the latest version of Flutter from this [link](https://flutter.dev/docs/get-started/install).
 
 **Step 3:**
 
-For IDE (such as Andriod Stdio) users, please just press "Run" Button after selecting the platrform(iOS simulator or Andriod emulator)
+Go to project root and execute the following command in the console to get the required dependencies: 
 
-Otherwise, please use the following commands in your terminal to run this app:
- 
+``` 
+flutter pub get 
+```
+
+**Step 4:**
+
+Open any virtual emulator or connect your physical device to your machine and enter the follwing command to your console to check for available devices:
+
 ``` 
 flutter devices 
 ```
 
+**Step 5:**
+
+Finally, enter the following command to run the application:
 
 ```
 flutter run
@@ -35,11 +47,9 @@ flutter run
 
 ## Overview
 
-This is an app for keeping track of inventory for shared physical items and manager-friendly fo uploading items.
+RentalManager is a cross-platform application that provides a convenient method for organizations to manage their inventory items where users can see available resources in real-time, and reserve, check out, and return.
 
-See screenshots of our app [here](https://photos.app.goo.gl/S2nc6pJcTjY9hxj68)
-
-**Please Note**: This app is a firebase based app so most functionaliies need to be done while devices are connected with the Internet. Please make sure you are not off-line while your are developing this app.
+**Please Note**: This appplication is internet dependent because we use Google's Firebase services. Please make sure you are not off-line while your are developing this appplication.
 
 ## Main Functionaliies
 - **Sign in**:
@@ -69,43 +79,71 @@ See screenshots of our app [here](https://photos.app.goo.gl/S2nc6pJcTjY9hxj68)
    ```
 
 - **First Tab View**:
-  * **[Location List View](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/Locations/custom_location_card.dart#L14-L111)**: lib/Locations/custom_location_card.dart Line 14- Line 111
+  * **[Location List View](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/Locations/list_page.dart)**: lib/Locations/list_page.dart Line 42-45
    
    ``` 
-  Widget customCard(int index, AsyncSnapshot snapshot, BuildContext context) 
-  //This view is 
-
+   return ListView.builder(
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int index) =>
+                    customCard(index, snapshot, context));
+   // I pass the locations retrieved from Firestore into the custom widget 'customCard' to be displayed.
    ```
 
 
-  * **[Grid Cell View](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/Locations/custom_gridcell.dart#L10-L40)**: lib/Locations/custom_gridcell.dart Line 10- Line 40)
+  * **[Category List View](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/Locations/category_page.dart)**: lib/Locations/category_page.dart Line 10)
    ``` 
-   class CustomCell extends StatelessWidget{}
-   // This view is 
-   ```
-  * **[Reserved View](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/Locations/detail_page.dart#L267-L340)**: lib/Locations/detail_page.dart Line267 - Line 340
-   ``` 
-   class CustomCell extends StatelessWidget{}
-   // This view is for reservation view
-
-   Below is database setting{
-      'imageURL': 
-      'name':  
-      'uid':  
-      'item':  
-      'amount':  
-      'startTime': 
-      'status':  
-      'reserved time': 
-      'picked Up time': 
-      'return time':  
-      'endTime':  
-      'UserName':  
-      'location': (For Manager search )
-      'category': 
-
+   class CategoryPage extends StatefulWidget {
+   ...
    }
-
+   // This view gets the selected location data from the previews view and displays its categories through a customized widget called 'displayGrids'.
+   ```
+   
+  * **[Item List View](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/Locations/item_page.dart)**: lib/Locations/item_page.dart Line 60-73
+  ```
+  return ListView.builder(
+              itemCount: snapshot.data.documents.length,
+              itemBuilder: (BuildContext context, int index) => ListTile(
+                title: Text(
+                    snapshot.data.documents[index].data['name'].toString()),
+                subtitle: Text(
+                    langaugeSetFunc('Total amount:') + ' ${snapshot.data.documents[index].data['# of items'].toString()}'),
+                onTap: () {
+                  navigateToDetail(snapshot.data.documents[index]);
+                  // testingReservations(
+                  //     snapshot.data.documents[index].documentID);
+                },
+              ),
+            );
+  // From the previews views we got selected location and category, so we retrieve the categorized item list from Firestore as display them as ListTile. 
+  ```
+  
+  
+  * **[Reservation creation](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/Locations/detail_page.dart#L267-L340)**: lib/Locations/detail_page.dart Line 267-340
+   ``` 
+   void uploadData(itemID, uid, dateTime, locationName, catergoryName) async {
+   ...
+   await databaseReference
+        .collection(returnReservationCollection())
+        .document()
+        .setData({
+      'imageURL': imageURL,
+      'name': itemName,
+      'uid': uid,
+      'item': itemID,
+      'amount': _currentResAmount.toString(),
+      'startTime': dateTime,
+      'status': "Reserved",
+      'reserved time': dateTime,
+      'picked Up time': 'NULL',
+      'return time': 'NULL',
+      'endTime': "TBD",
+      'UserName': globals.username,
+      'location': locationName,
+      'category': catergoryName,
+    });
+   ...
+   }
+   ```
 
 - **Second Tab View**:
   * **[iOS Sliding Segmented Control](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/tabs/reservations.dart#L276-L290)**: lib/tabs/reservations.dart Line 276-Line 290
@@ -130,9 +168,6 @@ See screenshots of our app [here](https://photos.app.goo.gl/S2nc6pJcTjY9hxj68)
   * **[Generate List View ](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/tabs/reservations.dart#L45-L242)**:  lib/tabs/reservations.dart Line45-242)
    ``` 
    ListView.builder(.....)
-   Using listview builder to genterate a list view and set each row as a list tile which 
-   contains leading image conver for reserved items or in use items, their names, the time
-   the time they are reserved.
    ```
 
 - **Third Tab View**:
@@ -142,9 +177,6 @@ See screenshots of our app [here](https://photos.app.goo.gl/S2nc6pJcTjY9hxj68)
   child: Scaffold(
         appBar: AppBar(...)
   )...
-  This view contains two views in total;
-  Swipe Left(Also as default view): for Admins and Managers to see recent activities happened in the Location(Manager) or organization(Organization) and 
-  Swipe right: Admins and Managers are able to see all people in the ogranization. Admins are able to change all users' roles in the organzaion. However, managers cna only invite guests only to manage their locations.
    ```
 
   * **[Activities Search View ](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/managebooksHelper.dart#L79-L291)**: lib/managebooksHelper.dart Line 79 - Line 291
@@ -227,6 +259,7 @@ See screenshots of our app [here](https://photos.app.goo.gl/S2nc6pJcTjY9hxj68)
   class _languageSettingState extends State<languageSetting>{}
   This view is to change language: English, Chinese, system setting
   ```
+  
 ### Created & Maintained By
 
 > Team Cowculator
@@ -234,6 +267,4 @@ See screenshots of our app [here](https://photos.app.goo.gl/S2nc6pJcTjY9hxj68)
 ### License
 
     Copyright 2020 Abudureheman Adila, Jiayi Zhang, Jing Gao, Alessandro Liu @ UC Davis 
-
-
 
