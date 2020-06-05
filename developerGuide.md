@@ -126,6 +126,9 @@ This is an app for keeping track of inventory for shared physical items and mana
   child: Scaffold(
         appBar: AppBar(...)
   )...
+  This view contains two views in total;
+  Swipe Left(Also as default view): for Admins and Managers to see recent activities happened in the Location(Manager) or organization(Organization) and 
+  Swipe right: Admins and Managers are able to see all people in the ogranization. Admins are able to change all users' roles in the organzaion. However, managers cna only invite guests only to manage their locations.
    ```
 
   * **[Activities Search View ](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/managebooksHelper.dart#L79-L291)**: lib/managebooksHelper.dart Line 79 - Line 291
