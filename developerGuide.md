@@ -13,7 +13,7 @@ For IDE (such as Andriod Stdio) users, please just press "Run" Button after sele
 
 Otherwise, please use the following commands in your terminal to run this app:
  
- ``` 
+``` 
 flutter devices 
 ```
 
@@ -78,6 +78,20 @@ This is an app for keeping track of inventory for shared physical items and mana
    ``` 
    ListView.builder(.....)
    ```
+
+- **Third Tab View**:
+  * **[Manager View](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/displayall.dart#L42-L207)**: lib/displayall.dart Line 42 - Line 207
+   
+   ``` 
+  child: Scaffold(
+        appBar: AppBar(...)
+  )...
+   ```
+  * **[Manage Location View ](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/manager/manage_locations.dart#L747-L795)**:  lib/manager/manage_locations.dart Line747-795
+   ``` 
+   Scaffold(.....)
+   ```
+   
 
 
   
