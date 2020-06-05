@@ -87,21 +87,47 @@ This is an app for keeping track of inventory for shared physical items and mana
         appBar: AppBar(...)
   )...
    ```
+
+  * **[Activities Search View ](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/managebooksHelper.dart#L79-L291)**: lib/managebooksHelper.dart Line 79 - Line 291
+   ``` 
+   class searchReservation extends StatefulWidget{
+    ...
+   }
+   This is the view for managers/Admins to search activities(reservations/PickUp/Return) activities in the organization/location: 
+   For Admin:
+      They can search items' activities by different Locations 
+   For Location Managers:
+      They can search items' activities only in their Locations   
+   The difference for this view between location managers and Admins is: For Admins' search view, they can see a [gear icon](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/managebooksHelper.dart#L151-L247) at their
+   corner scrren and Admins can press this icon to see differnt locations. (Default setting is all locations)
+
+   ```
+
+
+
   * **[Manage Location View ](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/manager/manage_locations.dart#L747-L795)**:  lib/manager/manage_locations.dart Line747-795
    ``` 
    Scaffold(.....) 
-   This is the view for managers to edit locations: 
+   This is the view for managers/Admins to edit locations: 
    1. Adding/deleting/editing locations' cover images and names
-   2. Also potentially change items' tags in that location. 
-      ex. from Location A -> Category B -> Item C to Location A' -> Catgory B -> Item C
+   2. Also potentially changed the tags for the items in that location. 
+      ex. change the location name will also let Admins use that new location name to search item in the seach view
    ```
   * **[Manage Category View ](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/manager/manage_category.dart#L729-L778)**:  lib/manager/manage_locations.dart Line729-L778
    ``` 
    Scaffold(.....)
+   This is the view for managers/Admins to edit categories: 
+   1. Adding/deleting/editing categories' cover images and names
+   2. Also potentially change the path to select an item. 
+      ex. from Location A -> Category B' -> Item C to Location A -> Catgory B' -> Item C
    ``` 
   * **[Manage items](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/displayall.dart#L2342-L2464)**:  lib/manager/manage_locations.dart Line2342 - Line 2464
    ``` 
    Scaffold(.....)
+   This is the view for managers/Admins to edit items:
+   1. Adding/deleting/editing items' cover images and names
+   2. Also potentially change the path to select an item. 
+      ex. from Location A -> Category B' -> Item C to Location A -> Catgory B' -> Item C
    ``` 
 
    
