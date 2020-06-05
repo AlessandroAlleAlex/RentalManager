@@ -10,17 +10,20 @@
 - [License](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/developerGuide.md#license)
 
 ## Getting Started
+
+Live Demo : [Flutter Rental Manager App Web&Mobile Demo](https://youtu.be/uWN17YViIzk)
+
 **Step 1:**
 
 Please make sure you have the environment to run Flutter via your terminal or IDE such as Andriod Studio. For the environment installation, please see details [here](https://flutter.dev/docs/get-started/install).
 
 **Step 2:**
 
-Download the zip file or use Git clone and set up the platform [iOS](https://flutter.dev/docs/get-started/install/macos#ios-setup) or [Andriod](https://flutter.dev/docs/get-started/install/macos#android-setup) to run our app. 
+Download the zip file or use the git clone command on your console, and then set up the platform [iOS](https://flutter.dev/docs/get-started/install/macos#ios-setup) or [Andriod](https://flutter.dev/docs/get-started/install/macos#android-setup) to run the application. 
 
 **Step 3:**
 
-For IDE (such as Andriod Studio) users, please just press "Run" Button after selecting the platform( iOS simulator or Andriod emulator)
+For IDE (such as Andriod Studio) users, please just press "Run" Button after selecting the platform (iOS simulator or Andriod emulator)
 
 Otherwise, please use the following commands in your terminal to run this app:
  
@@ -35,11 +38,11 @@ flutter run
 
 ## Overview
 
-This is an app for keeping track of inventory for shared physical items and manager-friendly fo uploading items.
+RentalManager is a cross-platform application that provides a convenient method for organizations to manage their inventory items where users can see available resources in real-time, and reserve, check out, and return.
 
 See screenshots of our app [here](https://photos.app.goo.gl/S2nc6pJcTjY9hxj68)
 
-**Please Note**: This app is a firebase based app so most functionaliies need to be done while devices are connected with the Internet. Please make sure you are not off-line while your are developing this app.
+**Please Note**: This appplication is internet dependent because we use Google's Firebase services. Please make sure you are not off-line while your are developing this appplication.
 
 ## Main Functionaliies
 - **Sign in**:
@@ -69,44 +72,71 @@ See screenshots of our app [here](https://photos.app.goo.gl/S2nc6pJcTjY9hxj68)
    ```
 
 - **First Tab View**:
-  * **[Location List View](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/Locations/custom_location_card.dart#L14-L111)**: lib/Locations/custom_location_card.dart Line 14- Line 111
+  * **[Location List View](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/Locations/list_page.dart)**: lib/Locations/list_page.dart Line 42-45
    
    ``` 
-  Widget customCard(int index, AsyncSnapshot snapshot, BuildContext context) 
-  //I pass the locations retrieved from Firestore into the custom widget 'customCard' to be displayed.
-
-
+   return ListView.builder(
+                itemCount: snapshot.data.length,
+                itemBuilder: (BuildContext context, int index) =>
+                    customCard(index, snapshot, context));
+   // I pass the locations retrieved from Firestore into the custom widget 'customCard' to be displayed.
    ```
 
 
-  * **[Grid Cell View](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/Locations/custom_gridcell.dart#L10-L40)**: lib/Locations/custom_gridcell.dart Line 10- Line 40)
+  * **[Category List View](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/Locations/category_page.dart)**: lib/Locations/category_page.dart Line 10)
    ``` 
-   class CustomCell extends StatelessWidget{}
-   This view gets the selected location data from the previews view and displays 
-   its categories through a customized widget called 'displayGrids'.
-   ```
-  * **[Reserved View](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/Locations/detail_page.dart#L267-L340)**: lib/Locations/detail_page.dart Line267 - Line 340
-   ``` 
-   class CustomCell extends StatelessWidget{}
-   This view is for reservation view
-
-   Below is database setting{
-      'imageURL': 
-      'name':  
-      'uid':  
-      'item':  
-      'amount':  
-      'startTime': 
-      'status':  
-      'reserved time': 
-      'picked Up time': 
-      'return time':  
-      'endTime':  
-      'UserName':  
-      'location': (For Manager search )
-      'category': 
-
+   class CategoryPage extends StatefulWidget {
+   ...
    }
+   // This view gets the selected location data from the previews view and displays its categories through a customized widget called 'displayGrids'.
+   ```
+   
+  * **[Item List View](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/Locations/item_page.dart)**: lib/Locations/item_page.dart Line 60-73
+  ```
+  return ListView.builder(
+              itemCount: snapshot.data.documents.length,
+              itemBuilder: (BuildContext context, int index) => ListTile(
+                title: Text(
+                    snapshot.data.documents[index].data['name'].toString()),
+                subtitle: Text(
+                    langaugeSetFunc('Total amount:') + ' ${snapshot.data.documents[index].data['# of items'].toString()}'),
+                onTap: () {
+                  navigateToDetail(snapshot.data.documents[index]);
+                  // testingReservations(
+                  //     snapshot.data.documents[index].documentID);
+                },
+              ),
+            );
+  // From the previews views we got selected location and category, so we retrieve the categorized item list from Firestore as display them as ListTile. 
+  ```
+  
+  
+  * **[Reservation creation](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/Locations/detail_page.dart#L267-L340)**: lib/Locations/detail_page.dart Line 267-340
+   ``` 
+   void uploadData(itemID, uid, dateTime, locationName, catergoryName) async {
+   ...
+   await databaseReference
+        .collection(returnReservationCollection())
+        .document()
+        .setData({
+      'imageURL': imageURL,
+      'name': itemName,
+      'uid': uid,
+      'item': itemID,
+      'amount': _currentResAmount.toString(),
+      'startTime': dateTime,
+      'status': "Reserved",
+      'reserved time': dateTime,
+      'picked Up time': 'NULL',
+      'return time': 'NULL',
+      'endTime': "TBD",
+      'UserName': globals.username,
+      'location': locationName,
+      'category': catergoryName,
+    });
+   ...
+   }
+   ```
 
 
 - **Second Tab View**:
