@@ -7,7 +7,7 @@
 
 - [Created & Maintained By](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/README.md#main-functionaliies)
 
-- [License](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/developerGuide.md#license)
+- [License](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/README.md#license)
 
 ## Getting Started
 
