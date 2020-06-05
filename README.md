@@ -73,7 +73,8 @@ See screenshots of our app [here](https://photos.app.goo.gl/S2nc6pJcTjY9hxj68)
    
    ``` 
   Widget customCard(int index, AsyncSnapshot snapshot, BuildContext context) 
-  //This view is 
+  //I pass the locations retrieved from Firestore into the custom widget 'customCard' to be displayed.
+
 
    ```
 
@@ -81,12 +82,13 @@ See screenshots of our app [here](https://photos.app.goo.gl/S2nc6pJcTjY9hxj68)
   * **[Grid Cell View](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/Locations/custom_gridcell.dart#L10-L40)**: lib/Locations/custom_gridcell.dart Line 10- Line 40)
    ``` 
    class CustomCell extends StatelessWidget{}
-   // This view is 
+   This view gets the selected location data from the previews view and displays 
+   its categories through a customized widget called 'displayGrids'.
    ```
   * **[Reserved View](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/Locations/detail_page.dart#L267-L340)**: lib/Locations/detail_page.dart Line267 - Line 340
    ``` 
    class CustomCell extends StatelessWidget{}
-   // This view is for reservation view
+   This view is for reservation view
 
    Below is database setting{
       'imageURL': 
