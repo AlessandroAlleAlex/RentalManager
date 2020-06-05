@@ -72,7 +72,7 @@ See screenshots of our app [here](https://photos.app.goo.gl/S2nc6pJcTjY9hxj68)
    ```
 
 - **First Tab View**:
-  * **[Location List View](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/Locations/list_page.dart)**: lib/Locations/list_page.dart Line 42-45
+  * **[Location List View](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/Locations/list_page.dart#L42-L45)**: lib/Locations/list_page.dart Line 42-45
    
    ``` 
    return ListView.builder(
@@ -83,7 +83,7 @@ See screenshots of our app [here](https://photos.app.goo.gl/S2nc6pJcTjY9hxj68)
    ```
 
 
-  * **[Category List View](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/Locations/category_page.dart)**: lib/Locations/category_page.dart Line 10)
+  * **[Category List View](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/Locations/category_page.dart#L10)**: lib/Locations/category_page.dart Line 10)
    ``` 
    class CategoryPage extends StatefulWidget {
    ...
@@ -91,7 +91,7 @@ See screenshots of our app [here](https://photos.app.goo.gl/S2nc6pJcTjY9hxj68)
    // This view gets the selected location data from the previews view and displays its categories through a customized widget called 'displayGrids'.
    ```
    
-  * **[Item List View](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/Locations/item_page.dart)**: lib/Locations/item_page.dart Line 60-73
+  * **[Item List View](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/Locations/item_page.dart#L60-L73)**: lib/Locations/item_page.dart Line 60-73
   ```
   return ListView.builder(
               itemCount: snapshot.data.documents.length,
