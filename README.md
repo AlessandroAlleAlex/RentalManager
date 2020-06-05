@@ -3,7 +3,7 @@
 
 - [Overview](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/README.md#overview)
 
-- [Main Functionalies](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/README.md#main-functionaliies)
+- [Main Functionalies](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/README.md#main-functionalies)
 
 - [Created & Maintained By](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/README.md#created--maintained-by)
 
