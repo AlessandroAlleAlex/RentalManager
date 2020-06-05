@@ -12,7 +12,7 @@
 ## Getting Started
 **Step 1:**
 
-Please make sure you have the environment to run flutter via your terminal or IDE such as(Andriod Studio). For the environment installation， please see details [here](https://flutter.dev/docs/get-started/install).
+Please make sure you have the environment to run flutter via your terminal or IDE such as(Andriod Studio). For the environment installation, please see details [here](https://flutter.dev/docs/get-started/install).
 
 **Step 2:**
 
