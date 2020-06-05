@@ -98,7 +98,7 @@ This is an app for keeping track of inventory for shared physical items and mana
       They can search items' activities by different Locations 
    For Location Managers:
       They can search items' activities only in their Locations   
-   The difference for this view between location managers and Admins is: For Admins' search view, they can see a [gear icon](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/managebooksHelper.dart#L151-L247) at their
+   The difference for this view between location managers and Admins is: For Admins' search view, they can see a gear icon at their
    corner scrren and Admins can press this icon to see differnt locations. (Default setting is all locations)
 
    ```
