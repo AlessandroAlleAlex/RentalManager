@@ -12,7 +12,7 @@
 ## Getting Started
 **Step 1:**
 
-Please make sure you have the environment to run flutter via your terminal or IDE such as(Andriod Stdio). For the environment installation， please see details [here](https://flutter.dev/docs/get-started/install).
+Please make sure you have the environment to run flutter via your terminal or IDE such as(Andriod Studio). For the environment installation， please see details [here](https://flutter.dev/docs/get-started/install).
 
 **Step 2:**
 
@@ -20,7 +20,7 @@ Download the zip file or use Git clone and set up the platform [iOS](https://flu
 
 **Step 3:**
 
-For IDE (such as Andriod Stdio) users, please just press "Run" Button after selecting the platrform(iOS simulator or Andriod emulator)
+For IDE (such as Andriod Studio) users, please just press "Run" Button after selecting the platrform(iOS simulator or Andriod emulator)
 
 Otherwise, please use the following commands in your terminal to run this app:
  
