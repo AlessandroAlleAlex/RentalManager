@@ -63,7 +63,7 @@ This is an app for keeping track of inventory for shared physical items and mana
         padding: EdgeInsets.all(2.0),
         backgroundColor: Colors.grey,
         thumbColor: backgroundcolor(),
-        groupValue: theriGroupVakue,
+        groupValue: theriGroupVakue, // switch views from "Reserved" to "In Use"
         onValueChanged: (changeFromGroupValue) {
          setState(() { // this is to change the Edit to Button words from "Edit" to "Done"
             rightButton = "Edit";
@@ -72,7 +72,7 @@ This is an app for keeping track of inventory for shared physical items and mana
           });
         },
          children: logoWidgets,
-  )
+  ) 
    ```
   * **[Generate List View ](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/tabs/reservations.dart#L45-L242)**:  lib/tabs/reservations.dart Line45-242)
    ``` 
@@ -90,7 +90,10 @@ This is an app for keeping track of inventory for shared physical items and mana
   * **[Manage Location View ](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/manager/manage_locations.dart#L747-L795)**:  lib/manager/manage_locations.dart Line747-795
    ``` 
    Scaffold(.....) 
-   /* This is the View for managers to add locations: include adding/deleting/editing locations' cover images and names */
+   This is the view for managers to edit locations: 
+   1. Adding/deleting/editing locations' cover images and names
+   2. Also potentially change items' tags in that location. 
+      ex. from Location A -> Category B -> Item C to Location A' -> Catgory B -> Item C
    ```
   * **[Manage Category View ](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/manager/manage_category.dart#L729-L778)**:  lib/manager/manage_locations.dart Line729-L778
    ``` 
