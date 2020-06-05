@@ -20,7 +20,7 @@ Download the zip file or use Git clone and set up the platform [iOS](https://flu
 
 **Step 3:**
 
-For IDE (such as Andriod Studio) users, please just press "Run" Button after selecting the Platform( iOS simulator or Andriod emulator)
+For IDE (such as Andriod Studio) users, please just press "Run" Button after selecting the platform( iOS simulator or Andriod emulator)
 
 Otherwise, please use the following commands in your terminal to run this app:
  
