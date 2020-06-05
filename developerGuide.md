@@ -214,7 +214,13 @@ This is an app for keeping track of inventory for shared physical items and mana
   class _languageSettingState extends State<languageSetting>{}
   This view is to change language: English, Chinese, system setting
   ```
+### Created & Maintained By
 
+> Team Cowculator
+
+### License
+
+    Copyright 2020 Abudureheman Adila, Jiayi Zhang, Jing Gao, Alessandro Liu @ UC Davis 
 
 
 
