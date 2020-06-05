@@ -37,18 +37,7 @@ flutter run
 
 This is an app for keeping track of inventory for shared physical items and manager-friendly fo uploading items.
 
-<table>
-  <tr>
-    <td> <img src="images/1.PNG"  alt="1" width = 36px height = 64px ></td>
-     <td> <img src="images/2.PNG"  alt="1" width = 36px height = 64px ></td>
-   </tr> 
-   <tr>
-       <td><img src="images/3.PNG" alt="3" width = 360px height = 640px></td>
-  </td>
-  </tr>
-</table>
-
-
+See screenshots of our app [here]()
 
 **Please Note**: This app is a firebase based app so most functionaliies need to be done while devices are connected with the Internet. Please make sure you are not off-line while your are developing this app.
 
