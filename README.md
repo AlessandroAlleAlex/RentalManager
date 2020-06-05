@@ -3,7 +3,7 @@
 
 - [Overview](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/developerGuide.md#overview)
 
-- [Main Functionaliies](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/developerGuide.md#main-functionaliies)
+- [Main Functionalies](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/developerGuide.md#main-functionalies)
 
 - [Created & Maintained By](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/developerGuide.md#created--maintained-by)
 
@@ -44,7 +44,7 @@ See screenshots of our app [here](https://photos.app.goo.gl/S2nc6pJcTjY9hxj68)
 
 **Please Note**: This appplication is internet dependent because we use Google's Firebase services. Please make sure you are not off-line while your are developing this appplication.
 
-## Main Functionaliies
+## Main Functionalies
 - **Sign in**:
   * **[Google Sign in](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/main.dart#L151-L165)**: lib/main.dart Line 151-Line 165
    
