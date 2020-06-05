@@ -37,7 +37,7 @@ flutter run
 
 This is an app for keeping track of inventory for shared physical items and manager-friendly fo uploading items.
 
-See screenshots of our app [here]()
+See screenshots of our app [here](https://photos.app.goo.gl/S2nc6pJcTjY9hxj68)
 
 **Please Note**: This app is a firebase based app so most functionaliies need to be done while devices are connected with the Internet. Please make sure you are not off-line while your are developing this app.
 
