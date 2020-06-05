@@ -54,6 +54,46 @@ This is an app for keeping track of inventory for shared physical items and mana
    var authHandler = newAuth
    var e = await authHandler.signIn(username, password);
    ```
+
+- **First Tab View**:
+  * **[Location List View](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/Locations/custom_location_card.dart#L14-L111)**: lib/Locations/custom_location_card.dart Line 14- Line 111
+   
+   ``` 
+  Widget customCard(int index, AsyncSnapshot snapshot, BuildContext context) 
+  //This view is 
+
+   ```
+
+
+  * **[Grid Cell View](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/Locations/custom_gridcell.dart#L10-L40)**: lib/Locations/custom_gridcell.dart Line 10- Line 40)
+   ``` 
+   class CustomCell extends StatelessWidget{}
+   // This view is 
+   ```
+  * **[Reserved View](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/Locations/detail_page.dart#L267-L340)**: lib/Locations/detail_page.dart Line267 - Line 340
+   ``` 
+   class CustomCell extends StatelessWidget{}
+   // This view is for reservation view
+
+   Below is database setting{
+      'imageURL': 
+      'name':  
+      'uid':  
+      'item':  
+      'amount':  
+      'startTime': 
+      'status':  
+      'reserved time': 
+      'picked Up time': 
+      'return time':  
+      'endTime':  
+      'UserName':  
+      'location': (For Manager search )
+      'category': 
+
+   }
+
+
 - **Second Tab View**:
   * **[iOS Sliding Segmented Control](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/tabs/reservations.dart#L276-L290)**: lib/tabs/reservations.dart Line 276-Line 290
    
@@ -111,28 +151,64 @@ This is an app for keeping track of inventory for shared physical items and mana
    Scaffold(.....) 
    This is the view for managers/Admins to edit locations: 
    1. Adding/deleting/editing locations' cover images and names
-   2. Also potentially changed the tags for the items in that location. 
-      ex. change the location name will also let Admins use that new location name to search item in the seach view
+   2. Changing the location name will also change the search options for Admins in the search Part.
+    
    ```
   * **[Manage Category View ](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/manager/manage_category.dart#L729-L778)**:  lib/manager/manage_locations.dart Line729-L778
    ``` 
    Scaffold(.....)
    This is the view for managers/Admins to edit categories: 
    1. Adding/deleting/editing categories' cover images and names
-   2. Also potentially change the path to select an item. 
-      ex. from Location A -> Category B' -> Item C to Location A -> Catgory B' -> Item C
    ``` 
-  * **[Manage items](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/displayall.dart#L2342-L2464)**:  lib/manager/manage_locations.dart Line2342 - Line 2464
+  * **[Manage items View](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/displayall.dart#L2342-L2464)**:  lib/manager/manage_locations.dart Line 2342 - Line 2464
    ``` 
    Scaffold(.....)
    This is the view for managers/Admins to edit items:
    1. Adding/deleting/editing items' cover images and names
-   2. Also potentially change the path to select an item. 
-      ex. from Location A -> Category B' -> Item C to Location A -> Catgory B' -> Item C
+   2. Changing the location name will also change the search input for managers and admins.
+    
    ``` 
 
-   
+  * **[Upload CSV View ](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/displayall.dart#L234-L390)**:  lib/displayall.dart Line 234 - Line 390
+   ``` 
+   void pickUpFile(BuildContext context, cater, subCollectionName) async 
+   This is the view for managers/Admins to upload items via CSV File:
+   1. Only CSV files can be picked up and all CSV files's columns' ranges should be 2 - 3.
+   2. Allow managers and Admins to select all items and unselected all items.
+   3. Add all selected items to storages and Delete all unselected items
+    
+   ```  
+
+  * **[Track Item Usage View ](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/searchItem.dart#L28-L496)**:  lib/searchItem.dart Line 28 - Line 496
+   ``` 
+  class theItemSearch extends StatefulWidget{...}
+  This is the view for all users(Guests/Managers/Admins) track items' usage
+  ```
+
+  * **[Pop up input window](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/tabs/help.dart#L132-L325)**: lib/tabs/help.dart Line 132-Line 325
+   ``` 
+  void _showDialog(String s)
+  This is the widget as a pop up window to get users' input. This widget is used in Contact Us, Lost And Found, Manage Locations, Manage Categories, Manage items. 
+  ```
+
+  **Fourth Tab View**:
+  * **[History Reservations](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/HistoryReservation.dart#L20-L219)**: lib/tabs/reservations.dart Line 20 - Line 219
+   ``` 
+   class _HistoryReservationState extends State<HistoryReservation>{}
+   This view is to check users' history
+   ```
+  * **[Theme Color ](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/changeColor.dart#L15-L164)**: lib/changeColor.dart Line 15-Line 164
+   ``` 
+   class _changeColorState extends State<changeColor> {}
+   This view is to change color: Light, Dark, system setting
+   ```
+
+  * **[Language Setting](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/changeColor.dart#L15-L164)**: lib/changeColor.dartLine 15-Line 164
+  ``` 
+  class _languageSettingState extends State<languageSetting>{}
+  This view is to change language: English, Chinese, system setting
+  ```
 
 
-  
+
 
