@@ -1,13 +1,13 @@
 # Table of Contents
-[Getting Started](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/developerGuide.md#getting-started)
+- [Getting Started](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/developerGuide.md#getting-started)
 
-[Overview](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/developerGuide.md#overview)
+- [Overview](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/developerGuide.md#overview)
 
-[Main Functionaliies](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/developerGuide.md#main-functionaliies)
+- [Main Functionaliies](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/developerGuide.md#main-functionaliies)
 
-[Created & Maintained By](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/developerGuide.md#created--maintained-by)
+- [Created & Maintained By](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/developerGuide.md#created--maintained-by)
 
-[License](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/developerGuide.md#license)
+- [License](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/developerGuide.md#license)
 
 ## Getting Started
 **Step 1:**
