@@ -89,7 +89,8 @@ This is an app for keeping track of inventory for shared physical items and mana
    ```
   * **[Manage Location View ](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/manager/manage_locations.dart#L747-L795)**:  lib/manager/manage_locations.dart Line747-795
    ``` 
-   Scaffold(.....) /* This is the View for managers to add locations: include adding/deleting/editing locations' cover images and names */
+   Scaffold(.....) 
+   /* This is the View for managers to add locations: include adding/deleting/editing locations' cover images and names */
    ```
   * **[Manage Category View ](https://github.com/AlessandroAlleAlex/RentalManager/blob/master/rental_manager/lib/manager/manage_category.dart#L729-L778)**:  lib/manager/manage_locations.dart Line729-L778
    ``` 
