@@ -89,7 +89,7 @@ class _OrganizationSelectionState extends State<OrganizationSelection> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Select an oganization'),
+        title: Text('Select an Organization'),
         backgroundColor: Colors.teal,
         actions: <Widget>[
           IconButton(

@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:107725945138:android:6fbb40dfc6cee77e44bf2b",
+        "mobilesdk_app_id": "1:107725945138:android:b9862b1e494ad45a44bf2b",
         "android_client_info": {
-          "package_name": "com.example.rental_manager"
+          "package_name": "com.ucdavis.rental_manager"
         }
       },
       "oauth_client": [
