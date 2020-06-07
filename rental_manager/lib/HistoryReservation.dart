@@ -1,7 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:rental_manager/CurrentReservation.dart';
+import 'package:rental_manager/Locations/show_all.dart';
 import 'package:rental_manager/PlatformWidget/platform_alert_dialog.dart';
 import 'package:rental_manager/PlatformWidget/strings.dart';
+import 'package:rental_manager/chatview/login.dart';
 import 'package:rental_manager/data.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,21 +19,93 @@ class HistoryReservation extends StatefulWidget {
 
 class _HistoryReservationState extends State<HistoryReservation> {
   List<globals.ReservationItem> localList = new List();
+  String getSubtitle(String reservedTime, String pickupTime, String returnTime, String status){
+    reservedTime = parseTime(reservedTime);
+    pickupTime = parseTime(pickupTime);
+    returnTime = parseTime(returnTime);
+    if(status == "Reserved"){
+      return status + " at " + parseTime(reservedTime);
+    }else if(status ==  "Picked Up"){
+      return status + " at " + parseTime(pickupTime);
 
+    }else if(status ==  "Returned"){
+      return status + " at " + parseTime(returnTime);
+      return pickupTime + status;
+    }
+  }
   @override
   Widget build(BuildContext context) {
     // Scaffold is a layout for the major Material Components.
+    if(globals.isiOS){
+      return Scaffold(
+          appBar:CupertinoNavigationBar(
+            heroTag: "Tab4History Reservation'",
+            transitionBetweenRoutes: false,
+            middle:Text(langaugeSetFunc('History Reservation'), style: TextStyle(color: textcolor()),),
+
+            backgroundColor: backgroundcolor(),
+          ),
+          backgroundColor: backgroundcolor(),
+          body:StreamBuilder(
+              stream: Firestore.instance
+                  .collection(returnReservationCollection()).where('uid', isEqualTo: globals.uid).where('status', isEqualTo: "Returned")
+                  .snapshots(),
+              builder: (context, snapshot){
+                List<DocumentSnapshot> documents = [];
+                try {
+                  documents = snapshot.data.documents;
+                } catch (e) {
+                  print(e.toString());
+                }
+                return ListView.builder(
+                    itemCount: documents.length,
+                    itemBuilder: (context, i){
+                      return Column(
+                        children: <Widget>[
+                          ListTile(
+                            leading: CircleAvatar(
+                              backgroundImage: NetworkImage(documents[i]["imageURL"]),
+                            ),
+                            title: Text(documents[i]["name"], style: TextStyle(color: textcolor())),
+                            subtitle: Text( getSubtitle(documents[i]["reserved time"], documents[i]["picked Up time"], documents[i]["return time"],
+                                documents[i]["status"]
+                            ), style: TextStyle(color: textcolor()) ),
+                            trailing: Icon(CupertinoIcons.right_chevron),
+                            onTap: (){
+                             if(globals.isAdmin || globals.locationManager.isNotEmpty){
+                               Navigator.push(context,
+                                   MaterialPageRoute(builder: (context) => Ticket(documents[i]))
+                               );
+                             }else{
+                               var ds = documents[i].data;
+                               String ret;
+                               ret = 'Item Name:' + ds["name"] + '\n';
+                               ret += 'Item Amount: ' + ds["amount"] + '\n';
+                               ret += 'Item Status: ' + ds["status"] + '\n';
+                               ret += 'Item Start Time: ' + ds["startTime"] + '\n';
+
+                               pop_window("The Item Information", "$ret", context);
+                             }
+                            },
+                          ),
+                          Divider(
+                            height: 2.0,
+                          ),
+                        ],
+                      );
+                    }
+                );
+              }
+          ),
+      );
+    }
+
     return new Scaffold(
         appBar: AppBar(
           title: Text(langaugeSetFunc('History Reservation'), style: TextStyle(color: textcolor()),),
           backgroundColor: backgroundcolor(),
           actions: <Widget>[
-            IconButton(
-                icon: Icon(
-                  Icons.repeat_one,
-                  color: Colors.white,
-                ),
-            ),
+
           ],
           iconTheme: IconThemeData(
             color: textcolor(), //change your color here

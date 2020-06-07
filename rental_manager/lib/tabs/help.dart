@@ -22,7 +22,7 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:rental_manager/PlatformWidget/platform_alert_dialog.dart';
 import 'package:rental_manager/PlatformWidget/strings.dart';
 import 'package:rental_manager/SlideDialog/slide_popup_dialog.dart'
-    as slideDialog;
+as slideDialog;
 import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart'; //For creating the SMTP Server
 import '../globals.dart';
@@ -65,7 +65,7 @@ class ThirdTab extends StatefulWidget {
 
 class _ThirdTabState extends State<ThirdTab> {
   SpeedDialChild returnManagerWidget() {
-    if (globals.isAdmin) {
+    if (!globals.isAdmin) {
       return SpeedDialChild(
         child: Icon(Icons.receipt, color: Colors.white),
         backgroundColor: Colors.green,
@@ -76,21 +76,6 @@ class _ThirdTabState extends State<ThirdTab> {
           print(contents);
         },
         label: langaugeSetFunc('Manager View'),
-        labelStyle: TextStyle(fontWeight: FontWeight.w500),
-        labelBackgroundColor: Colors.green,
-      );
-    } else if (!globals.isAdmin && globals.locationManager != "") {
-      return SpeedDialChild(
-        child: Icon(Icons.receipt, color: Colors.white),
-        backgroundColor: Colors.green,
-        onTap: () {
-          Navigator.push(
-              context, MaterialPageRoute(builder: (context) => Manager()));
-          //pickUpFile(context);
-          print(contents);
-        },
-        label: langaugeSetFunc('Location Manager') +
-            ': ${globals.locationManager}',
         labelStyle: TextStyle(fontWeight: FontWeight.w500),
         labelBackgroundColor: Colors.green,
       );
@@ -123,11 +108,10 @@ class _ThirdTabState extends State<ThirdTab> {
           ..from = Address(username)
           ..recipients.add('jagaoabc@gmail.com') //recipent email
           ..ccRecipients.addAll([
-            'destCc1@example.com',
-            'destCc2@example.com'
+            '$email',
           ]) //cc Recipents emails
           ..bccRecipients
-              .add(Address('bccAddress@example.com')) //bcc Recipents emails
+              .add(Address('jagao@ucdavis.edu')) //bcc Recipents emails
           ..subject = subject //subject of the email
           ..text = text; //body of the email
 
@@ -162,118 +146,127 @@ class _ThirdTabState extends State<ThirdTab> {
                 ),
                 SizedBox(
                   height: 20,
-                  width: MediaQuery.of(context).size.width / 10 * 6.87,
+                  width: MediaQuery.of(context).size.width / 10 * 8.87,
                   child: Divider(
                     color: Colors.grey,
                   ),
                 ),
-                TextFormField(
-                  onChanged: (text) {
-                    print("First text field: $text");
-                    email = text;
-                  },
-                  validator: (String val) {
-                    if (VerifyEmail(val) == false) {
-                      var str_mssage = "Please enter your valid email address";
-                      return langaugeSetFunc(str_mssage);
-                    }
-                    return null;
-                  },
-                  cursorColor: Colors.teal.shade900,
-                  scrollPadding: const EdgeInsets.symmetric(
-                      vertical: 20.0, horizontal: 50),
-                  decoration: InputDecoration(
-                    border: new OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(
-                        const Radius.circular(8.0),
-                      ),
-                      borderSide: new BorderSide(
-                        color: Colors.transparent,
-                        width: 1.0,
-                      ),
-                    ),
-                    labelText: langaugeSetFunc('Email'),
-                    prefixIcon: const Icon(Icons.email, color: Colors.black),
-                    // labelStyle:
-                    // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
-                    contentPadding: const EdgeInsets.symmetric(
+                Container(
+                  width: MediaQuery.of(context).size.width / 10 * 8.87,
+                  child: TextFormField(
+                    onChanged: (text) {
+                      print("First text field123: $text");
+                      email = text;
+                    },
+                    validator: (String val) {
+                      if (VerifyEmail(val) == false) {
+                        var str_mssage = "Please enter your valid email address";
+                        return langaugeSetFunc(str_mssage);
+                      }
+                      return null;
+                    },
+                    cursorColor: Colors.teal.shade900,
+                    scrollPadding: const EdgeInsets.symmetric(
                         vertical: 20.0, horizontal: 50),
+                    decoration: InputDecoration(
+                      border: new OutlineInputBorder(
+                        borderRadius: const BorderRadius.all(
+                          const Radius.circular(8.0),
+                        ),
+                        borderSide: new BorderSide(
+                          color: Colors.transparent,
+                          width: 1.0,
+                        ),
+                      ),
+                      labelText: langaugeSetFunc('Email'),
+                      prefixIcon: const Icon(Icons.email, color: Colors.black),
+                      // labelStyle:
+                      // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 20.0, horizontal: 50),
+                    ),
                   ),
                 ),
                 SizedBox(
                   height: 10,
                 ),
-                TextFormField(
-                  onChanged: (text) {
-                    print("First text field: $text");
-                    subject = text;
-                  },
-                  validator: (String val) {
-                    if (val.isEmpty) {
-                      var str_message = "Please fill in the blank";
-                      return langaugeSetFunc(str_message);
-                    }
-                    return null;
-                  },
-                  cursorColor: Colors.teal.shade900,
-                  scrollPadding: const EdgeInsets.symmetric(
-                      vertical: 20.0, horizontal: 50),
-                  decoration: InputDecoration(
-                    border: new OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(
-                        const Radius.circular(8.0),
-                      ),
-                      borderSide: new BorderSide(
-                        color: Colors.transparent,
-                        width: 1.0,
-                      ),
-                    ),
-                    labelText: langaugeSetFunc('Subject'),
-                    prefixIcon: const Icon(Icons.title, color: Colors.black),
-                    // labelStyle:
-                    // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
-                    contentPadding: const EdgeInsets.symmetric(
+                Container(
+                  width: MediaQuery.of(context).size.width / 10 * 8.87,
+                  child: TextFormField(
+                    onChanged: (text) {
+                      print("First text field: $text");
+                      subject = text;
+                    },
+                    validator: (String val) {
+                      if (val.isEmpty) {
+                        var str_message = "Please fill in the blank";
+                        return langaugeSetFunc(str_message);
+                      }
+                      return null;
+                    },
+                    cursorColor: Colors.teal.shade900,
+                    scrollPadding: const EdgeInsets.symmetric(
                         vertical: 20.0, horizontal: 50),
+                    decoration: InputDecoration(
+                      border: new OutlineInputBorder(
+                        borderRadius: const BorderRadius.all(
+                          const Radius.circular(8.0),
+                        ),
+                        borderSide: new BorderSide(
+                          color: Colors.transparent,
+                          width: 1.0,
+                        ),
+                      ),
+                      labelText: langaugeSetFunc('Subject'),
+                      prefixIcon: const Icon(Icons.title, color: Colors.black),
+                      // labelStyle:
+                      // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 20.0, horizontal: 50),
+                    ),
                   ),
                 ),
                 SizedBox(
                   height: 10,
                 ),
-                TextFormField(
-                  onChanged: (text) {
-                    print("First text field: $text");
-                    atext = text;
-                  },
-                  validator: (String val) {
-                    if (val.isEmpty) {
-                      var str_message = "Please fill in the blank";
-                      return langaugeSetFunc(str_message);
-                    }
-                    return null;
-                  },
-                  keyboardAppearance: Brightness.dark,
-                  keyboardType: TextInputType.multiline,
-                  maxLines: null,
-                  cursorColor: Colors.teal.shade900,
-                  scrollPadding: const EdgeInsets.symmetric(
-                      vertical: 50.0, horizontal: 50),
-                  decoration: InputDecoration(
-                    border: new OutlineInputBorder(
-                      borderRadius: const BorderRadius.all(
-                        const Radius.circular(8.0),
-                      ),
-                      borderSide: new BorderSide(
-                        color: Colors.transparent,
-                        width: 1.0,
-                      ),
-                    ),
-                    labelText: langaugeSetFunc('Text'),
-                    prefixIcon:
-                        const Icon(Icons.content_paste, color: Colors.black),
-                    // labelStyle:
-                    // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
-                    contentPadding: const EdgeInsets.symmetric(
+                Container(
+                  width: MediaQuery.of(context).size.width / 10 * 8.87,
+                  child: TextFormField(
+                    onChanged: (text) {
+                      print("First text field: $text");
+                      atext = text;
+                    },
+                    validator: (String val) {
+                      if (val.isEmpty) {
+                        var str_message = "Please fill in the blank";
+                        return langaugeSetFunc(str_message);
+                      }
+                      return null;
+                    },
+                    keyboardAppearance: Brightness.dark,
+                    keyboardType: TextInputType.multiline,
+                    maxLines: null,
+                    cursorColor: Colors.teal.shade900,
+                    scrollPadding: const EdgeInsets.symmetric(
                         vertical: 50.0, horizontal: 50),
+                    decoration: InputDecoration(
+                      border: new OutlineInputBorder(
+                        borderRadius: const BorderRadius.all(
+                          const Radius.circular(8.0),
+                        ),
+                        borderSide: new BorderSide(
+                          color: Colors.transparent,
+                          width: 1.0,
+                        ),
+                      ),
+                      labelText: langaugeSetFunc('Text'),
+                      prefixIcon:
+                      const Icon(Icons.content_paste, color: Colors.black),
+                      // labelStyle:
+                      // new TextStyle(color: Colors.teal.shade900, fontSize: 16.0),
+                      contentPadding: const EdgeInsets.symmetric(
+                          vertical: 50.0, horizontal: 50),
+                    ),
                   ),
                 ),
                 SizedBox(
@@ -334,6 +327,7 @@ class _ThirdTabState extends State<ThirdTab> {
     SpeedDial buildSpeedDial() {
       double height = MediaQuery.of(context).size.height;
       return SpeedDial(
+
         marginRight: 10,
         marginBottom: height / 3,
         animatedIcon: AnimatedIcons.menu_close,
@@ -381,37 +375,31 @@ class _ThirdTabState extends State<ThirdTab> {
     }
 
     //globals.AppBarheight = AppBar().preferredSize.height;
-    List<String> helpList = [
-      "Manager View",
-      "Track items' usage",
-      "Lost and found",
-      "Contact us"
-    ];
+    List<String> helpList = ["Manager View", "Track items' usage", "Lost and found", "Contact us"];
 
-    Widget returnListTile(String name) {
-      if (name == helpList[0]) {
+    Widget returnListTile(String name){
+      if(name == helpList[0]){
         return Column(
           children: <Widget>[
             Container(
-              decoration: new BoxDecoration(
-                color: BoxBackground(),
+              decoration: new BoxDecoration (
+                  color: BoxBackground(),
               ),
               child: ListTile(
-                leading: Icon(
-                  CupertinoIcons.person_solid,
-                  color: textcolor(),
-                ),
-                title: Text(
-                  langaugeSetFunc(name),
-                  style: TextStyle(color: textcolor()),
-                ),
-                trailing: Icon(
-                  CupertinoIcons.right_chevron,
-                  color: textcolor(),
-                ),
-                onTap: () {
-                  Navigator.push(context,
-                      MaterialPageRoute(builder: (context) => Manager()));
+                leading: Icon(CupertinoIcons.person_solid,color: textcolor(),),
+                title: Text(langaugeSetFunc(name), style: TextStyle(color: textcolor()),),
+                trailing: Icon(CupertinoIcons.right_chevron,color: textcolor(),),
+                onTap: () async{
+                  if(globals.username == "anonymous"){
+                    pop_window("Sorry", "anonymous cannot view this Page.\n Please go to the fourth tab and log out. Then sign up a new account.", context);
+                  }else{
+                    var a = await Firestore.instance.collection(returnReservationCollection()).getDocuments();
+                    globals.locationList = a.documents;
+
+
+                    Navigator.push(
+                        context, MaterialPageRoute(builder: (context) => Manager()));
+                  }
                 },
               ),
             ),
@@ -420,80 +408,66 @@ class _ThirdTabState extends State<ThirdTab> {
             ),
           ],
         );
-      } else if (name == helpList[1]) {
+      }else if(name == helpList[1]){
         return Container(
-          decoration: new BoxDecoration(
+          decoration: new BoxDecoration (
             color: BoxBackground(),
           ),
           child: ListTile(
-            leading: Icon(
-              CupertinoIcons.search,
-              color: textcolor(),
-            ),
-            title: Text(
-              langaugeSetFunc(name),
-              style: TextStyle(color: textcolor()),
-            ),
-            trailing: Icon(
-              CupertinoIcons.right_chevron,
-              color: textcolor(),
-            ),
+            leading: Icon(CupertinoIcons.search, color: textcolor(),),
+            title: Text(langaugeSetFunc(name),style: TextStyle(color: textcolor()),),
+            trailing: Icon(CupertinoIcons.right_chevron,color: textcolor(),),
             onTap: () {
-              Navigator.push(
-                  context, MaterialPageRoute(builder: (context) => track()));
+              if(globals.username == "anonymous"){
+                pop_window("Sorry", "anonymous cannot view this Page.\n Please go to the fourth tab and log out. Then sign up a new account.", context);
+              }else{
+                Navigator.push(
+                    context, MaterialPageRoute(builder: (context) => track()));
+              }
             },
           ),
         );
-      } else if (name == helpList[3]) {
+      }else if(name == helpList[3]){
         return Container(
-          decoration: new BoxDecoration(
+          decoration: new BoxDecoration (
             color: BoxBackground(),
           ),
           child: ListTile(
-            leading: Icon(
-              CupertinoIcons.pencil,
-              color: textcolor(),
-            ),
-            title: Text(
-              langaugeSetFunc(name),
-              style: TextStyle(color: textcolor()),
-            ),
-            trailing: Icon(
-              CupertinoIcons.right_chevron,
-              color: textcolor(),
-            ),
-            onTap: () {
-              _showDialog("Write down your ideas");
+            leading: Icon(CupertinoIcons.pencil,color: textcolor(),),
+            title: Text(langaugeSetFunc(name),style: TextStyle(color: textcolor()),),
+            trailing: Icon(CupertinoIcons.right_chevron,color: textcolor(),),
+            onTap: (){
+              if(false){
+                pop_window("Sorry", "anonymous cannot view this Page.\n Please go to the fourth tab and log out. Then sign up a new account.", context);
+              }else{
+                _showDialog("Write down your ideas");
+              }
             },
           ),
         );
-      } else {
+      }else{
         return Container(
-          decoration: new BoxDecoration(
+          decoration: new BoxDecoration (
             color: BoxBackground(),
           ),
           child: ListTile(
-            leading: Icon(
-              CupertinoIcons.info,
-              color: textcolor(),
-            ),
-            title: Text(
-              langaugeSetFunc(name),
-              style: TextStyle(color: textcolor()),
-            ),
-            trailing: Icon(
-              CupertinoIcons.right_chevron,
-              color: textcolor(),
-            ),
-            onTap: () {
+            leading: Icon(CupertinoIcons.info,color: textcolor(),),
+            title: Text(langaugeSetFunc(name),style: TextStyle(color: textcolor()),),
+            trailing: Icon(CupertinoIcons.right_chevron,color: textcolor(),),
+            onTap: (){
+              if(globals.username == "anonymous"){
+                pop_window("Sorry", "anonymous cannot view this Page.\n Please go to the fourth tab and log out. Then sign up a new account.", context);
+              }else{
               _showDialog("Describe the item and leave your contact");
+              }
             },
           ),
         );
       }
+
     }
 
-    if (globals.isiOS) {
+    if(globals.isiOS){
       return MaterialApp(
         home: Scaffold(
           appBar: CupertinoNavigationBar(
@@ -508,7 +482,7 @@ class _ThirdTabState extends State<ThirdTab> {
           backgroundColor: backgroundcolor(),
           body: ListView.builder(
             itemBuilder: (BuildContext context, int index) =>
-                returnListTile(helpList[index]),
+            returnListTile(helpList[index]),
             itemCount: helpList.length,
           ),
         ),
@@ -518,16 +492,16 @@ class _ThirdTabState extends State<ThirdTab> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Text(
-            langaugeSetFunc("Help"),
-            style: TextStyle(color: textcolor()),
-          ),
+          title: Text(langaugeSetFunc("FAQ & Guides"), style: TextStyle(color: textcolor()),),
           backgroundColor: backgroundcolor(),
           centerTitle: true,
+          actions: <Widget>[
+
+          ],
         ),
         backgroundColor: backgroundcolor(),
-        // floatingActionButton: buildSpeedDial(),
-        body: ListView.builder(
+
+        body:  ListView.builder(
           itemBuilder: (BuildContext context, int index) =>
               returnListTile(helpList[index]),
           itemCount: helpList.length,
@@ -535,6 +509,8 @@ class _ThirdTabState extends State<ThirdTab> {
       ),
     );
   }
+
+
 }
 
 void pop_window(a, b, context) {
@@ -585,7 +561,11 @@ void pickUpFile(BuildContext context) async {
   print(contents);
 }
 
-class itemInformation {}
+class itemInformation{
+
+}
+
+
 
 class Entry {
   Entry(this.title, [this.children = const <Entry>[]]);
@@ -646,6 +626,7 @@ class EntryItem extends StatelessWidget {
       key: PageStorageKey<Entry>(root),
       title: Text(root.title),
       children: root.children.map(_buildTiles).toList(),
+
     );
   }
 

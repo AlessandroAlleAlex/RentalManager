@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -29,7 +30,8 @@ import 'qrcodelogin.dart';
 import 'package:giffy_dialog/giffy_dialog.dart';
 import 'dart:ui' as ui;
 import 'package:devicelocale/devicelocale.dart';
-
+import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 Future getData() async {
   Firestore.instance
       .collection('global_users')
@@ -47,7 +49,6 @@ Future getData() async {
     }
     globals.phoneNumber = doc["PhoneNumber"];
     globals.organization = doc['organization'];
-    globals.locationManager = doc['LocationManager'];
   });
 }
 
@@ -93,25 +94,13 @@ class MyHomePage extends StatefulWidget {
   _MyHomePageState createState() => _MyHomePageState();
 }
 
-// var isLoggedIn = await googleSignIn.isSignedIn();
+
 final FirebaseAuth auth = FirebaseAuth.instance;
 
-//Future<void> taskSignUp(email, password) async{
-//  var authHandler = new Auth();
-//  var mystr = await authHandler.signUp(email, password);
-//
-//  PlatformAlertDialog(
-//    title: Strings.checkYourEmail,
-//    content: Strings.activationLinkSent(_email),
-//    defaultActionText: Strings.ok,
-//  ).show(context);
-//}
-
-// setState(() => sessionID = info['session_id']);
 
 Future uploadData(
     usernameFirst, usernameLast, email, uid, String organization) async {
-  String fullName = usernameFirst + ' ' + usernameLast;
+  String fullName = usernameFirst.toString().contains(' ') == true? usernameFirst : usernameFirst + ' ' + usernameLast;
   final databaseReference = Firestore.instance;
   String doc = "AppSignInUser" + email;
   // String thiscollectionName = '${organization}_users';
@@ -126,26 +115,11 @@ Future uploadData(
     'Email': email,
     'organization': organization,
     'Admin': false,
-    'LocationManager': '',
+    'LocationManager': "",
   });
 }
 
-void updateData(String collectionName) async {
-  final QuerySnapshot result =
-      await Firestore.instance.collection(collectionName).getDocuments();
-  final List<DocumentSnapshot> documents = result.documents;
-  List<String> userNameList = [];
-  documents.forEach((data) => userNameList.add(data.documentID));
 
-  for (var i = 0; i < userNameList.length; i++) {
-    await Firestore.instance
-        .collection(collectionName)
-        .document(userNameList[i])
-        .updateData({
-      'organization': true,
-    });
-  }
-}
 
 class _MyHomePageState extends State<MyHomePage> {
   String username;
@@ -157,7 +131,6 @@ class _MyHomePageState extends State<MyHomePage> {
   GoogleSignIn _googleSignIn = GoogleSignIn(
     scopes: [
       'email',
-      'https://www.googleapis.com/auth/contacts.readonly',
     ],
   );
 
@@ -201,17 +174,7 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
 
   @override
-  /*
-  * List<String>userinfor = [];
-   userinfor.add(globals.studentID);
-   userinfor.add(globals.username );
-   userinfor.add(globals.UserImageUrl);
-   userinfor.add(globals.phoneNumber);
-   userinfor.add(globals.email );
-   userinfor.add(globals.sex );
-   var prefs = await SharedPreferences.getInstance();
-   await prefs.setStringList("user", userinfor);
-  * */
+
   void testfunc() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     var list = prefs.getStringList("user");
@@ -237,6 +200,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     var language = prefs.getString('mylanguage');
 
+
     if (language != null) {
       if (language == 'English' || language == 'SimplifiedChinese') {
         globals.langaugeSet = language;
@@ -246,6 +210,7 @@ class _MyHomePageState extends State<MyHomePage> {
     } else {
       globals.langaugeSet = "English";
     }
+
     if (list == null) {
       return;
     }
@@ -264,25 +229,25 @@ class _MyHomePageState extends State<MyHomePage> {
           globals.organization = list[7];
         }
 
-        // if (globals.organization == null || globals.organization.isEmpty) {
-        await Firestore.instance
-            .collection(returnUserCollection())
-            .document(globals.uid)
-            .get()
-            .then((DocumentSnapshot ds) {
-          // use ds as a snapshot
-          var doc = ds.data;
-          // try {
-          globals.organization = doc['organization'];
-          globals.locationManager = doc['LocationManager'];
-          if (doc['Admin']) {
-            globals.isAdmin = true;
-          }
-          // } catch (e) {
-          //   print(e);
-          // }
-        });
-        // }
+        if (globals.organization == null || globals.organization.isEmpty) {
+          await Firestore.instance
+              .collection(returnUserCollection())
+              .document(globals.uid)
+              .get()
+              .then((DocumentSnapshot ds) {
+            // use ds as a snapshot
+            var doc = ds.data;
+            try {
+              globals.organization = doc['organization'];
+              globals.isAdmin = doc['Admin'];
+              globals.locationManager = doc['LocationManager'];
+            } catch (e) {
+              print(e);
+            }
+          });
+          print("OK" + globals.organization);
+
+        }
         Navigator.of(context).pushReplacementNamed('/MainViewScreen');
       }
     } catch (e) {
@@ -290,22 +255,21 @@ class _MyHomePageState extends State<MyHomePage> {
     }
   }
 
-  // Future getExistingOrganizations() async {
-  //   await Firestore.instance
-  //       .collection('organizations')
-  //       .getDocuments()
-  //       .then((organization) {
-  //     organization.documents
-  //         .forEach((org) => globals.existingOrganizations.add(org['name']));
-  //   });
-  //   print(globals.existingOrganizations.toString());
-  // }
+  Future getExistingOrganizations() async {
+    await Firestore.instance
+        .collection('organizations')
+        .getDocuments()
+        .then((organization) {
+      organization.documents
+          .forEach((org) => globals.existingOrganizations.add(org['name']));
+    });
+  }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    // getExistingOrganizations();
+    testfunc();
   }
 
   @override
@@ -320,7 +284,7 @@ class _MyHomePageState extends State<MyHomePage> {
     prLOGIN.style(message: 'Showing some progress...');
 
     //testfunc();
-    testfunc();
+
 
     return MaterialApp(
       home: Scaffold(
@@ -345,7 +309,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   children: <Widget>[
                     CircleAvatar(
                       radius: 50,
-                      backgroundImage: AssetImage('images/appstore.png'),
+                      backgroundImage: AssetImage('images/icon.png'),
                     ),
                     SizedBox(height: 10, width: 150),
                     Text(
@@ -516,20 +480,13 @@ class _MyHomePageState extends State<MyHomePage> {
                                               {'name': doc['organization']});
                                     }
                                     try {
-                                      globals.studentID =
-                                          doc[globals.rentalIDDatabase];
-                                      globals.locationManager =
-                                          doc['LocationManager'];
-                                      globals.username =
-                                          doc[globals.nameDababase];
+                                      globals.studentID = doc[globals.rentalIDDatabase];
+                                      globals.username = doc[globals.nameDababase];
                                       globals.UserImageUrl = doc["imageURL"];
                                       globals.phoneNumber = doc["PhoneNumber"];
                                       globals.email = doc["Email"];
-                                      globals.organization =
-                                          doc['organization'];
-                                      if (doc['Admin']) {
-                                        globals.isAdmin = true;
-                                      }
+                                      globals.organization = doc['organization'];
+
                                     } catch (e) {
                                       print(e);
                                     }
@@ -554,7 +511,8 @@ class _MyHomePageState extends State<MyHomePage> {
                                   await prefs.setStringList("user", userinfor);
                                   await prefs.setBool('isDark', false);
                                   await prefs.setInt('userSelectTheme', -1);
-
+                                  var holder = await Firestore.instance.collection(returnLocationsCollection()).getDocuments();
+                                  globals.locationList = holder.documents;
                                   Navigator.of(context)
                                       .pushReplacementNamed('/MainViewScreen');
                                 }
@@ -568,6 +526,7 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ],
                     ),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -584,15 +543,9 @@ class _MyHomePageState extends State<MyHomePage> {
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                                Image(
-                                  image: NetworkImage(
-                                      'https://pluspng.com/img-png/google-logo-png-open-2000.png'),
-                                  height: 25,
-                                ),
-                                SizedBox(width: 20.0),
                                 Center(
                                   child: Text(
-                                    langaugeSetFunc("LOGIN With Google"),
+                                    langaugeSetFunc("Anonymous LOGIN"),
                                     style: TextStyle(
                                       fontSize: 15,
                                       // backgroundColor:  Colors.teal[50],
@@ -604,109 +557,37 @@ class _MyHomePageState extends State<MyHomePage> {
                               ],
                             ),
                             onPressed: () async {
-                              //_handleSignIn();
+                              username = "jagaoabc@gmail.com";
+                              var email = username;
+                              globals.uid = 'AppSignInUser' + email;
 
-                              try {
-                                FirebaseUser googleuser =
-                                    await _myGoogleSignIn();
+                              await Firestore.instance
+                                  .collection(returnUserCollection())
+                                  .document(globals.uid)
+                                  .get()
+                                  .then((DocumentSnapshot ds) async {
+                                // use ds as a snapshot
+                                var doc = ds.data;
 
-                                if (googleuser != null) {
-                                  globals.mygoogleuser = googleuser;
+                                try {
+                                  globals.studentID = doc[globals.rentalIDDatabase];
+                                  globals.username = doc[globals.nameDababase];
+                                  globals.UserImageUrl = doc["imageURL"];
+                                  globals.phoneNumber = doc["PhoneNumber"];
+                                  globals.email = doc["Email"];
+                                  globals.organization = doc['organization'];
 
-                                  globals.username = googleuser.displayName;
-                                  globals.email = googleuser.email;
-                                  globals.uid =
-                                      'GoogleSignInUser' + globals.email;
-
-                                  await prLOGIN.show();
-                                  prLOGIN.hide();
-                                  String fullName = globals.username;
-                                  final databaseReference = Firestore.instance;
-
-                                  final QuerySnapshot result = await Firestore
-                                      .instance
-                                      .collection(returnUserCollection())
-                                      .getDocuments();
-                                  final List<DocumentSnapshot> documents =
-                                      result.documents;
-
-                                  for (var i = 0; i < documents.length; i++) {
-                                    if (documents[i].documentID ==
-                                        globals.uid) {
-                                      userExist = true;
-                                      break;
-                                    }
-                                  }
-                                  print(userExist == true);
-                                  if (userExist) {
-                                    try {
-                                      await Firestore.instance
-                                          .collection(returnUserCollection())
-                                          .document(globals.uid)
-                                          .get()
-                                          .then((DocumentSnapshot ds) {
-                                        // use ds as a snapshot
-                                        var doc = ds.data;
-                                        globals.UserImageUrl = doc["imageURL"];
-                                        globals.studentID =
-                                            doc[globals.rentalIDDatabase];
-                                        globals.phoneNumber =
-                                            doc["PhoneNumber"];
-                                        globals.sex = doc["Sex"];
-                                        if (globals.UserImageUrl == null) {
-                                          globals.UserImageUrl =
-                                              "https://images.unsplash.com/photo-1581660545544-83b8812f9516?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80";
-                                        }
-                                        if (globals.studentID == null) {
-                                          globals.studentID = "";
-                                        }
-                                        if (globals.phoneNumber == null) {
-                                          globals.phoneNumber = "";
-                                        }
-                                        if (globals.sex == null) {
-                                          globals.sex = "";
-                                        }
-                                      });
-                                    } catch (e) {
-                                      print(e);
-                                    }
-                                  } else {
-                                    await databaseReference
-                                        .collection(returnUserCollection())
-                                        .document(globals.uid)
-                                        .setData({
-                                      'Name': fullName,
-                                      'Email': globals.email,
-                                      'imageURL': globals.UserImageUrl,
-                                    });
-                                    globals.UserImageUrl =
-                                        "https://images.unsplash.com/photo-1581660545544-83b8812f9516?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80";
-                                  }
-
-                                  List<String> userinfor = [];
-                                  userinfor.add(globals.uid);
-                                  userinfor.add(globals.studentID);
-                                  userinfor.add(globals.username);
-                                  userinfor.add(globals.UserImageUrl);
-                                  userinfor.add(globals.phoneNumber);
-                                  userinfor.add(globals.email);
-                                  userinfor.add(globals.sex);
-                                  var prefs =
-                                      await SharedPreferences.getInstance();
-                                  await prefs.setStringList("user", userinfor);
-                                  await prefs.setBool('isDark', false);
-                                  await prefs.setInt('userSelectTheme', -1);
-                                  getData().whenComplete(() => Navigator.of(
-                                          context)
-                                      .pushReplacementNamed('/MainViewScreen'));
+                                } catch (e) {
+                                  print(e);
                                 }
-                              } catch (e) {
-                                print(
-                                    "Erro Line 515 Main.dart:" + e.toString());
-                              }
-
-                              //rewriteData();
-                              //Navigator.of(context).pushReplacementNamed('/MainViewScreen');
+                                if (doc['Admin'] == true) {
+                                  globals.isAdmin = true;
+                                } else {
+                                  globals.isAdmin = false;
+                                }
+                                globals.username = "anonymous";
+                              });
+                             Navigator.of(context).pushReplacementNamed('/MainViewScreen');
                             },
                             padding: EdgeInsets.all(7.0),
                             //color: Colors.teal.shade900,
@@ -716,60 +597,270 @@ class _MyHomePageState extends State<MyHomePage> {
                         ),
                       ],
                     ),
-                    SizedBox(
-                      height: 15,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        SizedBox(
-                          width: screenWidth / 6 * 5,
-                          child: RaisedButton(
-                            highlightElevation: 0.0,
-                            splashColor: Colors.greenAccent,
-                            highlightColor: Colors.green,
-                            elevation: 0.0,
-                            color: Colors.green,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: new BorderRadius.circular(30.0)),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                SizedBox(width: 20.0),
-                                Center(
-                                  child: Text(
-                                    langaugeSetFunc("Sign In With Scan"),
-                                    style: TextStyle(
-                                      fontSize: 15,
-                                      // backgroundColor:  Colors.teal[50],
-                                      color: Colors.white,
-                                      fontFamily: 'Montserrat',
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            onPressed: () async {
-                              //_handleSignIn();
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => GenerateScreen()));
+//                    Row(
+//                      mainAxisAlignment: MainAxisAlignment.center,
+//                      children: <Widget>[
+//                        SizedBox(
+//                          width: screenWidth / 6 * 5,
+//                          child: RaisedButton(
+//                            highlightElevation: 0.0,
+//                            splashColor: Colors.greenAccent,
+//                            highlightColor: Colors.green,
+//                            elevation: 0.0,
+//                            color: Colors.green,
+//                            shape: RoundedRectangleBorder(
+//                                borderRadius: new BorderRadius.circular(30.0)),
+//                            child: Row(
+//                              mainAxisAlignment: MainAxisAlignment.center,
+//                              children: <Widget>[
+//                                Image(
+//                                  image: NetworkImage(
+//                                      'https://pluspng.com/img-png/google-logo-png-open-2000.png'),
+//                                  height: 25,
+//                                ),
+//                                SizedBox(width: 20.0),
+//                                Center(
+//                                  child: Text(
+//                                    langaugeSetFunc("LOGIN With Google"),
+//                                    style: TextStyle(
+//                                      fontSize: 15,
+//                                      // backgroundColor:  Colors.teal[50],
+//                                      color: Colors.white,
+//                                      fontFamily: 'Montserrat',
+//                                    ),
+//                                  ),
+//                                ),
+//                              ],
+//                            ),
+//                            onPressed: () async {
+//                              //_handleSignIn();
+//
+//                              try {
+//                                FirebaseUser googleuser =
+//                                    await _myGoogleSignIn();
+//
+//                                if (googleuser != null) {
+//                                  globals.mygoogleuser = googleuser;
+//
+//                                  globals.username = googleuser.displayName;
+//                                  globals.email = googleuser.email;
+//                                  globals.uid =
+//                                      'AppSignInUser' + globals.email;
+//
+//                                  await prLOGIN.show();
+//                                  prLOGIN.hide();
+//                                  String fullName = globals.username;
+//                                  final databaseReference = Firestore.instance;
+//
+//                                  final QuerySnapshot result = await Firestore
+//                                      .instance
+//                                      .collection(returnUserCollection())
+//                                      .getDocuments();
+//                                  final List<DocumentSnapshot> documents =
+//                                      result.documents;
+//
+//                                  for (var i = 0; i < documents.length; i++) {
+//                                    if (documents[i].documentID ==
+//                                        globals.uid) {
+//                                      userExist = true;
+//                                      break;
+//                                    }
+//                                  }
+//                                  print(userExist == true);
+//                                  if (userExist) {
+//                                    print("UserExists\n");
+//                                    try {
+//                                      await Firestore.instance
+//                                          .collection(returnUserCollection())
+//                                          .document(globals.uid)
+//                                          .get()
+//                                          .then((DocumentSnapshot ds) {
+//                                        // use ds as a snapshot
+//                                        var doc = ds.data;
+//                                        globals.UserImageUrl = doc["imageURL"];
+//                                        globals.studentID = doc[globals.rentalIDDatabase];
+//                                        globals.phoneNumber = doc["PhoneNumber"];
+//
+//                                        if (globals.UserImageUrl == null) {
+//                                          globals.UserImageUrl =
+//                                              "https://images.unsplash.com/photo-1581660545544-83b8812f9516?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80";
+//                                        }
+//                                        if (globals.studentID == null) {
+//                                          globals.studentID = "";
+//                                        }
+//                                        if (globals.phoneNumber == null) {
+//                                          globals.phoneNumber = "";
+//                                        }
+//                                        globals.organization = doc["organization"];
+//                                        globals.isAdmin = doc["Admin"];
+//                                        globals.locationManager = doc["LocationManager"];
+//
+//
+//
+//
+//                                      });
+//                                      List<String> userinfor = [];
+//                                      userinfor.add(globals.uid);
+//                                      userinfor.add(globals.studentID);
+//                                      userinfor.add(globals.username);
+//                                      userinfor.add(globals.UserImageUrl);
+//                                      userinfor.add(globals.phoneNumber);
+//                                      userinfor.add(globals.email);
+//                                      userinfor.add(globals.sex);
+//                                      var prefs =
+//                                      await SharedPreferences.getInstance();
+//                                      await prefs.setStringList("user", userinfor);
+//                                      await prefs.setBool('isDark', false);
+//                                      await prefs.setInt('userSelectTheme', -1);
+//                                      var holder = await Firestore.instance.collection(returnLocationsCollection()).getDocuments();
+//                                      globals.locationList = holder.documents;
+//
+//
+//
+//
+//                                      Navigator.of(context).pushReplacementNamed('/MainViewScreen');
+//                                    } catch (e) {
+//                                      print(e);
+//                                    }
+//                                  } else {
+//                                    globals.UserImageUrl =
+//                                    "https://images.unsplash.com/photo-1581660545544-83b8812f9516?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1350&q=80";
+//                                    List<String> organizationList = [];
+//                                    QuerySnapshot list =
+//                                    await Firestore.instance.collection('organizations').getDocuments();
+//                                    list.documents.forEach((element) {
+//                                      String str = element.data['name'];
+//                                      if (str != null && str.isNotEmpty) {
+//                                        organizationList.add(str);
+//                                      }
+//                                    });
+//
+//                                    List<Text>nameList = [];
+//                                    List<String>copy_nameList = [];
+//
+//                                    String selectedValue = "";
+//
+//                                    organizationList.forEach((element) {
+//                                      copy_nameList.add(element);
+//                                    });
+//                                    copy_nameList.sort();
+//                                    copy_nameList = copy_nameList.toSet().toList();
+//                                    copy_nameList.forEach((element) {
+//                                      nameList.add(Text('$element'));
+//                                    });
+//
+//                                    showCupertinoModalPopup<String>(
+//                                      context: context,
+//                                      builder: (context) {
+//                                        return Column(
+//                                          mainAxisAlignment: MainAxisAlignment.end,
+//                                          children: <Widget>[
+//                                            Container(
+//                                              decoration: BoxDecoration(
+//                                                color: Color(0xffffffff),
+//                                                border: Border(
+//                                                  bottom: BorderSide(
+//                                                    color: Color(0xff999999),
+//                                                    width: 0.0,
+//                                                  ),
+//                                                ),
+//                                              ),
+//                                              child: Row(
+//                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                                                children: <Widget>[
+//                                                  CupertinoButton(
+//                                                    child: Text('Cancel'),
+//                                                    onPressed: () {
+//                                                      Navigator.pop(context);
+//                                                    },
+//                                                    padding: const EdgeInsets.symmetric(
+//                                                      horizontal: 16.0,
+//                                                      vertical: 5.0,
+//                                                    ),
+//                                                  ),
+//                                                  CupertinoButton(
+//                                                    child: Text('Confirm'),
+//                                                    onPressed: () async{
+//
+//                                                        globals.organization = selectedValue;
+//                                                        await databaseReference
+//                                                            .collection(returnUserCollection())
+//                                                            .document(globals.uid)
+//                                                            .setData({
+//                                                          'Name': fullName,
+//                                                          'Email': globals.email,
+//                                                          'imageURL': globals.UserImageUrl,
+//                                                          'Admin': false,
+//                                                          "LocationManager": '',
+//                                                          'PhoneNumber': '',
+//                                                          'RentalID': '',
+//                                                          'organization': globals.organization,
+//                                                        });
+//                                                        List<String> userinfor = [];
+//                                                        userinfor.add(globals.uid);
+//                                                        userinfor.add(globals.studentID);
+//                                                        userinfor.add(globals.username);
+//                                                        userinfor.add(globals.UserImageUrl);
+//                                                        userinfor.add(globals.phoneNumber);
+//                                                        userinfor.add(globals.email);
+//                                                        userinfor.add(globals.sex);
+//                                                        var prefs =
+//                                                        await SharedPreferences.getInstance();
+//                                                        await prefs.setStringList("user", userinfor);
+//                                                        await prefs.setBool('isDark', false);
+//                                                        await prefs.setInt('userSelectTheme', -1);
+//                                                        var holder = await Firestore.instance.collection(returnLocationsCollection()).getDocuments();
+//                                                        globals.locationList = holder.documents;
+//                                                        Navigator.of(context).pushReplacementNamed('/MainViewScreen');
+//
+//
+//                                                    },
+//                                                    padding: const EdgeInsets.symmetric(
+//                                                      horizontal: 16.0,
+//                                                      vertical: 5.0,
+//                                                    ),
+//                                                  )
+//                                                ],
+//                                              ),
+//                                            ),
+//                                            Container(
+//                                              height: 320.0,
+//                                              color: Color(0xfff7f7f7),
+//                                              child: CupertinoPicker(
+//                                                scrollController: FixedExtentScrollController(initialItem: 0),
+//                                                onSelectedItemChanged:(int index){
+//                                                  selectedValue =  copy_nameList[index].toString();
+//                                                },
+//                                                children: nameList,
+//                                                itemExtent: 32,
+//                                              ),
+//                                            )
+//                                          ],
+//                                        );
+//                                      },
+//                                    );
+//
+//
+//
+//                                  }
+//                                }
+//                              } catch (e) {
+//                                print(
+//                                    "Erro Line 515 Main.dart:" + e.toString());
+//                              }
+//
+//                              //rewriteData();
+//
+//                            },
+//                            padding: EdgeInsets.all(7.0),
+//                            //color: Colors.teal.shade900,
+//                            disabledColor: Colors.black,
+//                            disabledTextColor: Colors.black,
+//                          ),
+//                        ),
+//                      ],
+//                    ),
 
-                              //rewriteData();
-                              //Navigator.of(context).pushReplacementNamed('/MainViewScreen');
-                            },
-                            padding: EdgeInsets.all(7.0),
-                            //color: Colors.teal.shade900
-                            disabledColor: Colors.black,
-                            disabledTextColor: Colors.black,
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 15,
-                    ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -1024,6 +1115,8 @@ class _resetPasswordState extends State<resetPassword> {
                               prForgetPassword.hide();
                             });
                           });
+
+                          print('Founding');
                         } else {
                           String a = 'Warning',
                               b = 'Email Adress Not Found in Records';
@@ -1041,50 +1134,6 @@ class _resetPasswordState extends State<resetPassword> {
               SizedBox(
                 height: 5,
               ),
-//              Row(
-//                mainAxisAlignment: MainAxisAlignment.center,
-//                children: <Widget>[
-//                  SizedBox(
-//                    width: screenWidth / 6 * 5,
-//                    child: RaisedButton(
-//                      highlightElevation: 0.0,
-//                      splashColor: Colors.greenAccent,
-//                      highlightColor: Colors.green,
-//                      elevation: 0.0,
-//                      color: Colors.green,
-//                      shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
-//                      child: Row(
-//                        mainAxisAlignment: MainAxisAlignment.center,
-//                        children: <Widget>[
-//                          Center(
-//                            child: Text(
-//                              "Back to Login Page",
-//                              style: TextStyle(
-//                                fontSize: 15,
-//                                // backgroundColor:  Colors.teal[50],
-//                                color: Colors.white,
-//                                fontFamily: 'Montserrat',
-//                              ),
-//                            ),
-//                          ),
-//
-//                        ],
-//                      ),
-//                      onPressed: () {
-//                        Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
-//                      },
-//                      padding: EdgeInsets.all(7.0),
-//                      //color: Colors.teal.shade900,
-//                      disabledColor: Colors.black,
-//                      disabledTextColor: Colors.black,
-//
-//                    ),
-//                  ),
-//
-//
-//
-//                ],
-//              ),
             ],
           ),
         ),

@@ -51,21 +51,7 @@ class Auth implements BaseAuth{
     }
   }
 
-  // static void addUserSettingsDB(String userId) async {
-  //   checkUserExist(userId).then((value) {
-  //     if (!value) {
-  //       print("user ${user.firstName} ${user.email} added");
-  //       Firestore.instance
-  //           .document("users/${user.userId}")
-  //           .setData(user.toJson());
-  //       _addSettings(new Settings(
-  //         settingsId: userId,
-  //       ));
-  //     } else {
-  //       print("user ${user.firstName} ${user.email} exists");
-  //     }
-  //   });
-  // }
+
 
   Future<FirebaseUser> getCurrentUser() async {
     FirebaseUser user;

@@ -8,8 +8,7 @@ import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:rental_manager/SlideDialog/slide_popup_dialog.dart'
-    as slideDialog;
+import 'package:rental_manager/SlideDialog/slide_popup_dialog.dart' as slideDialog;
 import 'package:flutter/services.dart';
 import 'dart:typed_data';
 import 'package:path_provider/path_provider.dart';
@@ -51,26 +50,27 @@ class ItemInfo {
       this.start, this.Return, this.timeNow, this.uid, this.documentID);
 }
 
-String parseTime(String time_str) {
+
+String parseTime(String time_str){
   var reservationStartTime = time_str;
   try {
-    reservationStartTime =
-        DateFormat.yMd().add_jm().format(DateTime.parse(time_str));
-  } catch (e) {
+    reservationStartTime = DateFormat.yMd().add_jm().format(
+        DateTime.parse(time_str));
+  }catch(e){
     print(e);
   }
   return reservationStartTime.toString();
 }
 
-class itemMultiplSelect {
+class itemMultiplSelect{
   String name;
   String imageURL;
   String startTime;
   String documentID;
   int index;
-  itemMultiplSelect(
-      this.name, this.imageURL, this.startTime, this.documentID, this.index);
+  itemMultiplSelect(this.name, this.imageURL,this.startTime, this.documentID,this.index);
 }
+
 
 List<globals.ReservationItem> globalitemList = [];
 
@@ -197,10 +197,7 @@ class _CureentReservationState extends State<CureentReservation> {
       String test = "test";
       var url =
           'https://firebasestorage.googleapis.com/v0/b/rentalmanager-f94f1.appspot.com/o/item_images%2FRock%20Wall%20ATC-Carabiner.jpg?alt=media&token=f0e605fa-ed3e-40c1-b0d9-186ce01e3ab4';
-      await Firestore.instance
-          .collection(returnReservationCollection())
-          .document()
-          .setData({
+      await Firestore.instance.collection(returnReservationCollection()).document().setData({
         'imageURL': url,
         'name': test,
         'item': 'FmkqMr7ta72O4eeDjal7',
@@ -216,9 +213,8 @@ class _CureentReservationState extends State<CureentReservation> {
     }
 
     void deleteTestMode() async {
-      var result = await Firestore.instance
-          .collection(returnReservationCollection())
-          .getDocuments();
+      var result =
+          await Firestore.instance.collection(returnReservationCollection()).getDocuments();
       final List<DocumentSnapshot> documents = result.documents;
       for (int i = 0; i < documents.length; i++) {
         if (documents[i]["name"] == "test") {
@@ -238,27 +234,25 @@ class _CureentReservationState extends State<CureentReservation> {
     Map<String, String> urls = {};
 
     Map<String, int> index_map = {};
-    Map<String, String> uid_map = {};
+    Map<String ,String> uid_map = {};
     List<itemMultiplSelect> itemSelectedList = [];
-    var testa = itemMultiplSelect('Test', 'Test', 'Test', '123', -1);
+    var testa = itemMultiplSelect('Test', 'Test', 'Test','123', -1);
     var rate = 0.0;
-    Map<itemMultiplSelect, bool> final_map = {};
+    Map<itemMultiplSelect, bool>final_map = {};
     List<globals.ReservationItem> mylist = [];
-    Future<void> ReturnOrdersPopWindow2(
-        context, cancel, action, title, content) async {
+    Future<void> ReturnOrdersPopWindow2(context, cancel, action, title, content) async {
       return showDialog<void>(
         context: context,
         barrierDismissible: false, // user must tap button!
         builder: (BuildContext context) {
+
           return CupertinoAlertDialog(
             title: Text(title),
             content: Text(content),
             actions: <Widget>[
               CupertinoDialogAction(
-                child: Text(
-                  action,
-                ),
-                onPressed: () async {
+                child: Text(action,),
+                onPressed: () async{
                   FocusScope.of(context).requestFocus(FocusNode());
                   Navigator.pop(context, false);
                 },
@@ -268,9 +262,7 @@ class _CureentReservationState extends State<CureentReservation> {
         },
       );
     }
-
-    Future<void> ReturnOrdersPopWindow1(context, cancel, action, title, content,
-        List<itemMultiplSelect> itemMultiplSelectList) async {
+    Future<void> ReturnOrdersPopWindow1(context, cancel, action, title, content, List<itemMultiplSelect> itemMultiplSelectList) async {
       return showDialog<void>(
         context: context,
         barrierDismissible: false, // user must tap button!
@@ -281,36 +273,36 @@ class _CureentReservationState extends State<CureentReservation> {
             content: Text(content),
             actions: <Widget>[
               CupertinoDialogAction(
-                child: Text(cancel),
+                child: Text(cancel ),
                 onPressed: () {
+
                   Navigator.pop(context, false);
+
                 },
               ),
               CupertinoDialogAction(
-                child: Text(
-                  action,
-                ),
-                onPressed: () async {
+                child: Text(action,),
+                onPressed: () async{
                   Navigator.of(context).pop(true);
                   slideDialog.showSlideDialog(
                     context: globals.ContextInOrder,
-                    child: Container(
+                    child:  Container(
                       child: Form(
+
                         child: Column(
                           children: <Widget>[
                             Center(
-                              child: Text(
-                                  "Thanks for your returning!\nDid you enjoy this experience"),
+                              child:Text("Thanks for your returning!\nDid you enjoy this experience"),
                             ),
+
                             Center(
-                              child: RatingBar(
+                              child:  RatingBar(
                                 initialRating: 0,
                                 minRating: 1,
                                 direction: Axis.horizontal,
                                 allowHalfRating: true,
                                 itemCount: 5,
-                                itemPadding:
-                                    EdgeInsets.symmetric(horizontal: 4.0),
+                                itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
                                 itemBuilder: (context, _) => Icon(
                                   Icons.star,
                                   color: Colors.amber,
@@ -332,9 +324,7 @@ class _CureentReservationState extends State<CureentReservation> {
                                 highlightColor: Colors.green,
                                 elevation: 0.0,
                                 color: Colors.green,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius:
-                                        new BorderRadius.circular(30.0)),
+                                shape: RoundedRectangleBorder(borderRadius: new BorderRadius.circular(30.0)),
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: <Widget>[
@@ -349,55 +339,42 @@ class _CureentReservationState extends State<CureentReservation> {
                                         ),
                                       ),
                                     ),
+
                                   ],
                                 ),
-                                onPressed: () async {
+                                onPressed: () async{
                                   print('submit123 here\n ');
-                                  print("length = " +
-                                      itemMultiplSelectList.length.toString());
-                                  setState(() {});
-                                  for (int i = 0;
-                                      i < itemMultiplSelectList.length;
-                                      i++) {
-                                    String time =
-                                        DateFormat("yyyy-MM-dd HH:mm:ss")
-                                            .format(DateTime.now());
+                                  print("length = " + itemMultiplSelectList.length.toString());
+                                  setState(() {
+
+                                  });
+                                  for(int i = 0 ; i < itemMultiplSelectList.length; i++){
+                                    String time =  DateFormat("yyyy-MM-dd HH:mm:ss").format(DateTime.now());
                                     print(itemMultiplSelectList[i].documentID);
-                                    await Firestore.instance
-                                        .collection(
-                                            returnReservationCollection())
-                                        .document(
-                                            itemMultiplSelectList[i].documentID)
+                                    await Firestore.instance.collection(returnReservationCollection()).document(itemMultiplSelectList[i].documentID)
                                         .updateData({
                                       'return time': time,
-                                      'status': 'Returned',
+                                      'status' : 'Returned',
                                     });
                                   }
-                                  for (int i = 0;
-                                      i < itemMultiplSelectList.length;
-                                      i++) {
-                                    await Firestore.instance
-                                        .collection(
-                                            returnReservationCollection())
-                                        .document(
-                                            itemMultiplSelectList[i].documentID)
+                                  for(int i = 0; i <  itemMultiplSelectList.length; i++){
+                                    await Firestore.instance.collection(returnReservationCollection()).document( itemMultiplSelectList[i].documentID)
                                         .updateData({
                                       'Review': rate / 5,
+
                                     });
                                   }
-                                  FocusScope.of(globals.ContextInOrder)
-                                      .requestFocus(FocusNode());
+                                  FocusScope.of(globals.ContextInOrder).requestFocus(FocusNode());
                                   Navigator.pop(globals.ContextInOrder, false);
-                                  pop_window(
-                                      'Awesome',
-                                      "Thanks for your review!",
-                                      globals.ContextInOrder);
+                                  pop_window('Awesome', "Thanks for your review!", globals.ContextInOrder);
                                   //await ReturnOrdersPopWindow2(globals.ContextInOrder, '','OK',"Thanks for your review","We appreciate your evaluation!\nYour review will be used in the Help- track Page");
+
                                 },
                                 padding: EdgeInsets.all(7.0),
                                 //color: Colors.teal.shade900,
                                 disabledColor: Colors.black,
                                 disabledTextColor: Colors.black,
+
                               ),
                             ),
                           ],
@@ -406,11 +383,13 @@ class _CureentReservationState extends State<CureentReservation> {
                     ),
                     textField: Container(
                       child: Column(
-                        children: <Widget>[],
+                        children: <Widget>[
+                        ],
                       ),
                     ),
                     barrierColor: Colors.white.withOpacity(0.7),
                   );
+
                 },
               ),
             ],
@@ -419,10 +398,15 @@ class _CureentReservationState extends State<CureentReservation> {
       );
     }
 
+
+
+
     Widget a(int i) {
+
+
       if (i == 0) {
         return MaterialButton(
-          child: Text('Cancel', style: TextStyle(color: textcolor())),
+          child: Text('Cancel',style: TextStyle(color: textcolor())),
           onPressed: () {
             setState(() {});
           },
@@ -435,44 +419,46 @@ class _CureentReservationState extends State<CureentReservation> {
     Widget b(int i) {
       if (i == 0) {
         return new MaterialButton(
-          onPressed: () async {
+          onPressed: () async{
             List<itemMultiplSelect> returningList = [];
 
             final_map.forEach((key, value) {
-              if (value == true) {
+              if(value == true){
                 returningList.add(key);
+
               }
             });
 
             print(returningList.length);
             int itemNum = returningList.length;
             String itemName = "";
-            for (int i = 0; i < returningList.length; i++) {
+            for(int i = 0; i < returningList.length; i++){
               String name = returningList[i].name;
-              if (i == 0) {
+              if(i == 0){
                 itemName += name;
-              } else {
+              }else{
                 itemName += '\n';
                 itemName += name;
               }
             }
 
-            if (returningList.length == 0) {
+            if(returningList.length == 0) {
               PlatformAlertDialog(
                 title: "Warning",
                 content: "You did not select any items",
                 defaultActionText: Strings.ok,
               ).show(context);
-            } else {
-              await ReturnOrdersPopWindow1(
-                  context,
-                  'Cancel',
-                  'Return',
-                  'Warning',
-                  'Are you going to return following items:\n $itemName',
-                  returningList);
-              setState(() {});
+            }else{
+              await ReturnOrdersPopWindow1(context,'Cancel', 'Return','Warning', 'Are you going to return following items:\n $itemName', returningList);
+              setState(() {
+
+              });
+
             }
+
+
+
+
 
 //            titles.forEach((key, value) {
 //
@@ -485,6 +471,7 @@ class _CureentReservationState extends State<CureentReservation> {
 //                setState(() {});
 //              }
 //            });
+
           },
           child: new Text("Confirm", style: TextStyle(color: textcolor())),
         );
@@ -495,9 +482,8 @@ class _CureentReservationState extends State<CureentReservation> {
 
     Future<List<globals.ReservationItem>> getList() async {
       List<globals.ReservationItem> itemList = new List();
-      var result = await Firestore.instance
-          .collection(returnReservationCollection())
-          .getDocuments();
+      var result =
+          await Firestore.instance.collection(returnReservationCollection()).getDocuments();
       final List<DocumentSnapshot> documents = result.documents;
 
       for (int i = 0; i < documents.length; i++) {
@@ -528,16 +514,18 @@ class _CureentReservationState extends State<CureentReservation> {
 
       List<globals.ReservationItem> copy_itemList = [];
 
-      for (int i = 0; i < itemList.length; i++) {
+      for(int i = 0 ; i < itemList.length; i++){
         copy_itemList.add(itemList[i]);
       }
 
       itemList.clear();
 
+
       for (int i = 0; i < copy_itemList.length; i++) {
         if (copy_itemList[i].uid == globals.uid &&
             copy_itemList[i].status == "Picked Up" &&
-            copy_itemList[i].startTime != null) {
+            copy_itemList[i].startTime != null ) {
+
           itemList.add(copy_itemList[i]);
         }
       }
@@ -560,13 +548,15 @@ class _CureentReservationState extends State<CureentReservation> {
       return itemList;
     }
 
+
+
+
     return new Scaffold(
       appBar: AppBar(
         iconTheme: IconThemeData(
           color: textcolor(), //change your color here
         ),
-        title: Text(langaugeSetFunc('Orders'),
-            style: TextStyle(color: textcolor())),
+        title: Text(langaugeSetFunc('Orders'), style: TextStyle(color: textcolor())),
         centerTitle: true,
         backgroundColor: backgroundcolor(),
         actions: <Widget>[
@@ -576,6 +566,7 @@ class _CureentReservationState extends State<CureentReservation> {
               color: textcolor(),
             ),
             onPressed: () async {
+             
               isMultipleSeclect = !isMultipleSeclect;
 
               String test = "test";
@@ -608,14 +599,10 @@ class _CureentReservationState extends State<CureentReservation> {
                 urls[mylist[i].documentID] = mylist[i].imageURL;
                 index_map[mylist[i].documentID] = i;
 
-                itemSelectedList.add(itemMultiplSelect(
-                    mylist[i].name,
-                    mylist[i].imageURL,
-                    mylist[i].startTime,
-                    mylist[i].documentID,
-                    i));
+                itemSelectedList.add(itemMultiplSelect(mylist[i].name, mylist[i].imageURL,mylist[i].startTime,mylist[i].documentID, i));
+
               }
-              for (int i = 0; i < itemSelectedList.length; i++) {
+              for(int i = 0; i < itemSelectedList.length;i++){
                 var item = itemSelectedList[i];
                 final_map[item] = false;
               }
@@ -627,9 +614,7 @@ class _CureentReservationState extends State<CureentReservation> {
       ),
       backgroundColor: backgroundcolor(),
       body: StreamBuilder(
-          stream: Firestore.instance
-              .collection(returnReservationCollection())
-              .snapshots(),
+          stream: Firestore.instance.collection(returnReservationCollection()).snapshots(),
           builder: (context, snapshot) {
             if (!snapshot.hasData) return const Text('loading...');
 
@@ -655,21 +640,16 @@ class _CureentReservationState extends State<CureentReservation> {
                           data: ThemeData(unselectedWidgetColor: textcolor()),
                           child: CheckboxListTile(
                             activeColor: Colors.blue,
-                            title: new Text(
-                              key.name,
-                              style: TextStyle(color: textcolor()),
-                            ),
-                            subtitle: new Text(
-                              parseTime(key.startTime),
-                              style: TextStyle(color: textcolor()),
-                            ),
+
+                            title: new Text(key.name,style: TextStyle(color: textcolor()),),
+                            subtitle: new Text(parseTime(key.startTime), style: TextStyle(color: textcolor()),),
                             secondary: CircleAvatar(
                               backgroundImage: NetworkImage(key.imageURL),
                             ),
                             value: final_map[key],
                             onChanged: (bool value) async {
                               final_map.forEach((thiskey, avalue) {
-                                if (thiskey.documentID == key.documentID) {
+                                if(thiskey.documentID == key.documentID){
                                   final_map[thiskey] = value;
                                 }
                               });
@@ -716,21 +696,26 @@ class _CureentReservationState extends State<CureentReservation> {
                 }
               }
 
+
               List<globals.ReservationItem> copy_itemList = [];
 
-              for (int i = 0; i < itemList.length; i++) {
+              for(int i = 0 ; i < itemList.length; i++){
                 copy_itemList.add(itemList[i]);
               }
 
               itemList.clear();
 
+
               for (int i = 0; i < copy_itemList.length; i++) {
                 if (copy_itemList[i].uid == globals.uid &&
                     copy_itemList[i].status == "Picked Up" &&
-                    copy_itemList[i].startTime != null) {
-                  itemList.add(copy_itemList[i]);
+                    copy_itemList[i].startTime != null ) {
+
+                    itemList.add(copy_itemList[i]);
                 }
               }
+
+
 
               for (int i = 0; i < itemList.length - 1; i++) {
                 for (int j = 0; j < itemList.length - i - 1; j++) {
@@ -760,18 +745,13 @@ class _CureentReservationState extends State<CureentReservation> {
                 subtitles[mylist[i].documentID] = itemList[i].startTime;
                 urls[mylist[i].documentID] = itemList[i].imageURL;
                 index_map[mylist[i].documentID] = i;
-                itemSelectedList.add(itemMultiplSelect(
-                    mylist[i].name,
-                    mylist[i].imageURL,
-                    mylist[i].startTime,
-                    mylist[i].documentID,
-                    i));
+                itemSelectedList.add(itemMultiplSelect(mylist[i].name, mylist[i].imageURL,  mylist[i].startTime, mylist[i].documentID,i));
               }
-              for (int i = 0; i < itemSelectedList.length; i++) {
-                var item = itemSelectedList[i];
+                for(int i = 0; i < itemSelectedList.length;i++){
+                  var item = itemSelectedList[i];
 
-                final_map[item] = false;
-              }
+                  final_map[item] = false;
+                }
 
               return ListView.builder(
                   itemCount: itemList.length,
@@ -785,14 +765,9 @@ class _CureentReservationState extends State<CureentReservation> {
                               backgroundImage:
                                   NetworkImage(itemList[i].imageURL),
                             ),
-                            trailing: new Icon(
-                              Icons.chevron_right,
-                              color: textcolor(),
-                            ),
-                            title: new Text(itemList[i].name,
-                                style: TextStyle(color: textcolor())),
-                            subtitle: new Text(parseTime(itemList[i].startTime),
-                                style: TextStyle(color: textcolor())),
+                            trailing: new Icon(Icons.chevron_right, color: textcolor(),),
+                            title: new Text(itemList[i].name, style: TextStyle(color: textcolor()) ),
+                            subtitle: new Text(parseTime(itemList[i].startTime), style: TextStyle(color: textcolor())),
                             onTap: () {
                               var list = itemList;
                               var url = itemList[i].imageURL;
@@ -873,9 +848,8 @@ _buildFancyButtonOk(BuildContext context) {
 
 void GetImageURL(String uid) async {
   globals.itemList.clear();
-  final QuerySnapshot result = await Firestore.instance
-      .collection(returnItemCollection())
-      .getDocuments();
+  final QuerySnapshot result =
+      await Firestore.instance.collection(returnItemCollection()).getDocuments();
   final List<DocumentSnapshot> documents = result.documents;
   List<String> itemList = [];
   documents.forEach((data) => itemList.add(data.documentID));
@@ -917,44 +891,29 @@ class Ticket extends StatefulWidget {
   @override
   DocumentSnapshot theItem;
 
-  Ticket(DocumentSnapshot theItem) {
+  Ticket(DocumentSnapshot  theItem) {
     this.theItem = theItem;
   }
   _TicketState createState() => _TicketState();
 }
 
 class _TicketState extends State<Ticket> {
+
+
   GlobalKey theGlobalKey = new GlobalKey();
 
-//  Future<void> _captureAndSharePng() async {
-//    try {
-//      RenderRepaintBoundary boundary = theGlobalKey.currentContext.findRenderObject();
-//      var image = await boundary.toImage();
-//      ByteData byteData = await image.toByteData(format: ImageByteFormat.png);
-//      Uint8List pngBytes = byteData.buffer.asUint8List();
-//      final tempDir = await getApplicationDocumentsDirectory();
-//      final file = await new File('${tempDir.path}/image.png').create();
-//      await file.writeAsBytes(pngBytes);
-//      print(tempDir.path);
-//      final channel = const MethodChannel('plugins.flutter.io/share');;
-//      channel.invokeMethod('shareFile', 'image.png');
-//
-//      //final ByteData bytes = await image.toByteData(format: ImageByteFormat.png);
-//
-//
-//    } catch(e) {
-//      print(e.toString());
-//    }
-//  }
+
 
   @override
   Widget build(BuildContext context) {
+
     String person = this.widget.theItem["UserName"];
+     
     var parsetime = parseTime(this.widget.theItem["startTime"]);
     String date = parsetime.substring(0, parsetime.indexOf(' '));
     String item = this.widget.theItem["name"];
-    if (item.length >= 20) {
-      item = item.substring(0, 17) + "...";
+    if(item.length >= 20){
+      item = item.substring(0,17) + "...";
     }
     String status = this.widget.theItem["status"];
 
@@ -970,6 +929,134 @@ class _TicketState extends State<Ticket> {
     print(reservationID);
 
     File _imageFile;
+    print(MediaQuery.of(context).size.height);
+    if(globals.isiOS){
+      return Scaffold(
+        appBar: CupertinoNavigationBar(
+          heroTag: "Tab23",
+          transitionBetweenRoutes: false,
+          backgroundColor: backgroundcolor(),
+          middle: Text(langaugeSetFunc('Details'), style: TextStyle(color: textcolor()),),
+          trailing: GestureDetector(
+            child: Icon(
+              CupertinoIcons.share,
+              color: textcolor(),
+            ),
+            onTap: () async{
+
+              RenderRepaintBoundary boundary =
+              theGlobalKey.currentContext.findRenderObject();
+              ui.Image image = await boundary.toImage();
+              final directory = (await getApplicationDocumentsDirectory()).path;
+              ByteData byteData =
+              await image.toByteData(format: ui.ImageByteFormat.png);
+
+              Uint8List pngBytes = byteData.buffer.asUint8List();
+
+              try {
+                await WcFlutterShare.share(
+                    sharePopupTitle: 'Order Receipt',
+                    fileName: 'Order Receipt.png',
+                    mimeType: 'image/png',
+                    bytesOfFile: pngBytes);
+              } catch (e) {
+                print(e.toString());
+              }
+              print("OK");
+            },
+          ),
+        ),
+        backgroundColor: backgroundcolor(),
+        body: Center(
+          child: RepaintBoundary(
+            key: theGlobalKey,
+            child: FlutterTicketWidget(
+              color: Colors.yellow,
+              width: 320,
+              height: 500,
+              isCornerRounded: true,
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Container(
+                          width: 15.0 * this.widget.theItem["location"].toString().length,
+                          height: 25.0,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(60.0),
+                            border: Border.all(width: 1.0, color: Colors.green),
+                          ),
+                          child: Center(
+                            child: Text(
+                              '${this.widget.theItem["location"]}',
+                              style: TextStyle(color: Colors.green),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Center(
+                      child: CircleAvatar(
+                        radius: 52,
+                        backgroundColor: Colors.teal,
+                        child: CircleAvatar(
+                          radius: 50,
+                          backgroundColor: Colors.teal,
+                          backgroundImage: NetworkImage(url),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 25.0),
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding:const EdgeInsets.only(top: 12.0, right: 40.0),
+                            child: ticketDetailsWidget(
+                                'Person', '$person', 'Date', '$date'),
+                          ),
+                          Padding(
+                            padding:
+                            const EdgeInsets.only(top: 12.0, right: 59.0),
+                            child: ticketDetailsWidget(
+                                'Item', '$item', 'Amount', '$amount'),
+                          ),
+                          Padding(
+                            padding:
+                            const EdgeInsets.only(top: 12.0, right: 41.0),
+                            child: ticketDetailsWidget(
+                                'Start', '$start', 'Status', '$status'),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: 25,
+                    ),
+                    Center(
+                      child: Align(
+                        alignment: FractionalOffset.bottomCenter,
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: 10.0),
+                          child: QrImage(
+                            data: uid,
+                            size: 95,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -978,20 +1065,13 @@ class _TicketState extends State<Ticket> {
         ),
         backgroundColor: backgroundcolor(),
         automaticallyImplyLeading: true,
-        title: Text(
-          langaugeSetFunc('Details'),
-          style: TextStyle(color: textcolor()),
-        ),
+        title: Text(langaugeSetFunc('Details'), style: TextStyle(color: textcolor()),),
         centerTitle: true,
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.share),
             onPressed: () async {
-              //Share.share('check out my website https://example.com', subject: 'ok', image: NetworkImage(globals.UserImageUrl) );
 
-              // If the widget was removed from the tree while the asynchronous platform
-              // message was in flight, we want to discard the reply rather than calling
-              // setState to update our non-existent appearance.
               RenderRepaintBoundary boundary =
                   theGlobalKey.currentContext.findRenderObject();
               ui.Image image = await boundary.toImage();
@@ -1064,8 +1144,7 @@ class _TicketState extends State<Ticket> {
                     child: Column(
                       children: <Widget>[
                         Padding(
-                          padding:
-                              const EdgeInsets.only(top: 12.0, right: 40.0),
+                          padding:const EdgeInsets.only(top: 12.0, right: 40.0),
                           child: ticketDetailsWidget(
                               'Person', '$person', 'Date', '$date'),
                         ),
@@ -1094,7 +1173,7 @@ class _TicketState extends State<Ticket> {
                         padding: EdgeInsets.only(bottom: 10.0),
                         child: QrImage(
                           data: uid,
-                          size: 0.3 * MediaQuery.of(context).size.width,
+                          size: 0.9 * MediaQuery.of(context).size.width,
                         ),
                       ),
                     ),
@@ -1162,8 +1241,8 @@ class _TicketState extends State<Ticket> {
       ],
     );
   }
-
   var rate = 0;
+
 }
 
 class Share {
@@ -1196,22 +1275,3 @@ class Share {
   }
 }
 
-/*
-*  Container(
-              child: Column(children: <Widget>[
-
-                Expanded(child:  LiquidPullToRefresh(
-                  color: Colors.teal,
-                  key: _refreshIndicatorKey,	// key if you want to add
-                  onRefresh: _handleRefresh,
-                  child: ListView(
-                      padding: const EdgeInsets.all(20.0),
-                      children:  _getListings(context, itemList)// <<<<< Note this change for the return type
-                  ),
-                ),
-                )
-              ]),
-            );
-*
-*
-* */

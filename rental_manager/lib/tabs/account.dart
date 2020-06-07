@@ -16,32 +16,30 @@ import 'package:rental_manager/CurrentReservation.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:progress_dialog/progress_dialog.dart';
+import 'help.dart';
 import 'map.dart';
 import 'package:rental_manager/changeColor.dart';
-
 ProgressDialog pr;
 
-Future<List<globals.ReservationItem>> setData() async {
+Future<List<globals.ReservationItem>> setData() async{
   List<globals.ReservationItem> itemList = new List();
 
-  final QuerySnapshot result = await Firestore.instance
-      .collection(returnReservationCollection())
-      .where('uid', isEqualTo: globals.uid)
-      .getDocuments();
+  final QuerySnapshot result =
+  await Firestore.instance.collection(returnReservationCollection()).where('uid', isEqualTo: globals.uid).getDocuments();
   final List<DocumentSnapshot> documents = result.documents;
   List<globals.ReservationItem> reservationList = new List();
   int count = 0;
-  documents.forEach((ds) => reservationList.add(globals.ReservationItem(
-        ds["amount"],
-        ds["startTime"],
-        ds["endTime"],
-        ds["item"],
-        ds["status"],
-        ds["uid"],
-        ds["name"],
-        ds["imageURL"],
-        ds.documentID,
-      )));
+  documents.forEach((ds) => reservationList.add(globals.ReservationItem(ds["amount"],
+    ds["startTime"],
+    ds["endTime"],
+    ds["item"],
+    ds["status"],
+    ds["uid"],
+    ds["name"],
+    ds["imageURL"],
+    ds.documentID,
+  )
+  ));
 
   return reservationList;
 }
@@ -49,7 +47,7 @@ Future<List<globals.ReservationItem>> setData() async {
 class FourthTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    pr = new ProgressDialog(context, type: ProgressDialogType.Normal);
+    pr = new ProgressDialog(context,type: ProgressDialogType.Normal);
     pr.style(message: 'Showing some progress...');
     pr.style(
       message: 'Please wait...',
@@ -64,17 +62,16 @@ class FourthTab extends StatelessWidget {
           color: Colors.black, fontSize: 19.0, fontWeight: FontWeight.w600),
     );
     var screenwidth = MediaQuery.of(context).size.width;
-    Color accountBackgroundColor() {
-      if (globals.dark == true) {
+    Color accountBackgroundColor(){
+      if(globals.dark == true){
         return Colors.black;
-      } else {
+      }else{
         return Colors.white;
       }
     }
-
-    if (globals.isiOS) {
+    if(globals.isiOS){
       return Scaffold(
-        appBar: CupertinoNavigationBar(
+        appBar:  CupertinoNavigationBar(
           heroTag: "tab4Account",
           transitionBetweenRoutes: false,
           backgroundColor: backgroundcolor(),
@@ -83,6 +80,8 @@ class FourthTab extends StatelessWidget {
         body: SafeArea(
           child: Column(
             children: <Widget>[
+
+
               Row(
                 children: <Widget>[
                   SizedBox(
@@ -90,9 +89,7 @@ class FourthTab extends StatelessWidget {
                   ),
                   CircleAvatar(
                     radius: 50,
-                    backgroundImage: globals.UserImageUrl == ""
-                        ? AssetImage('images/appstore.png')
-                        : NetworkImage(globals.UserImageUrl),
+                    backgroundImage: globals.UserImageUrl == ""? AssetImage('images/appstore.png'): NetworkImage(globals.UserImageUrl),
                   ),
                   Text(
                     globals.username,
@@ -112,168 +109,117 @@ class FourthTab extends StatelessWidget {
                   ),
                 ],
               ),
+
+               
               Container(
-                decoration: new BoxDecoration(
-                  color: BoxBackground(),
+                decoration: new BoxDecoration (
+                    color: BoxBackground(),
                 ),
                 child: ListTile(
-                  leading: Icon(
-                    CupertinoIcons.tag,
-                    color: textcolor(),
-                  ),
-                  title: Text(
-                    langaugeSetFunc("History"),
-                    style: TextStyle(color: textcolor()),
-                  ),
-                  trailing: Icon(
-                    CupertinoIcons.right_chevron,
-                    color: textcolor(),
-                  ),
-                  onTap: () async {
-                    await pr.show();
+                  leading: Icon(CupertinoIcons.tag,color: textcolor(),),
+                  title: Text(langaugeSetFunc("History"), style: TextStyle(color: textcolor()),),
+                  trailing: Icon(CupertinoIcons.right_chevron,color: textcolor(),),
+                  onTap: () async{
+                    if(globals.username == "anonymous"){
+                      pop_window("Sorry", "anonymous cannot view this Page.\n Please go to the fourth tab and log out. Then sign up a new account.", context);
+                    }else{
+                      await pr.show();
 
-                    var mylist = await setData();
+                      pr.hide();
 
-                    List<globals.ReservationItem> sort_list = [];
-                    mylist.forEach((element) {
-                      sort_list.add(element);
-                    });
-
-                    for (int i = 0; i < sort_list.length - 1; i++) {
-                      for (int j = 0; j < sort_list.length - i - 1; j++) {
-                        var a = sort_list[j].startTime,
-                            b = sort_list[j + 1].startTime;
-                        if (a == null || b == null) {
-                          continue;
-                        }
-
-                        if (isEarly(a, b)) {
-                          var swap = sort_list[j];
-                          sort_list[j] = sort_list[j + 1];
-                          sort_list[j + 1] = swap;
-                        }
-                      }
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => HistoryReservation()));
                     }
-                    globals.itemList = sort_list;
+                  },
+                ),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Container(
+                decoration: new BoxDecoration (
+                    color: BoxBackground(),
+                ),
+                child: ListTile(
+                  leading: Icon(CupertinoIcons.profile_circled,color: textcolor(),),
+                  title: Text(langaugeSetFunc("Account Details"), style: TextStyle(color: textcolor()),),
+                  trailing: Icon(CupertinoIcons.right_chevron, color: textcolor(),),
+                  onTap: (){
+                    if(globals.username == "anonymous"){
+                      pop_window("Sorry", "anonymous cannot view this Page.\n Please go to the fourth tab and log out. Then sign up a new account.", context);
+                    }else{
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfile()));
+                    }
 
-                    pr.hide();
-                    print(mylist.length.toString());
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => HistoryReservation()));
                   },
                 ),
               ),
+              Container(
+                decoration: new BoxDecoration (
+                    color: BoxBackground(),
+                ),
+                child: ListTile(
+                  leading: Icon(CupertinoIcons.brightness, color: textcolor(),),
+                  title: Text(langaugeSetFunc(("Theme Color")), style: TextStyle(color: textcolor()),),
+                  trailing: Icon(CupertinoIcons.right_chevron, color: textcolor(),),
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => changeColor()));
+
+                  },
+                ),
+              ),
+              Container(
+                decoration: new BoxDecoration (
+                    color: BoxBackground(),
+                ),
+                child: ListTile(
+                  leading: Icon(CupertinoIcons.gear,color: textcolor(),),
+                  title: Text(langaugeSetFunc('Language Setting'), style: TextStyle(color: textcolor()),),
+                  trailing: Icon(CupertinoIcons.right_chevron, color: textcolor(),),
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => languageSetting()));
+                  },
+                ),
+              ),
+
               SizedBox(
                 height: 10,
               ),
               Container(
-                decoration: new BoxDecoration(
-                  color: BoxBackground(),
-                ),
-                child: ListTile(
-                  leading: Icon(
-                    CupertinoIcons.profile_circled,
-                    color: textcolor(),
-                  ),
-                  title: Text(
-                    langaugeSetFunc("Account Details"),
-                    style: TextStyle(color: textcolor()),
-                  ),
-                  trailing: Icon(
-                    CupertinoIcons.right_chevron,
-                    color: textcolor(),
-                  ),
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => EditProfile()));
-                  },
-                ),
-              ),
-              Container(
-                decoration: new BoxDecoration(
-                  color: BoxBackground(),
-                ),
-                child: ListTile(
-                  leading: Icon(
-                    CupertinoIcons.brightness,
-                    color: textcolor(),
-                  ),
-                  title: Text(
-                    langaugeSetFunc(("Theme Color")),
-                    style: TextStyle(color: textcolor()),
-                  ),
-                  trailing: Icon(
-                    CupertinoIcons.right_chevron,
-                    color: textcolor(),
-                  ),
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => changeColor()));
-                  },
-                ),
-              ),
-              Container(
-                decoration: new BoxDecoration(
-                  color: BoxBackground(),
-                ),
-                child: ListTile(
-                  leading: Icon(
-                    CupertinoIcons.gear,
-                    color: textcolor(),
-                  ),
-                  title: Text(
-                    langaugeSetFunc('Language Setting'),
-                    style: TextStyle(color: textcolor()),
-                  ),
-                  trailing: Icon(
-                    CupertinoIcons.right_chevron,
-                    color: textcolor(),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => languageSetting()));
-                  },
-                ),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Container(
-                padding: EdgeInsets.all(0.6),
-                margin: EdgeInsets.only(
-                  left: 0,
-                  right: 0,
-                ),
+                padding:EdgeInsets.all(0.6),
+                margin:EdgeInsets.only(left:0, right:0,),
                 color: BoxBackground(),
                 child: FlatButton(
-                  onPressed: () async {
+                  onPressed: () async{
                     print('Log out');
-                    await pr.show();
+                    if(globals.username == "anonymous"){
+                      Navigator.of(context).pushNamedAndRemoveUntil('/LoginScreen', (Route route) => false);
+                    }else{
+                      await pr.show();
 
-                    Future.delayed(Duration(seconds: 2)).then((onValue) {});
-                    var prefs = await SharedPreferences.getInstance();
-                    prefs.remove("user");
-                    pr.hide();
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        '/LoginScreen', (Route route) => false);
-                    //Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
-                    print(context);
+                      Future.delayed(Duration(seconds: 2)).then((onValue){
+                      });
+                      var prefs = await SharedPreferences.getInstance();
+                      prefs.remove("user");
+                      pr.hide();
+                      Navigator.of(context).pushNamedAndRemoveUntil('/LoginScreen', (Route route) => false);
+                      //Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
+                      print(context);
+                    }
                   },
                   child: Column(
                     children: <Widget>[
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Text(langaugeSetFunc('Log Out'),
+                          Text(
+                              langaugeSetFunc('Log Out'),
                               style: TextStyle(
                                 fontSize: 20,
                                 color: textcolor(),
                                 fontFamily: 'Source Sans Pro',
-                              )),
+                              )
+                          ),
+
                         ],
                       ),
                     ],
@@ -291,27 +237,34 @@ class FourthTab extends StatelessWidget {
                   ),
                 ],
               ),
+
             ],
           ),
         ),
       );
     }
 
+
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
           title: Text(
             "Rental Manager",
-            style: TextStyle(fontFamily: 'Pacifico', color: textcolor()
-                // backgroundColor: Colors.teal,
-                ),
+            style:  TextStyle(
+              fontFamily: 'Pacifico',
+              color: textcolor()
+              // backgroundColor: Colors.teal,
+            ),
           ),
+
           backgroundColor: backgroundcolor(),
         ),
         backgroundColor: backgroundcolor(),
         body: SafeArea(
           child: Column(
             children: <Widget>[
+
+
               Row(
                 children: <Widget>[
                   SizedBox(
@@ -319,9 +272,7 @@ class FourthTab extends StatelessWidget {
                   ),
                   CircleAvatar(
                     radius: 50,
-                    backgroundImage: globals.UserImageUrl == ""
-                        ? AssetImage('images/appstore.png')
-                        : NetworkImage(globals.UserImageUrl),
+                    backgroundImage: globals.UserImageUrl == ""? AssetImage('images/appstore.png'): NetworkImage(globals.UserImageUrl),
                   ),
                   Text(
                     globals.username,
@@ -341,27 +292,22 @@ class FourthTab extends StatelessWidget {
                   ),
                 ],
               ),
+
+
               Container(
-                decoration: new BoxDecoration(
+                decoration: new BoxDecoration (
                   color: BoxBackground(),
                 ),
                 child: ListTile(
-                  leading: Icon(
-                    CupertinoIcons.tag,
-                    color: textcolor(),
-                  ),
-                  title: Text(
-                    langaugeSetFunc("History"),
-                    style: TextStyle(color: textcolor()),
-                  ),
-                  trailing: Icon(
-                    CupertinoIcons.right_chevron,
-                    color: textcolor(),
-                  ),
-                  onTap: () async {
+                  leading: Icon(CupertinoIcons.tag,color: textcolor(),),
+                  title: Text(langaugeSetFunc("History"), style: TextStyle(color: textcolor()),),
+                  trailing: Icon(CupertinoIcons.right_chevron,color: textcolor(),),
+                  onTap: () async{
                     await pr.show();
 
                     var mylist = await setData();
+
+
 
                     List<globals.ReservationItem> sort_list = [];
                     mylist.forEach((element) {
@@ -370,15 +316,14 @@ class FourthTab extends StatelessWidget {
 
                     for (int i = 0; i < sort_list.length - 1; i++) {
                       for (int j = 0; j < sort_list.length - i - 1; j++) {
-                        var a = sort_list[j].startTime,
-                            b = sort_list[j + 1].startTime;
+                        var a = sort_list[j].startTime, b = sort_list[j + 1].startTime;
                         if (a == null || b == null) {
                           continue;
                         }
 
                         if (isEarly(a, b)) {
                           var swap = sort_list[j];
-                          sort_list[j] = sort_list[j + 1];
+                          sort_list[j] =sort_list[j + 1];
                           sort_list[j + 1] = swap;
                         }
                       }
@@ -387,10 +332,7 @@ class FourthTab extends StatelessWidget {
 
                     pr.hide();
                     print(mylist.length.toString());
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => HistoryReservation()));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => HistoryReservation()));
                   },
                 ),
               ),
@@ -398,97 +340,63 @@ class FourthTab extends StatelessWidget {
                 height: 10,
               ),
               Container(
-                decoration: new BoxDecoration(
+                decoration: new BoxDecoration (
                   color: BoxBackground(),
                 ),
                 child: ListTile(
-                  leading: Icon(
-                    CupertinoIcons.profile_circled,
-                    color: textcolor(),
-                  ),
-                  title: Text(
-                    langaugeSetFunc("Account Details"),
-                    style: TextStyle(color: textcolor()),
-                  ),
-                  trailing: Icon(
-                    CupertinoIcons.right_chevron,
-                    color: textcolor(),
-                  ),
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => EditProfile()));
+                  leading: Icon(CupertinoIcons.profile_circled,color: textcolor(),),
+                  title: Text(langaugeSetFunc("Account Details"), style: TextStyle(color: textcolor()),),
+                  trailing: Icon(CupertinoIcons.right_chevron, color: textcolor(),),
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfile()));
                   },
                 ),
               ),
               Container(
-                decoration: new BoxDecoration(
+                decoration: new BoxDecoration (
                   color: BoxBackground(),
                 ),
                 child: ListTile(
-                  leading: Icon(
-                    CupertinoIcons.brightness,
-                    color: textcolor(),
-                  ),
-                  title: Text(
-                    langaugeSetFunc(("Theme Color")),
-                    style: TextStyle(color: textcolor()),
-                  ),
-                  trailing: Icon(
-                    CupertinoIcons.right_chevron,
-                    color: textcolor(),
-                  ),
-                  onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => changeColor()));
+                  leading: Icon(CupertinoIcons.brightness, color: textcolor(),),
+                  title: Text(langaugeSetFunc(("Theme Color")), style: TextStyle(color: textcolor()),),
+                  trailing: Icon(CupertinoIcons.right_chevron, color: textcolor(),),
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => changeColor()));
                   },
                 ),
               ),
               Container(
-                decoration: new BoxDecoration(
+                decoration: new BoxDecoration (
                   color: BoxBackground(),
                 ),
                 child: ListTile(
-                  leading: Icon(
-                    CupertinoIcons.gear,
-                    color: textcolor(),
-                  ),
-                  title: Text(
-                    langaugeSetFunc('Language Setting'),
-                    style: TextStyle(color: textcolor()),
-                  ),
-                  trailing: Icon(
-                    CupertinoIcons.right_chevron,
-                    color: textcolor(),
-                  ),
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => languageSetting()));
+                  leading: Icon(CupertinoIcons.gear,color: textcolor(),),
+                  title: Text(langaugeSetFunc('Language Setting'), style: TextStyle(color: textcolor()),),
+                  trailing: Icon(CupertinoIcons.right_chevron, color: textcolor(),),
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => languageSetting()));
                   },
                 ),
               ),
+
               SizedBox(
                 height: 10,
               ),
               Container(
-                padding: EdgeInsets.all(0.6),
-                margin: EdgeInsets.only(
-                  left: 0,
-                  right: 0,
-                ),
+                padding:EdgeInsets.all(0.6),
+                margin:EdgeInsets.only(left:0, right:0,),
                 color: BoxBackground(),
                 child: FlatButton(
-                  onPressed: () async {
+                  onPressed: () async{
                     print('Log out');
                     await pr.show();
 
-                    Future.delayed(Duration(seconds: 2)).then((onValue) {});
+                    Future.delayed(Duration(seconds: 2)).then((onValue){
+                    });
                     var prefs = await SharedPreferences.getInstance();
                     prefs.remove("user");
                     pr.hide();
-                    Navigator.of(context).pushNamedAndRemoveUntil(
-                        '/LoginScreen', (Route route) => false);
+                    Navigator.of(context).pushNamedAndRemoveUntil('/LoginScreen', (Route route) => false);
                     //Navigator.push(context, MaterialPageRoute(builder: (context) => MyApp()));
                     print(context);
                   },
@@ -497,12 +405,15 @@ class FourthTab extends StatelessWidget {
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
-                          Text(langaugeSetFunc('Log Out'),
+                          Text(
+                              langaugeSetFunc('Log Out'),
                               style: TextStyle(
                                 fontSize: 20,
                                 color: textcolor(),
                                 fontFamily: 'Source Sans Pro',
-                              )),
+                              )
+                          ),
+
                         ],
                       ),
                     ],
@@ -520,6 +431,7 @@ class FourthTab extends StatelessWidget {
                   ),
                 ],
               ),
+
             ],
           ),
         ),

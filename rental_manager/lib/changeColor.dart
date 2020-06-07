@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:rental_manager/language.dart';
 import 'package:rental_manager/tabs/locations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'globals.dart' as globals;
@@ -10,7 +12,6 @@ class changeColor extends StatefulWidget {
 
 class _changeColorState extends State<changeColor> {
   @override
-
   Widget selectTheme(String mode){
     if(globals.userSelectTheme == -1){
       if(mode == "light"){
@@ -42,7 +43,7 @@ class _changeColorState extends State<changeColor> {
         Column(
           children: <Widget>[
             new ListTile(
-              title: Text('Light', style: TextStyle(color: textcolor()),),
+              title: Text(langaugeSetFunc('Light'), style: TextStyle(color: textcolor()),),
               trailing: selectTheme("light"),
               onTap: () async{
 
@@ -64,7 +65,7 @@ class _changeColorState extends State<changeColor> {
       Column(
         children: <Widget>[
           new ListTile(
-            title: Text('Dark', style: TextStyle(color: textcolor()),),
+            title: Text(langaugeSetFunc('Dark'), style: TextStyle(color: textcolor()),),
             trailing: selectTheme("dark"),
             onTap: () async{
 
@@ -87,7 +88,7 @@ class _changeColorState extends State<changeColor> {
       Column(
         children: <Widget>[
           new ListTile(
-            title: Text('By System Default Setting', style: TextStyle(color: textcolor()),),
+            title: Text(langaugeSetFunc('By System Default Setting'), style: TextStyle(color: textcolor()),),
             trailing: selectTheme("systemTheme"),
             onTap: () async {
               final Brightness brightnessValue = MediaQuery.of(context).platformBrightness;
@@ -115,7 +116,28 @@ class _changeColorState extends State<changeColor> {
 
 
   Widget build(BuildContext context) {
+    if(globals.isiOS){
+      return Scaffold(
+          appBar: CupertinoNavigationBar(
+            heroTag: "12312Theme Color",
+            transitionBetweenRoutes: false,
+            middle: Text('Theme Color', style: TextStyle(color: textcolor()),),
 
+            backgroundColor: backgroundcolor(),
+          ),
+          backgroundColor: backgroundcolor(),
+          body:  new SafeArea(
+              child: Container(child: Column(children: <Widget>[
+
+                Expanded(child:  ListView(
+                  padding: const EdgeInsets.all(20.0),
+                  children: _getListings(context), // <<<<< Note this change for the return type
+                ),
+                )
+              ])
+              ))
+      );
+    }
 
     return Scaffold(
       appBar: AppBar(

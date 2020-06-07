@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -10,6 +11,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'dart:typed_data';
 import 'dart:core';
+import 'globals.dart' as globals;
 class myTime {
   String reservedTime;
   String pickUpTime;
@@ -75,6 +77,216 @@ class _theItemSearchState extends State<theItemSearch> {
         afternoonPercent = copy_afternoonValue.toStringAsFixed(1),
         eveningPercent = copy_eveningValue.toStringAsFixed(1);
     GlobalKey theGlobalKey = new GlobalKey();
+
+    if(globals.isiOS){
+      return Scaffold(
+        appBar: CupertinoNavigationBar(
+          heroTag: "Tab311dSelected item: ",
+          transitionBetweenRoutes: false,
+          middle: new Text( langaugeSetFunc('Selected item: ') + " $itemname", style: TextStyle(color: textcolor()),),
+          trailing: GestureDetector(
+            onTap: ()async{
+              //Share.share('check out my website https://example.com', subject: 'ok', image: NetworkImage(globals.UserImageUrl) );
+
+              // If the widget was removed from the tree while the asynchronous platform
+              // message was in flight, we want to discard the reply rather than calling
+              // setState to update our non-existent appearance.
+              RenderRepaintBoundary boundary = theGlobalKey.currentContext.findRenderObject();
+              ui.Image image = await boundary.toImage();
+              final directory = (await getApplicationDocumentsDirectory()).path;
+              ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
+              Uint8List pngBytes = byteData.buffer.asUint8List();
+
+
+              try{
+                await WcFlutterShare.share(
+                    sharePopupTitle: 'Order Receipt',
+                    fileName: 'Order Receipt.png',
+                    mimeType: 'image/png',
+                    bytesOfFile: pngBytes);
+              }catch (e){
+                print(e.toString());
+              }
+              print("OK");
+            },
+            child: Icon(
+              CupertinoIcons.share,
+              color: textcolor(),
+            ),
+          ),
+          backgroundColor: backgroundcolor(),
+        ),
+
+        backgroundColor: backgroundcolor(),
+        body: Center(
+          child:  RepaintBoundary(
+            key: theGlobalKey,
+            child: ListView(children: <Widget>[
+              Center(
+                child: new Text(
+                  "$itemname" + langaugeSetFunc("Usage"),
+                  style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 20.0, color: textcolor()),
+                ),
+              ),
+              Divider(
+                height: 20,
+                indent: 100,
+                endIndent: 100,
+              ),
+              Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+
+                    Center(
+                      child: Text(langaugeSetFunc("Morning Usage"),
+                        style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0, color: textcolor()), ),
+                    ),
+                    Padding(
+                      padding:EdgeInsets.fromLTRB(15.0, 5, 15, 15),
+                      child: Wrap(
+                        direction: Axis.vertical,
+                        children: <Widget>[
+                          new LinearPercentIndicator(
+                            width: MediaQuery.of(context).size.width * 0.618,
+                            animation: true,
+
+                            lineHeight: 20.0,
+                            animationDuration: 2000,
+                            percent: morningValue,
+                            center: Text("$morningPercent%"),
+                            linearStrokeCap: LinearStrokeCap.roundAll,
+                            progressColor: Colors.greenAccent,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Center(
+                      child: Text(langaugeSetFunc("Afternoon Usage"),
+                        style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0,color: textcolor()),),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(15.0, 5, 15, 15),
+                      child: Wrap(
+                        direction: Axis.vertical,
+                        children: <Widget>[
+                          new LinearPercentIndicator(
+                            width: MediaQuery.of(context).size.width * 0.618,
+                            animation: true,
+
+                            lineHeight: 20.0,
+                            animationDuration: 2000,
+                            percent: afternoonValue,
+                            center: Text("$afternoonPercent%"),
+                            linearStrokeCap: LinearStrokeCap.roundAll,
+                            progressColor: Colors.greenAccent,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Center(
+                      child: Text(langaugeSetFunc("Evening Usage"),
+                        style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 17.0, color: textcolor()),),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(15.0, 5, 15, 15),
+                      child: Wrap(
+                        direction: Axis.vertical,
+                        children: <Widget>[
+                          new LinearPercentIndicator(
+                            width: MediaQuery.of(context).size.width *0.618,
+                            animation: true,
+                            lineHeight: 20.0,
+                            animationDuration: 2000,
+                            percent: eveningValue,
+                            center: Text("$eveningPercent%"),
+                            linearStrokeCap: LinearStrokeCap.roundAll,
+                            progressColor: Colors.green,
+                          ),
+                        ],
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(15.0),
+                      child: Wrap(
+                        direction: Axis.vertical,
+                        children: <Widget>[
+                          new LinearPercentIndicator(
+                            width: 140.0,
+                            lineHeight: 14.0,
+                            percent: 1,
+                            leading: Text(langaugeSetFunc("Feedback"), style: TextStyle(color: textcolor()),),
+                            center: Text(
+                              "100.0%",
+                              style: new TextStyle(fontSize: 12.0),
+                            ),
+                            trailing: Icon(Icons.mood, color: textcolor(),),
+                            linearStrokeCap: LinearStrokeCap.roundAll,
+                            backgroundColor: Colors.grey,
+                            progressColor: Colors.blue,
+                          ),
+                        ],
+                      ),
+                    ),
+
+                  ],
+                ),
+              ),
+
+              Divider(
+                height: 20,
+                indent: 100,
+                endIndent: 100,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  new CircularPercentIndicator(
+                    radius: 100.0,
+                    animation: true,
+                    animationDuration: 2000,
+                    lineWidth: 10.0,
+                    percent: value / 6,
+                    header: new Text(
+                      langaugeSetFunc("Average Hour"),
+                      style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 15.0,color: textcolor()),
+                    ),
+                    center: new Text(
+                      "$averageHourTime hours",
+                      style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 15.0,color: textcolor()),
+                    ),
+
+                    circularStrokeCap: CircularStrokeCap.round,
+                    progressColor: Colors.red,
+                  ),
+                  new CircularPercentIndicator(
+                    radius: 100.0,
+                    lineWidth: 10.0,
+                    animation: true,
+                    animationDuration: 2000,
+                    percent: percentReserved,
+                    header: new Text(
+                      langaugeSetFunc("Preference",) ,
+                      style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 15.0,color: textcolor()),
+                    ),
+                    center: new Text(
+                      "$percentReservedTime%",
+                      style: new TextStyle(fontWeight: FontWeight.bold, fontSize: 15.0,color: textcolor()),
+                    ),
+
+                    circularStrokeCap: CircularStrokeCap.round,
+                    progressColor: Colors.purple,
+                  ),
+                ],
+              ),
+
+
+            ]),
+          ),
+        ),
+      );
+    }
+
     return Scaffold(
       appBar: new AppBar(
         iconTheme: IconThemeData(
